@@ -43,11 +43,16 @@ function Search() {
     fetchData();
 
     }, []);
+
+    
   
 
   return (
     <Layout>
+
    <Wrapper>
+
+    
 
         <SearchBBar small={false} />
 
