@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {KAKAO_AUTH_URL} from "../components/KaKao";
 
 import "../styles/global.css";
-import { getCookies, removeCookie, setCookies } from '../Cookies';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -218,10 +217,8 @@ function MainHeader() {
     setClick((cur) => !(cur));
   }
 
-  const cookies  = getCookies("accessToken");
   
   const clickLogout = () => {
-    removeCookie("accessToken");
     movePage("/");
   }
 
@@ -235,7 +232,7 @@ function MainHeader() {
           </LinkContainer>
         </Column>
         <Column >
-          <LoginBtn onClick={cookies ? clickLogout: clickLogin}>{cookies ? "로그아웃" : "로그인"}</LoginBtn>
+          <LoginBtn >로그인</LoginBtn>
         </Column>
       </Container>
 
