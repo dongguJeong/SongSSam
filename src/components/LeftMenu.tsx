@@ -3,8 +3,6 @@ import styled from "styled-components";
 import "../styles/font.css";
 import { Link, useNavigate } from "react-router-dom";
 import SearchBBar from "./SearchBar";
-import { getCookies } from "../Cookies";
-import { type } from "@testing-library/user-event/dist/type";
 
 const Wrapper = styled.div`
 
@@ -102,16 +100,9 @@ function LeftMenu(){
     const move = useNavigate();
 
     const goMypage = () => {
-        const cookie = getCookies("accessToken"); 
-
-        if(!cookie){
-            alert("로그인이 필요합니다");
-            move("/");
-
-        }
-        else{
+        
             move('/mypage');
-        }
+        
     }
 
 

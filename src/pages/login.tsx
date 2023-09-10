@@ -32,7 +32,7 @@ const Circle = styled.div`
     } 
 `
 
-const server = "3.35.0.114:8080";
+const server = "songssam.site:8080";
 
 export default function Redirect(){
 
@@ -41,14 +41,14 @@ export default function Redirect(){
 
     const kakaoLogin = async(code : string | string[] | undefined) => {
         try {
-          const res = await axios({
-            method: "POST",
-            url: `http://${server}/v2/login?authorizationCode=${code}`,
-            withCredentials : true,
-          })
+          const res = await axios.post(`http://${server}/auth/login`, 
+          {
+          authoriztioncode: code // 코드를 요청의 본문에 추가
+          }, );
 
 
           console.log("생성 : ", res);   
+
           movePage("/");
           
         } catch (err) {

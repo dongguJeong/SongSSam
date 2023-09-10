@@ -8,7 +8,7 @@ export default function Game() {
         const response = await axios.post(
           "http://songssam.site:8080/auth/login",
           {
-            authorizationCode: "카카오톡에서 받은 authorizationCode",
+            "authorizationCode": "카카오톡에서 받은 authorizationCode",
           }
         );
 

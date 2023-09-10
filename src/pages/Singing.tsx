@@ -144,9 +144,9 @@ function Singing() {
   const constraint = { audio: true };
 
   const onSuccess = (stream : MediaStream) => {
-    const mediaRecorder = new MediaRecorder(stream);
+     mediaRecorderRef.current = new MediaRecorder(stream);
     
-    mediaRecorder.ondataavailable = (e) => {
+     mediaRecorderRef.current.ondataavailable = (e) => {
       if (e.data.size > 0) {
         setChunks((prev ) => [...prev, e.data]);
       }
@@ -259,7 +259,7 @@ function Singing() {
         else{
           ctx.fillStyle = "blue";
         }
-      ctx.fillRect(voice.startX,voice.startY-1, barwidth,lineHeight-1);
+      ctx.fillRect(voice.startX-1,voice.startY-1, barwidth,lineHeight-1);
   
       voice.startX -= barwidth;
       voice.endX -= barwidth;
@@ -284,20 +284,27 @@ function Singing() {
 
   //녹음 기능
   const handleStartRecording = () => {
+    console.log("녹음 시작");
 
-    const mediaRecorder = mediaRecorderRef.current;
-    if (mediaRecorder) {
+    
+
+    if (mediaRecorderRef.current) {
+
     setChunks(() => []); // Reset chunks
-    mediaRecorder.start();
+    mediaRecorderRef.current.start();
     setRecording(true);
+    }
+    else{
+      console.log("미디어 레코더 없음");
     }
   };
 
   const handleStopRecording = () => {
 
-    const mediaRecorder = mediaRecorderRef.current;
-    if (mediaRecorder) {
-      mediaRecorder.stop();
+    console.log("녹음 끝");
+    
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
       setRecording(false);
       set피치((prev) => (prev = 0));
     }
