@@ -232,7 +232,7 @@ function MainHeader() {
           </LinkContainer>
         </Column>
         <Column >
-          <LoginBtn >로그인</LoginBtn>
+          <LoginBtn onClick={ clickLogin}>로그인</LoginBtn>
         </Column>
       </Container>
 
