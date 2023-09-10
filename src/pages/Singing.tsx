@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PitchDetector } from 'pitchy';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAccessToken } from '../redux/tokenSlice';
 
 
 interface INote{
@@ -12,8 +14,11 @@ interface INote{
 interface ISaveVoice{
   clipName : string,
   audioURL : string,
+  blob : Blob,
   
 }
+
+
 
 function Singing() {
   const [recording, setRecording] = useState(false);
@@ -313,12 +318,45 @@ function Singing() {
   const saveClip = () => {
     const clipName = `${count}번 클립`;
     setCount((prev) => prev + 1);
-    const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
+    const blob = new Blob(chunks, { type: 'audio/mp3' });
     setChunks(() => []);
     const audioURL = window.URL.createObjectURL(blob);
-    setClips((prev) => [...prev, { clipName, audioURL }]);
+    setClips((prev) => [...prev, { clipName, audioURL, blob }]);
   };
 
+
+  const AToken =  useSelector(getAccessToken);
+  const 음성전송 = (음성파일 : Blob) => {
+
+    const voiceURL = "http://songssam.site:8080/member/vocal_upload";
+    const formData = new FormData();
+    const audioBlob = new Blob(chunks, { type: 'audio/mp3' });
+    formData.append('file', audioBlob, 'audio.mp3'  ); // 'audioBlob'는 서버에서 받을 때 사용할 필드 이름
+
+  // fetch를 사용하여 서버로 전송
+  fetch(voiceURL, {
+    method: 'POST',
+    body: formData,
+    headers : {
+      "Authorization": "Bearer " + AToken
+    }
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('파일 업로드에 실패했습니다.');
+      }
+      return response.json(); // 서버 응답 처리
+    })
+    .then((data) => {
+      console.log('파일 업로드 성공:', data);
+      // 서버 응답 처리 로직을 추가하세요.
+    })
+    .catch((error) => {
+      console.error('파일 업로드 오류:', error);
+      // 오류 처리 로직을 추가하세요.
+    });
+
+  }
 
   useEffect(() => {
     if (chunks.length > 0 && !recording) {
@@ -348,6 +386,7 @@ function Singing() {
           <div key={i}>
             <h1>{clip.clipName}</h1>
             <audio controls src={clip.audioURL}></audio>
+            <button onClick={() => 음성전송(clip.blob)}>파일 전송</button>
           </div>
         ))}
       </section>

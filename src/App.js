@@ -7,7 +7,6 @@ import Redirect from "./pages/login";
 import Singing from './pages/Singing';
 import Search from './pages/Search';
 import Prefer from "./pages/Prefer";
-import Game from './pages/Game';
 
 function App() {
   return (
@@ -15,7 +14,6 @@ function App() {
       <BrowserRouter>
         <Routes>
 
-          <Route path='/Game' element={<Game></Game>}></Route>
           <Route path = "/prefer" element={<Prefer/>}></Route>
           <Route path='/search/:target' element ={<Search></Search>}></Route>
           <Route path ="/singing" element={<Singing/>}> </Route>

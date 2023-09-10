@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { setAccessToken } from "../redux/tokenSlice";
+import { useDispatch } from 'react-redux';
 
 
 const Wrapper = styled.div`
@@ -37,17 +38,23 @@ const server = "songssam.site:8080";
 export default function Redirect(){
 
     const movePage = useNavigate();
-
+    const dispatch = useDispatch();
 
     const kakaoLogin = async(code : string | string[] | undefined) => {
+
+        
         try {
           const res = await axios.post(`http://${server}/auth/login`, 
           {
-          authoriztioncode: code // 코드를 요청의 본문에 추가
+          "authorizationCode": code // 코드를 요청의 본문에 추가
+
           }, );
 
 
-          console.log("생성 : ", res);   
+          console.log("생성 : ", res); 
+          
+          dispatch(setAccessToken(res.data));
+
 
           movePage("/");
           

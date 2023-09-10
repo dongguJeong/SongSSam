@@ -16,7 +16,7 @@ const Wrapper = styled.div`
 `
 
 
-const chartCrawlingURL = `http://${serverURL}/v3/chartjson`;
+const chartCrawlingURL = `http://${serverURL}/song/chartjson`;
 
 function Search() {
 

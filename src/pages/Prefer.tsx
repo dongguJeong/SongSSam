@@ -3,9 +3,10 @@ import { styled} from 'styled-components';
 import Layout from "../components/Layout";
 import serverURL from "../asset/Url";
 import { IData } from "../components/Chart";
+import axios from "axios";
 
 
-const chartCrawlingURL = `http://${serverURL}/v3/chartjson`;
+const chartCrawlingURL = `http://${serverURL}/song/chartjson`;
 
 
 const Wrapper = styled.div`
@@ -89,10 +90,10 @@ function Prefer(){
         const fetchData = async () => {
           try {
             const response = await (await fetch(chartCrawlingURL,
-              {
-                method: "GET",
-              }
-            )).json();
+                {
+                  method: "GET",
+                }
+              )).json();
             
             console.log(response);
             setChartData(response);

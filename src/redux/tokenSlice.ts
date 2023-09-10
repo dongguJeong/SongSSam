@@ -27,6 +27,7 @@ const tokenSlice = createSlice({
             state.refreshToken = action.payload;;
         },
 
+
         deleteAccessToken(state){
             
             state.accessToken = "";
@@ -37,12 +38,15 @@ const tokenSlice = createSlice({
             state.refreshToken = "";
         },
 
-
+        
        
     },
 
 });
 
-export const {setAccessToken ,setRefreshToken} = tokenSlice.actions;
+
+export const getAccessToken = (state: { token: TokenState }) => state.token.accessToken;
+
+export const {setAccessToken ,setRefreshToken ,deleteAccessToken,deleteRefreshToken } = tokenSlice.actions;
 
 export default tokenSlice.reducer;

@@ -73,6 +73,8 @@ export default function SearchBBar ( {small} : ISearchBar){
 
     const [search, setSearch] = useState("");
 
+    
+
 
     const handleSubmit = (e :React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

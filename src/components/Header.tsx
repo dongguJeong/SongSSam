@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import {KAKAO_AUTH_URL} from "../components/KaKao";
 
 import "../styles/global.css";
 import { useNavigate } from 'react-router-dom';
+import {  useSelector } from 'react-redux/es/hooks/useSelector';
+import { getAccessToken,deleteAccessToken } from '../redux/tokenSlice';
+import { useDispatch } from 'react-redux';
+
 
 
 const Wrapper = styled.div`
@@ -209,9 +213,11 @@ const CloseBtn = styled.div`
 function MainHeader() {
 
 
-
+  const dispatch = useDispatch();  
   const movePage = useNavigate();
   const [click, setClick] = useState(false);
+
+  
 
   const clickLogin = () =>{
     setClick((cur) => !(cur));
@@ -219,6 +225,7 @@ function MainHeader() {
 
   
   const clickLogout = () => {
+    dispatch(deleteAccessToken());
     movePage("/");
   }
 
@@ -232,7 +239,7 @@ function MainHeader() {
           </LinkContainer>
         </Column>
         <Column >
-          <LoginBtn onClick={ clickLogin}>로그인</LoginBtn>
+          <LoginBtn onClick={useSelector(getAccessToken) ? clickLogout : clickLogin}>{useSelector(getAccessToken) ? "로그아웃" : "로그인"}</LoginBtn>
         </Column>
       </Container>
 
