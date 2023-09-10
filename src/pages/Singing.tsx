@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PitchDetector } from 'pitchy';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import { getAccessToken } from '../redux/tokenSlice';
 
 
@@ -25,9 +25,8 @@ function Singing() {
   const [clips, setClips] = useState<ISaveVoice[]>([]);
   const [count, setCount] = useState(1);
   const [chunks, setChunks] = useState<Blob[]>([]);
-  const [피치, set피치] = useState(0);
-  const [옥타브, set옥타브] = useState(0);
-  const buffersize = 50;
+  const [pitch, setPitch] = useState(0);
+  const buffersize = 75;
   const voiceRef = useRef<INote[]>(new Array(buffersize));
   const voiceArray=voiceRef.current;
   
@@ -37,13 +36,18 @@ function Singing() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasHalf = canvasWidth / 2;
   
-  let 높은옥타브 = 5;
-  let 낮은옥타브 = 3;
+  
+  
 
   const barwidth = canvasHalf/buffersize;
 
   const lineNumber = 16;
-  const lineHeight = canvasHeight / lineNumber;
+  const lineHeight = canvasHeight / lineNumber; 
+
+  let 기준음 = 48;
+  let 최고음 = 기준음+12;
+  let 최저음 = 기준음 - 12;
+  const 최고음시작점 = lineHeight/2; 
 
   
   //음성정보
@@ -73,12 +77,13 @@ function Singing() {
       const y = i * lineHeight;
       ctx.beginPath();
       ctx.moveTo(0, y);
-
-      if (i >= 6 && i <= 10) {
+      if(i === 8){
         ctx.lineWidth = 5;
-      } else {
+      }
+      else{
         ctx.lineWidth = 1;
       }
+    
 
       ctx.lineTo(canvasWidth, y);
       ctx.stroke();
@@ -92,11 +97,11 @@ function Singing() {
     ctx.stroke();
     }
     
-  }, []);
+  }, [canvasHeight]);
 
 
 
-  // 실시간 목소리 피치 탐지
+  // 실시간 목소리 pitch 탐지
   function updatePitch(analyserNode : AnalyserNode, detector : PitchDetector<Float32Array> , input : Float32Array, sampleRate : number) {
     analyserNode.getFloatTimeDomainData(input);
     const [pitch, clarity] = detector.findPitch(input, sampleRate);
@@ -110,35 +115,30 @@ function Singing() {
     const startX = canvasHalf-barwidth;
     const endX = canvasHalf;
 
-    //목소리 분석
-    if (Math.round(clarity * 100) > 70) {
 
-      //미디 음계를 알아내고
+    //목소리 분석
+    if (Math.round(clarity * 100) > 80) {
+
+      //들어온 목소리에 대해서 미디 번호를 알아내고
       midi = freqToNote(Math.round(pitch * 10) / 10);
 
-      //미디 음계로부터 옥타브와 계이름을 알아냄
-      //인덱스 0 ~ 11 까지 각각 도, 도#, 레, 레# ... 등에 해당됨.
-      const {noteIndex  , octave } = pitchToNoteName(midi);
-      set옥타브(()=> octave);
+      
 
-      if (octave < 낮은옥타브 || octave > 높은옥타브) {
-        midi  = 0;
-        voiceArray.push({startX,endX,startY : 0, endY :0});
-      }
-      else{
-
-        const startY = (5-0.5*noteIndex) * lineHeight + Math.abs(octave - 높은옥타브) * lineHeight * 5;
-        const endY =  (6-0.5*noteIndex) * lineHeight + Math.abs(octave - 높은옥타브)* lineHeight * 5;
-
-        voiceArray.push({startX : startX,endX : endX, startY: startY, endY :endY});
+      if( (midi <= 최고음) && (midi >= 최저음) ){
+       const startY= 최고음시작점+Math.abs(최고음 - midi) * 0.5 * lineHeight;
+       const endY = startY + lineHeight;
+       voiceArray.push({startX : startX,endX : endX, startY: startY, endY :endY});
       }
 
-      set피치(() => midi);
+       else{
+        voiceArray.push({startX : startX,endX : endX, startY: 0, endY : 0});
+       }
+      setPitch(() => midi);
 
     }else{
       midi = 0;
       voiceArray.push({startX : startX, endX : endX, startY: 0, endY :0});
-      set피치(midi);
+      setPitch(midi);
     }
 
     requestAnimationFrame(() => updatePitch(analyserNode, detector, input, sampleRate));
@@ -192,18 +192,6 @@ function Singing() {
     return Math.round(12 * (Math.log(freq / 440.0) / Math.log(2))) + 69;
   };
 
-  //미디 번호에서 음계이름으로
-  function pitchToNoteName(pitch : number) {
-    // 음계 이름 배열
-    
-    // 피치를 12로 나눈 나머지를 계산하여 음계 인덱스로 변환
-    const noteIndex = Math.round(pitch) % 12;
-  
-    // 피치를 옥타브로 나눈 몫을 계산하여 옥타브 번호 생성
-    const octave = Math.floor(pitch / 12);
-    return { noteIndex : noteIndex , octave} ;
-  }
-
 
   //마이크 음성 시각화 하는 로직
 
@@ -228,10 +216,12 @@ function Singing() {
       const y = i * lineHeight;
       ctx.beginPath();
       ctx.moveTo(0, y);
-
-      if (i >= 6 && i <= 10) {
+      
+      
+      if(i=== 8){
         ctx.lineWidth = 5;
-      } else {
+      }
+      else{
         ctx.lineWidth = 1;
       }
 
@@ -258,13 +248,13 @@ function Singing() {
           voice?.endY !== undefined){
       
         
-        if( voice.startY == 0 ) {   
+        if( voice.startY === 0 ) {   
          ctx.fillStyle = "white";
         }
         else{
           ctx.fillStyle = "blue";
         }
-      ctx.fillRect(voice.startX-1,voice.startY-1, barwidth,lineHeight-1);
+      ctx.fillRect(voice.startX,voice.startY, barwidth,lineHeight);
   
       voice.startX -= barwidth;
       voice.endX -= barwidth;
@@ -311,7 +301,7 @@ function Singing() {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       setRecording(false);
-      set피치((prev) => (prev = 0));
+      setPitch((prev) => (prev = 0));
     }
   };
 
@@ -366,8 +356,7 @@ function Singing() {
 
   return (
     <div>
-      <h1>미디 음표 :  음계 {피치} </h1>
-      <h1>옥타브 :   {옥타브} </h1>
+      <h1>미디 번호 :  {pitch} </h1>
 
       <canvas height={canvasHeight} width={canvasWidth} ref={canvasRef}></canvas>
 

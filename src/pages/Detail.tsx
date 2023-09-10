@@ -140,7 +140,7 @@ const SFContainer = styled.div`
 `
 ;
 
-const SF_Header = styled.div` 
+const SFHeader = styled.div` 
     display : flex;
     width : 100%;
     justify-content : space-between;
@@ -153,7 +153,7 @@ const SF_Header = styled.div`
 
 `;
 
-const SF_closeBtn = styled.div`
+const SFcloseBtn = styled.div`
     width : 30px;
     height : 30px;
     border-radius : 50%;
@@ -170,11 +170,11 @@ const SF_closeBtn = styled.div`
     }
 `;
 
-const SF_title = styled.div`
+const SFtitle = styled.div`
     padding-left : 10px;
 `;
 
-const SF_ProcessContainer = styled.div`
+const SFProcessContainer = styled.div`
     display : flex;
 
     div:first-child{
@@ -183,13 +183,13 @@ const SF_ProcessContainer = styled.div`
 `;
 
 
-const SF_process = styled.div`
+const SFprocess = styled.div`
     display : flex;
     align-items : center;
     justify-content : center;
 `;
 
-const SF_MusicSheet = styled.div`
+const SFMusicSheet = styled.div`
     width : 100%;
     height : 300px;
     background-color : white;
@@ -199,7 +199,7 @@ const SF_MusicSheet = styled.div`
     }
 `;
 
-const SF_Lyric = styled.div`
+const SFLyric = styled.div`
     width : 100%;
     height : 50%;
 `
@@ -237,22 +237,22 @@ export default function Detail() {
             sample &&
         <SampleFixed>
             <SFContainer>
-                <SF_Header>
-                    <SF_title>
+                <SFHeader>
+                    <SFtitle>
                         샘플링
-                    </SF_title>
-                    <SF_ProcessContainer>
-                        <SF_process>진행상황 1/10</SF_process>
-                        <SF_closeBtn onClick={clickSample}>
+                    </SFtitle>
+                    <SFProcessContainer>
+                        <SFprocess>진행상황 1/10</SFprocess>
+                        <SFcloseBtn onClick={clickSample}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill='white'  viewBox="0 0 384 512"><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/>
                             </svg>
-                        </SF_closeBtn>
-                    </SF_ProcessContainer>
-                </SF_Header>
-                <SF_MusicSheet>
-                    <SF_Lyric></SF_Lyric>
-                    <SF_Lyric></SF_Lyric>
-                </SF_MusicSheet>
+                        </SFcloseBtn>
+                    </SFProcessContainer>
+                </SFHeader>
+                <SFMusicSheet>
+                    <SFLyric></SFLyric>
+                    <SFLyric></SFLyric>
+                </SFMusicSheet>
             </SFContainer>
         </SampleFixed>
         }

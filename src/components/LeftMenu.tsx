@@ -1,7 +1,7 @@
-import React, { useState ,ChangeEvent} from "react";
+import React from "react";
 import styled from "styled-components";
 import "../styles/font.css";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import SearchBBar from "./SearchBar";
 
 const Wrapper = styled.div`
@@ -49,17 +49,6 @@ const HeaderIcon = styled.img`
 `
 
 
-const Svg = styled.svg`
-    width : 15px; 
-    height : 15px;
-    position : absolute;
-    top : 7px;
-    right : 10px;
-    z-index : 1;
-    cursor : pointer;
-    
-
-`
 
 const Item = styled.li`
     width : 80%;

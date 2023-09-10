@@ -3,7 +3,7 @@ import { styled} from 'styled-components';
 import Layout from "../components/Layout";
 import serverURL from "../asset/Url";
 import { IData } from "../components/Chart";
-import axios from "axios";
+
 
 
 const chartCrawlingURL = `http://${serverURL}/song/chartjson`;
