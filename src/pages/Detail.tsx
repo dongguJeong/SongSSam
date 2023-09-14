@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import { styled } from 'styled-components';
 import "../styles/global.css";
+import PerfectScore from '../components/PerfectScore';
 
 const Wrapper = styled.div` 
   width : 80%;
   margin-left : 10%;
   padding-top : 80px;
+  
 `
 
 const Container = styled.div`
@@ -80,19 +82,7 @@ const SampleCheck = styled.div`
     }
 `;
 
-const CoachingContainer = styled.div`
-    width : 100%;
-    margin-top : 30px;
-`
 
-const MusicSheetContainer = styled.div``;
-
-const MusicSheet = styled.div`
-    background-color : gray;
-    width  : 100%;
-    height : 400px;
-    
-`;
 
 const Square = styled.div`
     width : 130px;
@@ -124,7 +114,7 @@ const OtherCol = styled.div`
 
 const SampleFixed = styled.div`
     position : fixed;
-    top : 20%; ;
+    top : 20%; 
     left : var(--SampleFixed-ml);
     width : 1050px;
     height : 370px;
@@ -204,6 +194,13 @@ const SFLyric = styled.div`
     height : 50%;
 `
 
+const PerfectFixed = styled(SampleFixed)`
+    height : 700px;
+    top : 10%;
+    overflow : scroll;
+    
+`
+
 export default function Detail() {
 
     const [sample, setSample] = useState(false);
@@ -211,7 +208,13 @@ export default function Detail() {
         setSample((cur) => !(cur));
     }
 
-  return <Layout>
+    const [Perfect, setPerfect] = useState(false);
+    const clickPerfect = () => {
+        setPerfect((cur) => !(cur));
+    }
+
+  return (
+  <Layout>
      <Wrapper>
        <Container>
         <SongContainer>
@@ -230,6 +233,13 @@ export default function Detail() {
             <SampleWrite>샘플링이 필요합니다</SampleWrite>
             <SampleCheck>
                 <button onClick={clickSample}>샘플링 하기</button>
+            </SampleCheck>
+        </SampleContainer>
+
+        <SampleContainer>
+            <SampleWrite>내 목소리로 노래부르기</SampleWrite>
+            <SampleCheck>
+                <button onClick={() => setPerfect((cur) => !cur )}>퍼펙트 싱어</button>
             </SampleCheck>
         </SampleContainer>
 
@@ -255,18 +265,12 @@ export default function Detail() {
                 </SFMusicSheet>
             </SFContainer>
         </SampleFixed>
+
         }
-
-
-
+        {
+            Perfect && <PerfectScore></PerfectScore>
+        }
         
-        <CoachingContainer>
-            <MusicSheetContainer>
-                <MusicSheet>
-                </MusicSheet>
-            </MusicSheetContainer>
-        </CoachingContainer>
-
         <OtherContainer>
             <OtherCol>
             <OtherTitle>같은 가수의 다른 곡들</OtherTitle>
@@ -305,7 +309,7 @@ export default function Detail() {
     </Wrapper>
    
   </Layout>
-   
+  )
   
 }
 

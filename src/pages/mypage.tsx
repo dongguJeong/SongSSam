@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import styled from 'styled-components';
-import { AnimatePresence, motion } from 'framer-motion';
 
 import "../styles/global.css";
-import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { getAccessToken } from '../redux/tokenSlice';
 
 const Wrapper = styled.div`
   width : 80%;
@@ -74,187 +74,44 @@ const ProfileInner = styled.div`
     display : flex;
 `
 
-
-
-const GenreContainer =styled.div`
-
-`;
-const GenreEdit = styled.div`
-    display : flex;
-    margin-top : 25px;
-    margin-bottom : 20px;
-    div:first-child {
-      font-size : 25px;
-    }
-
-    div:last-child{
-
-      color : var(--iconColor);
-      margin-left : 5px;
-      text-decoration : underline;
-      cursor : pointer;
-    }
-
-    div:last-child:hover{
-      color : #0013de;
-    }
-
-`;
-
-
-
-const GenreList = styled.div``;
-
-const Genre = styled.div`
-    display : grid;
-    grid-template-columns : repeat(2, 100px);
-    grid-gap : 20px;
-
-    list-style : none;
-    font-size : 17px;
-    
-    svg{
-      transform : rotateZ(20deg);
-      margin-right : 10px;
-    }
-
-`;
-
-const PreferBox = styled(motion.div)`
-    position : absolute;
-    top : 5%; 
-    left : var(--PreferBox-ml);
-    width : 800px;
-    height : var(--PreferBox-height);
-    background: #FFBA46;
-    border-radius : 15px;
-    box-shadow : 0px 4px 6px -1px rgb(0,0,0,.3);
-    padding : 15px;
-    overflow : scroll;
-
-`;
-const P_container = styled.div``;
-
-const P_header = styled.div`
-    display : flex;
-    justify-content : space-between;
-    width : 100%;
-    height : 50px;
-    background-color : white;
-    border-radius : 15px;
-    align-items : center;
-    margin-bottom : 20px;
-    padding-right : 10px;
-    padding-left : 10px;
-    box-shadow :  0px 4px 6px -1px rgb(0,0,0,.3);
-
-
-`;
-
-const P_body = styled.div`
-
-    width : 90%;
+interface IProfile {
   
-    display : grid;
-    grid-template-columns : repeat(4, 150px);
-    grid-gap : 20px;
-    margin : 0 auto;
-    padding-left : 2%;
-
-`;
-
-
-const P_header_title = styled.div`
-
-
-`;
-
-const SF_closeBtn = styled.div`
-    width : 30px;
-    height : 30px;
-    border-radius : 50%;
-    color : white;
-    background-color : rgba(0,0,0,0.3);
-    
-    display : flex;
-    align-items : center;
-    justify-content : center;
-    cursor : pointer;
-
-    svg{
-        width : 17px;
-        height : 17px;
-    }
-`;
-
-
-const P_item_container = styled.div<{bgPath : string}>`
-
-    background-color : white;
-    display : flex;
-    box-shadow : 0px 4px 6px -1px rgb(0,0,0,.3);
-
-    
-    align-items: center;
-    justify-content : center;
-    border-radius : 20px;
-    height : 150px;
-    align-items : end;
-    background-image : url(${prop => prop.bgPath});
-    background-size : cover;
-    background-position: center;
-    
-
-    div{
-      text-align : center;
-    }
-
-`;
-
-const loginVars = {
-  invisible : {
-    y : 30,
-    opacity : 0,
-    
-    transition : {
-      type : "tween",
-      duration : 0.5
-    }
-  },
-
-  visible : {
-    y : 0,
-    opacity : 1,
-
-    transition : {
-      type : "tween",
-      
-    }
-    
-  },
-
-  exit : {
-    y : 30,
-    opacity : 0,
-   
-    transition : {
-      duration : 0.8
-    }
-  }
-
 }
-
-
 
 
 function MyPage() {
 
-  const movePage = useNavigate();
+  const [profileData , setProfileData] = useState([]);
 
-  const [edit, setEdit] = useState(false);
-  const clickEdit = () => {
-    setEdit((cur) => !cur);
-  }
+  const AToken = useSelector(getAccessToken);
+
+  useEffect(() => {
+    const fetchData =async () => { 
+
+      try{
+        const res = await fetch("http://songssam.site:8080/member/info",
+            {
+              method : "GET",
+              headers : {
+                Authorization : `Bearer ${AToken}`
+              }
+            }
+        )
+
+        const data = await res.json();
+        setProfileData(data);
+        console.log(data);
+
+       }catch(err){
+        console.log(err);
+       }
+      }
+    
+
+    fetchData();
+
+  },[])
+  
 
 
   return (<Layout>
@@ -273,15 +130,7 @@ function MyPage() {
             <h2>qwerty@naver.com</h2>
           </ProfileSinger>
           </ProfileInner>
-          <GenreContainer>
-            
-            <GenreEdit>
-              <div>선호장르</div>
-            </GenreEdit>
-      
-
-            
-          </GenreContainer>
+          
         </ProfileCol>   
       </Profile>
 

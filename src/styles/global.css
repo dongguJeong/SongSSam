@@ -78,9 +78,12 @@ table {
 }
 
 
-@media only screen and (min-height : 900px)  {
+@media only screen and (min-width : 900px)  {
 	:root{
 		--PreferBox-height : 800px;
+		--Canvas-width : 1000px;
+		--Canvas-height : 500px;
+		
 	 }
 	}
 

@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { PitchDetector } from 'pitchy';
 import {  useSelector } from 'react-redux';
 import { getAccessToken } from '../redux/tokenSlice';
-
+import styled from 'styled-components';
+import '../styles/global.css';
 
 interface INote{
   startX : number,
@@ -19,8 +20,29 @@ interface ISaveVoice{
 }
 
 
+const SectionTitle = styled.h1`
+  margin-top : 10px;
+`
+const RecordStartBtn = styled.button`
+  border : none;
+  color : white;
+  background-color : ${(props) => (props.disabled ? 'rgba(0,0,0,0.5)' : 'var(--iconColor)')};
+  border-radius : 10px;
+  cursor : ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+  padding : 20px 10px;
+  font-size  :15px;
+  margin-right : 10px;
+  box-shadow : 0px 4px 6px -1px rgb(0,0,0,.3);
+`
+const RecordStopBtn = styled(RecordStartBtn)``
 
-function Singing() {
+const ClipContainer = styled.h1``
+const ClipTitle = styled.h2``
+const ClipAudio = styled.audio``
+
+
+
+function PerfectScore() {
   const [recording, setRecording] = useState(false);
   const [clips, setClips] = useState<ISaveVoice[]>([]);
   const [count, setCount] = useState(1);
@@ -31,10 +53,10 @@ function Singing() {
   const voiceArray=voiceRef.current;
   
   // Canvas 설정
-  const canvasWidth = 1400;
+  const canvasWidth = 950;
   const canvasHeight = 500;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const canvasHalf = canvasWidth / 2;
+  const canvasHalf = canvasWidth / 4;
   
   
   
@@ -117,12 +139,10 @@ function Singing() {
 
 
     //목소리 분석
-    if (Math.round(clarity * 100) > 80) {
+    if (Math.round(clarity * 100) > 50) {
 
       //들어온 목소리에 대해서 미디 번호를 알아내고
       midi = freqToNote(Math.round(pitch * 10) / 10);
-
-      
 
       if( (midi <= 최고음) && (midi >= 최저음) ){
        const startY= 최고음시작점+Math.abs(최고음 - midi) * 0.5 * lineHeight;
@@ -361,16 +381,18 @@ function Singing() {
       <canvas height={canvasHeight} width={canvasWidth} ref={canvasRef}></canvas>
 
       <div>
-        <span>녹음 클립들</span>
-        <button onClick={handleStartRecording} disabled={recording}>
-          녹음시작
-        </button>
-        <button onClick={handleStopRecording} disabled={!recording}>
-          녹음종료
-        </button>
+        
+        <RecordStartBtn onClick={handleStartRecording} disabled={recording}>
+          <span>녹음시작</span>
+        </RecordStartBtn>
+        <RecordStopBtn onClick={handleStopRecording} disabled={!recording}>
+          <span>녹음종료</span>
+        </RecordStopBtn>
       </div>
 
+        <SectionTitle>녹음 클립들</SectionTitle>
       <section>
+        
         {clips.map((clip, i) => (
           <div key={i}>
             <h1>{clip.clipName}</h1>
@@ -383,4 +405,4 @@ function Singing() {
   );
 }
 
-export default Singing;
+export default PerfectScore;

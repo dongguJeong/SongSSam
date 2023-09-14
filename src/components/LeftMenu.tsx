@@ -122,11 +122,6 @@ function LeftMenu(){
                 <span  >내 정보</span>
             </Item>
 
-            
-            <Item onClick={() => move("/singing")}>
-                <span >목소리 샘플링(test)</span>
-
-            </Item>
 
             <Item onClick={() => move("/prefer")}>
                 <span >선호하는 노래 조사(임시)</span>
