@@ -4,7 +4,8 @@ import React, { useEffect,useState } from "react";
 import serverURL from "../asset/Url";
 import Chart, { IData } from "../components/Chart";
 import styled from "styled-components";
-
+import { useSelector } from "react-redux";
+import { getAccessToken } from "../redux/tokenSlice";
 
 const Wrapper = styled.div`
   width : 80%;
@@ -26,36 +27,43 @@ export default function Search(){
 
     const [search,setSearch] = useState<IData[]>([]);
 
-    const searchAPI = ( target : string | undefined, mode : number ) => {
-        return `http://${serverURL}/v3/search?target=${target}&mode=${mode}`;
-    }
+    
+
+    const AToken = useSelector(getAccessToken);
+    
 
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch(searchAPI(target, 0), {
-              method: 'GET',
-            });
-    
-            if (!response.ok) {
-              throw new Error('Network response was not ok.');
-            }
-    
-            const data = await response.json();
-            console.log(data);
-            setSearch(data);
+            const response = await (await fetch(`http://${serverURL}/song/search?target=${target}&mode=0`,
+              {
+                method: "GET",
+              }
+            )).json();
+
+            console.log(response);
+            setSearch(response);
+
+            
           } catch (error) {
             console.error('Error fetching data:', error);
           }
         };
     
         fetchData(); 
-      }, [target]);
+      }, [target,AToken]);
+
+
+      useEffect(() => 
+        console.log(search)
+      ,[target]);
+
+
 
     return(
         <Layout>
             <Wrapper>
-            <Chart title={makeTitle()} btnTitle="일단 진행 시켜" data={search}/>
+              <Chart title={makeTitle()} btnTitle ="커버곡 만들러 가기"  data={search} />
             </Wrapper>
         </Layout>
     )

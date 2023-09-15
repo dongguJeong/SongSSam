@@ -70,7 +70,7 @@ const SongTitle = styled.h3`
 `;
 const Singer = styled.h3`
   text-align : start;
-  width : 100px;
+  width : 130px;
 
 `;
 
