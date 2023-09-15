@@ -33,6 +33,7 @@ const RecordStartBtn = styled.button`
   font-size  :15px;
   margin-right : 10px;
   box-shadow : 0px 4px 6px -1px rgb(0,0,0,.3);
+
 `
 const RecordStopBtn = styled(RecordStartBtn)``
 
@@ -328,7 +329,7 @@ function PerfectScore() {
   const saveClip = () => {
     const clipName = `${count}번 클립`;
     setCount((prev) => prev + 1);
-    const blob = new Blob(chunks, { type: 'audio/mp3' });
+    const blob = new Blob(chunks, { type: 'audio/wav' });
     setChunks(() => []);
     const audioURL = window.URL.createObjectURL(blob);
     setClips((prev) => [...prev, { clipName, audioURL, blob }]);
@@ -341,7 +342,7 @@ function PerfectScore() {
     const voiceURL = "http://songssam.site:8080/member/vocal_upload";
     const formData = new FormData();
     const audioBlob = new Blob(chunks, { type: 'audio/mp3' });
-    formData.append('file', audioBlob, 'audio.mp3'  ); // 'audioBlob'는 서버에서 받을 때 사용할 필드 이름
+    formData.append('file', audioBlob, 'audio.wav'  ); // 'audioBlob'는 서버에서 받을 때 사용할 필드 이름
 
   // fetch를 사용하여 서버로 전송
   fetch(voiceURL, {

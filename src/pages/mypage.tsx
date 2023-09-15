@@ -75,7 +75,11 @@ const ProfileInner = styled.div`
 `
 
 interface IProfile {
-  
+  id : number,
+  email : string,
+  nickname : string,
+  profile : string,
+  role : string,
 }
 
 
@@ -84,6 +88,7 @@ function MyPage() {
   const [profileData , setProfileData] = useState([]);
 
   const AToken = useSelector(getAccessToken);
+  console.log(AToken);
 
   useEffect(() => {
     const fetchData =async () => { 
@@ -93,7 +98,8 @@ function MyPage() {
             {
               method : "GET",
               headers : {
-                Authorization : `Bearer ${AToken}`
+                Authorization : `Bearer ${AToken}`,
+                Origin : 'http://localhost:3000',
               }
             }
         )
@@ -110,7 +116,7 @@ function MyPage() {
 
     fetchData();
 
-  },[])
+  },[AToken])
   
 
 

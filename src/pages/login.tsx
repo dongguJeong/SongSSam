@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { setAccessToken } from "../redux/tokenSlice";
+import { setAccessToken, setRefreshToken } from "../redux/tokenSlice";
 import { useDispatch } from 'react-redux';
 
 
@@ -42,7 +42,6 @@ export default function Redirect(){
 
     const kakaoLogin = async(code : string | string[] | undefined) => {
 
-        
         try {
           const res = await axios.post(`http://${server}/auth/login`, 
           {
@@ -51,10 +50,13 @@ export default function Redirect(){
           }, );
 
 
-          console.log("생성 : ", res); 
+          console.log("생성 : ", res.data); 
           
-          dispatch(setAccessToken(res.data));
 
+          dispatch(setAccessToken(res.data.response.accessToken));
+          dispatch(setRefreshToken(res.data.response.refreshToken));
+          
+          
 
           movePage("/");
           

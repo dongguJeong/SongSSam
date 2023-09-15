@@ -45,7 +45,6 @@ const HeaderIcon = styled.img`
    
     width : 35px;
     height : 35px;
-
 `
 
 
@@ -56,7 +55,7 @@ const Item = styled.li`
     margin-bottom  : 20px;
     display : flex;
     align-items : center;
-    
+    cursor : pointer;
 
     &:hover{
         background-color : white;

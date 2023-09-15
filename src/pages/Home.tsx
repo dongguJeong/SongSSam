@@ -16,7 +16,7 @@ const Wrapper = styled.div`
 `
 
 
-const chartCrawlingURL = `http://${serverURL}/v3/chartjson`;
+const chartCrawlingURL = `http://${serverURL}/song/chartjson`;
 
 function Search() {
 
@@ -55,7 +55,6 @@ function Search() {
     
 
         <SearchBBar small={false} />
-
         <Chart title="인기 차트" btnTitle ="커버곡 만들러 가기"  data={chartData} />
       </Wrapper>
       </Layout>

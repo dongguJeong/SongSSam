@@ -112,7 +112,6 @@ function Prefer(){
 
         const clickPrefer = ( {title ,genre ,artist} : IClick) => {
 
-            
             const index = clicked.findIndex((i) => i.title === title);
             
             if( index === -1) //추가
@@ -122,21 +121,25 @@ function Prefer(){
                 }
 
                 const temp  = {title,genre,artist};
-                setClicked([...clicked , temp]);
+                setClicked((prev) => [...prev , temp]);
                 setCount((cur) => cur+1);
-
             }
 
             else{ // 삭제
                 setClicked([ ...clicked.slice(0,index), ...clicked.slice(index+1) ] );
                 setCount((cur) => cur-1);
             }  
-            console.log(clicked);
+            
         }
 
         const handleSubmit = () => {
+            
             alert("제출했습니다");
         }
+
+        useEffect(() => {
+            console.log(clicked);
+          }, [clicked]);
 
     return(
         <Layout>

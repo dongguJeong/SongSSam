@@ -201,6 +201,8 @@ const PerfectFixed = styled(SampleFixed)`
     
 `
 
+
+
 export default function Detail() {
 
     const [sample, setSample] = useState(false);
