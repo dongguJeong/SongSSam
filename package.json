@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/react": "^18.2.21",
     "@types/react-router-dom": "^5.3.3",
     "@types/recoil": "^0.0.9",
     "@types/styled-components": "^5.1.26",

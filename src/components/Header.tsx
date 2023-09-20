@@ -206,7 +206,6 @@ const CloseBtn = styled.div`
   width : 15px;
   height : 15px;
   }
-
 `
 
 
@@ -216,19 +215,25 @@ function MainHeader() {
   const dispatch = useDispatch();  
   const movePage = useNavigate();
   const [click, setClick] = useState(false);
+  const accessToken = useSelector(getAccessToken);
 
   
 
   const clickLogin = () =>{
+    console.log(accessToken);
     setClick((cur) => !(cur));
   }
 
   
   const clickLogout = () => {
     dispatch(deleteAccessToken());
+    console.log(accessToken);
     movePage("/");
   }
 
+  
+
+  
 
   return <> 
 
@@ -239,7 +244,7 @@ function MainHeader() {
           </LinkContainer>
         </Column>
         <Column >
-          <LoginBtn onClick={useSelector(getAccessToken) ? clickLogout : clickLogin}>{useSelector(getAccessToken) ? "로그아웃" : "로그인"}</LoginBtn>
+          <LoginBtn onClick={ accessToken ? clickLogout : clickLogin}>{accessToken ? "로그아웃" : "로그인"}</LoginBtn>
         </Column>
       </Container>
 

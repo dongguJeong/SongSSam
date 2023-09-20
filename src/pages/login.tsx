@@ -67,8 +67,6 @@ export default function Redirect(){
         }
       };
 
-       
-
         useEffect(()=> {
 
         let code = new URL(window.location.href).searchParams.get("code"); 

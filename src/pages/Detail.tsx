@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import { styled } from 'styled-components';
 import "../styles/global.css";
 import PerfectScore from '../components/PerfectScore';
+import { useParams, useSearchParams } from 'react-router-dom';
+import AudioContainer from '../components/AudioContainer';
 
 const Wrapper = styled.div` 
   width : 80%;
@@ -19,7 +21,7 @@ const SongContainer = styled.div`
 
 `;
 
-const SongImg = styled.div`
+const SongImg = styled.img`
     width : 200px;
     height : 200px;
     background-color : gray;
@@ -194,39 +196,35 @@ const SFLyric = styled.div`
     height : 50%;
 `
 
-const PerfectFixed = styled(SampleFixed)`
-    height : 700px;
-    top : 10%;
-    overflow : scroll;
-    
-`
+
 
 
 
 export default function Detail() {
 
+    const {title, singer,imgUrl} = useParams();
+   
     const [sample, setSample] = useState(false);
     const clickSample = () => {
         setSample((cur) => !(cur));
     }
 
     const [Perfect, setPerfect] = useState(false);
-    const clickPerfect = () => {
-        setPerfect((cur) => !(cur));
-    }
+    
+    
 
   return (
   <Layout>
      <Wrapper>
        <Container>
         <SongContainer>
-            <SongImg/>
+            <SongImg src={imgUrl} alt='Song Image'/>
             <SongCol>
                 <SongTitle>
-                    <span>제목</span>
+                    <span>{title}</span>
                 </SongTitle>
                 <Singer>
-                    <span>가수</span>
+                    <span>{singer}</span>
                 </Singer>
             </SongCol>
         </SongContainer>
@@ -244,6 +242,9 @@ export default function Detail() {
                 <button onClick={() => setPerfect((cur) => !cur )}>퍼펙트 싱어</button>
             </SampleCheck>
         </SampleContainer>
+
+
+        <AudioContainer audioSource={"/audio/헤어지자말해요.mp3"}></AudioContainer>
 
         {
             sample &&
@@ -269,6 +270,7 @@ export default function Detail() {
         </SampleFixed>
 
         }
+
         {
             Perfect && <PerfectScore></PerfectScore>
         }

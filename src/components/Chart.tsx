@@ -168,7 +168,7 @@ export default function Chart( {title,btnTitle,data}: IChart  ){
 
               <SongColumn>
                 <SongButton>
-                  <Link to={`/detail/{song.title}`} > {btnTitle} </Link>
+                  <Link to={`/detail/${song.artist}/${song.title}/${encodeURIComponent(song.imgUrl)}`} > {btnTitle} </Link>
                 </SongButton>
               </SongColumn>
             </SongContainer>)}

@@ -26,17 +26,24 @@ const Profile = styled.div`
 `;
 
 
-const Square = styled.div`
+const Square = styled.div<{bgPath : string}>`
     width : 200px;
     height : 200px;
     border-radius : 50%;
-    background-color : gray;
     margin-right : 100px;
+
+    background-position : ${props => (props.bgPath == '/img/user-solid.svg' ? 'center bottom' : 'center')};
+    background-repeat : no-repeat;
+    background-image :  url(${props => props.bgPath});
+    background-color: ${props => (props.bgPath == '/img/user-solid.svg' ?  'rgba(128, 128, 128, 0.7)': "transparent")};
+    background-blend-mode: multiply;
+
 `;
 
 const ProfileCol = styled.div`
     display : flex;
     flex-direction : column;
+    
     
 `;
 
@@ -54,7 +61,7 @@ const ProfileTitle = styled.div`
     font-size : 30px;
   }
 
-  margin-bottom  : 15px;
+  margin-bottom  :30px;
     
     
 `
@@ -71,21 +78,21 @@ const ProfileSinger = styled.div`
 `
 
 const ProfileInner = styled.div`
-    display : flex;
+    padding-top :30px;
 `
 
 interface IProfile {
   id : number,
   email : string,
   nickname : string,
-  profile : string,
+  profileUrl : string ,
   role : string,
 }
 
 
 function MyPage() {
 
-  const [profileData , setProfileData] = useState([]);
+  const [profileData , setProfileData] = useState<IProfile>();
 
   const AToken = useSelector(getAccessToken);
   console.log(AToken);
@@ -106,7 +113,7 @@ function MyPage() {
 
         const data = await res.json();
         setProfileData(data);
-        console.log(data);
+        
 
        }catch(err){
         console.log(err);
@@ -118,22 +125,23 @@ function MyPage() {
 
   },[AToken])
   
+  const profileImage = profileData?.profileUrl !== undefined ? profileData.profileUrl : '/img/user-solid.svg';
 
 
   return (<Layout>
     
     <Wrapper>
       <Profile>
-        <Square/>
+        <Square bgPath = {profileImage}/>
         <ProfileCol>
           <ProfileInner>
           <ProfileTitle>
             <h3>이름</h3>
-            <h1>홍길동</h1>
+            <h1>정동구</h1>
           </ProfileTitle>
           <ProfileSinger> 
             <h3>카카오톡 이메일</h3>
-            <h2>qwerty@naver.com</h2>
+            <h2>naver.com</h2>
           </ProfileSinger>
           </ProfileInner>
           

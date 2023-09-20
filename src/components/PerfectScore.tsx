@@ -4,6 +4,7 @@ import {  useSelector } from 'react-redux';
 import { getAccessToken } from '../redux/tokenSlice';
 import styled from 'styled-components';
 import '../styles/global.css';
+import AudioContainer from './AudioContainer';
 
 interface INote{
   startX : number,
@@ -22,24 +23,33 @@ interface ISaveVoice{
 
 const SectionTitle = styled.h1`
   margin-top : 10px;
+  margin-bottom : 10px;
 `
 const RecordStartBtn = styled.button`
   border : none;
   color : white;
-  background-color : ${(props) => (props.disabled ? 'rgba(0,0,0,0.5)' : 'var(--iconColor)')};
+  background-color : ${(props) => (props.disabled ? 'rgba(0,0,0,0.5)' : 'rgba(0,142,245,1)')};
   border-radius : 10px;
   cursor : ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   padding : 20px 10px;
   font-size  :15px;
   margin-right : 10px;
-  box-shadow : 0px 4px 6px -1px rgb(0,0,0,.3);
+  box-shadow: ${(props) =>
+    props.disabled
+      ? '2px 4px 6px -1px rgb(0,0,0,.3)'
+      : '2px 4px 6px -1px rgba(0,142,245,1)'};
 
+  &:hover {
+    background-color: ${(props) => (props.disabled ? 'rgba(0,0,0,0.5)' : 'rgba(0,142,245,0.8)')};
+  }
 `
-const RecordStopBtn = styled(RecordStartBtn)``
 
-const ClipContainer = styled.h1``
-const ClipTitle = styled.h2``
-const ClipAudio = styled.audio``
+const RecordBtnContainer = styled.div`
+  margin-bottom : 15px;
+  margin-top : 10px;
+`
+const RecordStopBtn = styled(RecordStartBtn)``;
+
 
 
 
@@ -58,7 +68,7 @@ function PerfectScore() {
   const canvasHeight = 500;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasHalf = canvasWidth / 4;
-  
+  const redlineWidth = 3
   
   
 
@@ -82,48 +92,7 @@ function PerfectScore() {
     audioContextRef.current = new AudioContext();
   }, []);
 
-  //오선지 그리기
-  useEffect(() => {
-
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
-
-    if(ctx && canvas) {
-    
-    ctx.fillStyle = 'white';
-    canvas.style.border = '1px solid black';
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    
-    ctx.strokeStyle = 'black';
-
-    for (let i = 1; i <= lineHeight; i++) {
-      const y = i * lineHeight;
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      if(i === 8){
-        ctx.lineWidth = 5;
-      }
-      else{
-        ctx.lineWidth = 1;
-      }
-    
-
-      ctx.lineTo(canvasWidth, y);
-      ctx.stroke();
-    }
-
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = 'red';
-    ctx.beginPath();
-    ctx.moveTo(canvasHalf, 0);
-    ctx.lineTo(canvasHalf, canvasHeight);
-    ctx.stroke();
-    }
-    
-  }, [canvasHeight]);
-
-
-
+  
   // 실시간 목소리 pitch 탐지
   function updatePitch(analyserNode : AnalyserNode, detector : PitchDetector<Float32Array> , input : Float32Array, sampleRate : number) {
     analyserNode.getFloatTimeDomainData(input);
@@ -222,7 +191,7 @@ function PerfectScore() {
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d');
 
-    //오선지 새로 그리기
+    //오선지  그리기
     if(ctx && canvas){
     
     ctx.clearRect(0,0,canvas.width, canvas.height);
@@ -239,7 +208,7 @@ function PerfectScore() {
       ctx.moveTo(0, y);
       
       
-      if(i=== 8){
+      if(i=== 7){
         ctx.lineWidth = 5;
       }
       else{
@@ -250,7 +219,7 @@ function PerfectScore() {
       ctx.stroke();
     }
 
-    ctx.lineWidth = 5;
+    ctx.lineWidth = redlineWidth;
     ctx.strokeStyle = 'red';
     ctx.beginPath();
     ctx.moveTo(canvasHalf, 0);
@@ -381,7 +350,7 @@ function PerfectScore() {
 
       <canvas height={canvasHeight} width={canvasWidth} ref={canvasRef}></canvas>
 
-      <div>
+      <RecordBtnContainer>
         
         <RecordStartBtn onClick={handleStartRecording} disabled={recording}>
           <span>녹음시작</span>
@@ -389,18 +358,21 @@ function PerfectScore() {
         <RecordStopBtn onClick={handleStopRecording} disabled={!recording}>
           <span>녹음종료</span>
         </RecordStopBtn>
-      </div>
+      </RecordBtnContainer>
 
-        <SectionTitle>녹음 클립들</SectionTitle>
-      <section>
         
+      <section>
+        <SectionTitle>녹음 클립들</SectionTitle>
         {clips.map((clip, i) => (
           <div key={i}>
             <h1>{clip.clipName}</h1>
+            
             <audio controls src={clip.audioURL}></audio>
             <button onClick={() => 음성전송(clip.blob)}>파일 전송</button>
           </div>
         ))}
+
+         
       </section>
     </div>
   );

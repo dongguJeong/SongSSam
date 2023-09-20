@@ -32,7 +32,7 @@ function Search() {
           }
         )).json();
         
-        console.log(response);
+        
         setChartData(response);
 
       }catch(err){
@@ -52,7 +52,6 @@ function Search() {
 
    <Wrapper>
 
-    
 
         <SearchBBar small={false} />
         <Chart title="인기 차트" btnTitle ="커버곡 만들러 가기"  data={chartData} />

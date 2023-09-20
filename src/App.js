@@ -16,7 +16,7 @@ function App() {
           <Route path='/search/:target' element ={<Search></Search>}></Route>
           <Route path ="/login" element={<Redirect/>}> </Route>
           <Route path ="/mypage" element={<MyPage></MyPage>}> </Route>
-          <Route path ="/detail/:target" element={<Detail></Detail>}> </Route>
+          <Route path ="/detail/:singer/:title/:imgUrl" element={<Detail></Detail>}> </Route>
           <Route path ="/" element={<Home></Home>}> </Route>
         </Routes>
       </BrowserRouter>
