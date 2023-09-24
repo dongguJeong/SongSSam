@@ -1,2 +1,2 @@
-const serverURL = "songssam.site:8080";
+const serverURL = "songssam.site:8443";
 export default serverURL;

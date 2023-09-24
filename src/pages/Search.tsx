@@ -5,7 +5,7 @@ import serverURL from "../asset/Url";
 import Chart, { IData } from "../components/Chart";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-import { getAccessToken } from "../redux/tokenSlice";
+import { RootState } from "../redux/store";
 
 const Wrapper = styled.div`
   width : 80%;
@@ -29,13 +29,14 @@ export default function Search(){
 
     
 
-    const AToken = useSelector(getAccessToken);
+    const accessToken = useSelector((state: RootState) => state.accessToken);
+
     
 
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await (await fetch(`http://${serverURL}/song/search?target=${target}&mode=0`,
+            const response = await (await fetch(`https://${serverURL}/song/search?target=${target}&mode=0`,
               {
                 method: "GET",
               }
@@ -51,12 +52,7 @@ export default function Search(){
         };
     
         fetchData(); 
-      }, [target,AToken]);
-
-
-      useEffect(() => 
-        console.log(search)
-      ,[target]);
+      }, [target,accessToken]);
 
 
 

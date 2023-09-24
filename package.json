@@ -2,7 +2,7 @@
   "name": "reactv3",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://songssam.site:8080",
+  "proxy": "http://songssam.site:8443",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.17.0",

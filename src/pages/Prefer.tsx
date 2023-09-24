@@ -6,7 +6,6 @@ import { IData } from "../components/Chart";
 
 
 
-const chartCrawlingURL = `http://${serverURL}/song/chartjson`;
 
 
 const Wrapper = styled.div`
@@ -89,7 +88,7 @@ function Prefer(){
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await (await fetch(chartCrawlingURL,
+            const response = await (await fetch(`https://${serverURL}/song/chartjson`,
                 {
                   method: "GET",
                 }

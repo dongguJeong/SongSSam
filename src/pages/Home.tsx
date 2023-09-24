@@ -16,8 +16,6 @@ const Wrapper = styled.div`
 `
 
 
-const chartCrawlingURL = `http://${serverURL}/song/chartjson`;
-
 function Search() {
 
   
@@ -26,9 +24,10 @@ function Search() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await (await fetch(chartCrawlingURL,
+        const response = await (await fetch(`https://${serverURL}/song/chartjson`,
           {
             method: "GET",
+            
           }
         )).json();
         

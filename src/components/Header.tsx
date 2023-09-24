@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import {KAKAO_AUTH_URL} from "../components/KaKao";
@@ -6,9 +6,11 @@ import {KAKAO_AUTH_URL} from "../components/KaKao";
 import "../styles/global.css";
 import { useNavigate } from 'react-router-dom';
 import {  useSelector } from 'react-redux/es/hooks/useSelector';
-import { getAccessToken,deleteAccessToken } from '../redux/tokenSlice';
+import { deleteAccessToken } from '../redux/accessTokenSlice';
+import { deleteRefreshToken } from '../redux/refreshTokenSlice';
 import { useDispatch } from 'react-redux';
-
+import { RootState, persistor } from '../redux/store';
+import { Persistor } from 'redux-persist';
 
 
 const Wrapper = styled.div`
@@ -21,8 +23,6 @@ const Wrapper = styled.div`
   right : 0;
   z-index: 1;
   box-shadow : 0px 4px 6px -1px rgb(0,0,0,.3);
-
-  
 `;
 
 
@@ -36,12 +36,6 @@ const Container = styled.div`
   justify-content : space-between;
   align-items : center;
   
-
-`
-
-const HeaderTitle = styled.span`
-  font-family : "ingrid_darling";
-  font-size : 30px;
 `
 
 
@@ -79,7 +73,7 @@ const LoginContainer = styled(motion.div)`
   background-color : white  ;
   position : fixed;
   box-shadow : 1px 1px 5px 1px  rgba(0,0,0,0.2);
-  
+  z-index : 4;
   top : 25%;
   left : 45%;
   border-radius : 10px;
@@ -215,23 +209,54 @@ function MainHeader() {
   const dispatch = useDispatch();  
   const movePage = useNavigate();
   const [click, setClick] = useState(false);
-  const accessToken = useSelector(getAccessToken);
-
   
-
+  const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
+  
   const clickLogin = () =>{
-    console.log(accessToken);
-    setClick((cur) => !(cur));
+    
+    setClick((cur) => true);
+    
   }
+
+  const fetchLogOut = async () => {
+    try {
+      const response = await fetch(`https://kapi.kakao.com/v1/user/logout`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  const kakaoLogOut = async () => {
+    try {
+      await fetchLogOut();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   
   const clickLogout = () => {
     dispatch(deleteAccessToken());
-    console.log(accessToken);
+    dispatch(deleteRefreshToken());
+    persistor.purge();
+    kakaoLogOut();
+    setClick(cur => false);
+
+
     movePage("/");
   }
 
-  
+
+
+
 
   
 
@@ -244,7 +269,7 @@ function MainHeader() {
           </LinkContainer>
         </Column>
         <Column >
-          <LoginBtn onClick={ accessToken ? clickLogout : clickLogin}>{accessToken ? "로그아웃" : "로그인"}</LoginBtn>
+          <LoginBtn onClick={accessToken ?  clickLogout : clickLogin }> { accessToken ? "로그아웃" :"로그인"}</LoginBtn>
         </Column>
       </Container>
 

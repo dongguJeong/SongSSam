@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PitchDetector } from 'pitchy';
 import {  useSelector } from 'react-redux';
-import { getAccessToken } from '../redux/tokenSlice';
 import styled from 'styled-components';
 import '../styles/global.css';
 import AudioContainer from './AudioContainer';
+import serverURL from '../asset/Url';
+import { RootState } from '../redux/store';
 
 interface INote{
   startX : number,
@@ -17,6 +18,7 @@ interface ISaveVoice{
   clipName : string,
   audioURL : string,
   blob : Blob,
+  clipDurationTime : number ,
   
 }
 
@@ -59,9 +61,13 @@ function PerfectScore() {
   const [count, setCount] = useState(1);
   const [chunks, setChunks] = useState<Blob[]>([]);
   const [pitch, setPitch] = useState(0);
+  const [recordingStartTime, setRecordingStartTime] = useState<number >(0);
+  const [recordingEndTime, setRecordingEndTime] = useState<number>(0);
+
+
   const buffersize = 75;
-  const voiceRef = useRef<INote[]>(new Array(buffersize));
-  const voiceArray=voiceRef.current;
+  const voiceArray = useRef<INote[]>(new Array(buffersize));
+  
   
   // Canvas 설정
   const canvasWidth = 950;
@@ -100,8 +106,8 @@ function PerfectScore() {
 
     let midi = 0;
 
-    if(voiceArray.length >= buffersize ){
-        voiceArray.shift();
+    if(voiceArray.current.length >= buffersize ){
+        voiceArray.current.shift();
     }
 
     const startX = canvasHalf-barwidth;
@@ -109,7 +115,7 @@ function PerfectScore() {
 
 
     //목소리 분석
-    if (Math.round(clarity * 100) > 50) {
+    if (Math.round(clarity * 100) > 80) {
 
       //들어온 목소리에 대해서 미디 번호를 알아내고
       midi = freqToNote(Math.round(pitch * 10) / 10);
@@ -117,17 +123,17 @@ function PerfectScore() {
       if( (midi <= 최고음) && (midi >= 최저음) ){
        const startY= 최고음시작점+Math.abs(최고음 - midi) * 0.5 * lineHeight;
        const endY = startY + lineHeight;
-       voiceArray.push({startX : startX,endX : endX, startY: startY, endY :endY});
+       voiceArray.current.push({startX : startX,endX : endX, startY: startY, endY :endY});
       }
 
        else{
-        voiceArray.push({startX : startX,endX : endX, startY: 0, endY : 0});
+        voiceArray.current.push({startX : startX,endX : endX, startY: 0, endY : 0});
        }
       setPitch(() => midi);
 
     }else{
       midi = 0;
-      voiceArray.push({startX : startX, endX : endX, startY: 0, endY :0});
+      voiceArray.current.push({startX : startX, endX : endX, startY: 0, endY :0});
       setPitch(midi);
     }
 
@@ -164,16 +170,16 @@ function PerfectScore() {
     }
   };
 
-  const onError = (error : any) => {
-    console.error('getUserMedia를 지원하지 않는 브라우저 입니다', error);
-  };
+  
 
   
   useEffect(() => {
     navigator.mediaDevices
       .getUserMedia(constraint)
       .then(onSuccess)
-      .catch(onError);
+      .catch((error) => {
+        console.error('마이크 권한을 허용하지 않았습니다', error);
+      });
   }, []);
 
 
@@ -230,7 +236,7 @@ function PerfectScore() {
     
     ctx.strokeStyle =" blue";
 
-    for (const voice of voiceArray) {
+    for (const voice of voiceArray.current) {
 
       if (voice?.startX !== undefined && 
           voice?.startY !== undefined && 
@@ -260,7 +266,7 @@ function PerfectScore() {
      
       프레임마다실행할거();
 
-    },[voiceArray]);
+    },[]);
 
 
 
@@ -278,6 +284,7 @@ function PerfectScore() {
     setChunks(() => []); // Reset chunks
     mediaRecorderRef.current.start();
     setRecording(true);
+    setRecordingStartTime(Date.now());
     }
     else{
       console.log("미디어 레코더 없음");
@@ -292,6 +299,7 @@ function PerfectScore() {
       mediaRecorderRef.current.stop();
       setRecording(false);
       setPitch((prev) => (prev = 0));
+      setRecordingEndTime(Date.now());
     }
   };
 
@@ -301,42 +309,40 @@ function PerfectScore() {
     const blob = new Blob(chunks, { type: 'audio/wav' });
     setChunks(() => []);
     const audioURL = window.URL.createObjectURL(blob);
-    setClips((prev) => [...prev, { clipName, audioURL, blob }]);
+    const clipDurationTime = (recordingEndTime - recordingStartTime) / 1000; // 밀리초를 초로 변환
+
+
+    setClips((prev) => [...prev, { clipName, audioURL, blob , clipDurationTime}]);
   };
 
 
-  const AToken =  useSelector(getAccessToken);
-  const 음성전송 = (음성파일 : Blob) => {
-
-    const voiceURL = "http://songssam.site:8080/member/vocal_upload";
+  const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
+  const sendVoice = (음성파일 : Blob) => {
+    const voiceURL = `https://${serverURL}/member/upload`;
     const formData = new FormData();
-    const audioBlob = new Blob(chunks, { type: 'audio/mp3' });
-    formData.append('file', audioBlob, 'audio.wav'  ); // 'audioBlob'는 서버에서 받을 때 사용할 필드 이름
-
-  // fetch를 사용하여 서버로 전송
-  fetch(voiceURL, {
-    method: 'POST',
-    body: formData,
-    headers : {
-      "Authorization": "Bearer " + AToken
-    }
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('파일 업로드에 실패했습니다.');
+    formData.append('file', 음성파일, 'audio.wav');
+  
+    // fetch를 사용하여 서버로 전송
+    fetch(voiceURL, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        "Authorization": `Bearer ${accessToken}`
       }
-      return response.json(); // 서버 응답 처리
     })
-    .then((data) => {
-      console.log('파일 업로드 성공:', data);
-      // 서버 응답 처리 로직을 추가하세요.
-    })
-    .catch((error) => {
-      console.error('파일 업로드 오류:', error);
-      // 오류 처리 로직을 추가하세요.
-    });
-
+      .then((response) => {
+        if (response.ok) {
+          console.log('데이터 전송 성공'); // 200 OK 상태 코드
+        } else {
+          console.error('데이터 전송 실패'); // 오류 발생시 catch 블록으로 이동
+        }
+      })
+      .catch((error) => {
+        console.error('데이터 전송 오류:', error);
+        // 오류 처리 로직을 추가하세요.
+      });
   }
+  
 
   useEffect(() => {
     if (chunks.length > 0 && !recording) {
@@ -367,8 +373,8 @@ function PerfectScore() {
           <div key={i}>
             <h1>{clip.clipName}</h1>
             
-            <audio controls src={clip.audioURL}></audio>
-            <button onClick={() => 음성전송(clip.blob)}>파일 전송</button>
+            <AudioContainer audioSource={clip.audioURL} clipDurationTime = {clip.clipDurationTime}></AudioContainer>
+            <button onClick={() => sendVoice(clip.blob)}>파일 전송</button>
           </div>
         ))}
 

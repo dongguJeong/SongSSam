@@ -3,8 +3,7 @@ import Layout from '../components/Layout';
 import { styled } from 'styled-components';
 import "../styles/global.css";
 import PerfectScore from '../components/PerfectScore';
-import { useParams, useSearchParams } from 'react-router-dom';
-import AudioContainer from '../components/AudioContainer';
+import { useParams } from 'react-router-dom';
 
 const Wrapper = styled.div` 
   width : 80%;
@@ -209,7 +208,6 @@ export default function Detail() {
         setSample((cur) => !(cur));
     }
 
-    const [Perfect, setPerfect] = useState(false);
     
     
 
@@ -239,12 +237,11 @@ export default function Detail() {
         <SampleContainer>
             <SampleWrite>내 목소리로 노래부르기</SampleWrite>
             <SampleCheck>
-                <button onClick={() => setPerfect((cur) => !cur )}>퍼펙트 싱어</button>
+                <button>퍼펙트 싱어</button>
             </SampleCheck>
         </SampleContainer>
 
 
-        <AudioContainer audioSource={"/audio/헤어지자말해요.mp3"}></AudioContainer>
 
         {
             sample &&
@@ -272,7 +269,7 @@ export default function Detail() {
         }
 
         {
-            Perfect && <PerfectScore></PerfectScore>
+            <PerfectScore></PerfectScore>
         }
         
         <OtherContainer>

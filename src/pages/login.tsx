@@ -2,8 +2,10 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { setAccessToken, setRefreshToken } from "../redux/tokenSlice";
+import { setAccessToken } from "../redux/accessTokenSlice";
+import { setRefreshToken } from "../redux/refreshTokenSlice";
 import { useDispatch } from 'react-redux';
+import serverURL from "../asset/Url";
 
 
 const Wrapper = styled.div`
@@ -33,7 +35,7 @@ const Circle = styled.div`
     } 
 `
 
-const server = "songssam.site:8080";
+
 
 export default function Redirect(){
 
@@ -43,15 +45,12 @@ export default function Redirect(){
     const kakaoLogin = async(code : string | string[] | undefined) => {
 
         try {
-          const res = await axios.post(`http://${server}/auth/login`, 
+          const res = await axios.post(`https://${serverURL}/auth/login`, 
           {
           "authorizationCode": code // 코드를 요청의 본문에 추가
 
           }, );
 
-
-          console.log("생성 : ", res.data); 
-          
 
           dispatch(setAccessToken(res.data.response.accessToken));
           dispatch(setRefreshToken(res.data.response.refreshToken));

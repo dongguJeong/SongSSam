@@ -10,6 +10,9 @@ const AudioPlayer = styled.div`
     border-radius : 50px;
     border : 1px solid blue;
     align-items : center;
+    box-shadow : 0px 4px 6px -1px rgb(0,0,0,.3);
+
+
 
 `
 
@@ -55,7 +58,7 @@ const PlayPause = styled.div`
 const ProgressBar = styled.input`
     --bar-bg : #A3A096;
     --seek-before-width : 0;
-    --seek-before-color : #3F7AB5;
+    --seek-before-color : #FFBA46;
     --knobby : #3452a5;
     --selectedKnobby : #26c9c3;
     appearance : none;
@@ -144,7 +147,7 @@ const ProgressBar = styled.input`
 const VolumeBar = styled.input`
     --bar-bg : #A3A096;
     --seek-before-width : 100%;
-    --seek-before-color : #3F7AB5;
+    --seek-before-color : #FFBA46;
     --knobby : #3452a5;
     --selectedKnobby : #26c9c3;
     appearance : none;
@@ -251,11 +254,12 @@ const MuteBtn = styled.div`
 
     cursor : pointer;
     margin-right : 10px;
-
+    --selectedKnobby : #26c9c3;
     
     transition : all .1s;
     svg:hover{
         transform : scale(1.2);
+        fill : var(--selectedKnobby);
     }
 
     svg{
@@ -267,7 +271,7 @@ const MuteBtn = styled.div`
 
 
 
-const AudioContainer = ({audioSource} : {audioSource : string}) => {
+const AudioContainer = ({audioSource, clipDurationTime} : {audioSource : string , clipDurationTime : number}) => {
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration,setDuration] = useState(0);
@@ -285,13 +289,16 @@ const AudioContainer = ({audioSource} : {audioSource : string}) => {
     useEffect(() => {
         const progressBar = progressBarRef.current;
         const audioPlayer =audioPlayerRef.current;
-        if(audioPlayer && progressBar) {
-            const seconds = Math.floor(audioPlayer.duration);
-            setDuration(seconds);
+        if(audioPlayer && progressBar  ) {
+         
+            const seconds = Math.floor(clipDurationTime);
+            setDuration(seconds)
             progressBar.max = seconds.toString();
         }
-    },[audioPlayerRef?.current?.onloadedmetadata , audioPlayerRef?.current?.readyState])
+    },[audioPlayerRef])
 
+    
+ 
     //시간을 00:00초로 표시
     const calculateTime = (secs : number) => {
         const minutes = Math.floor(secs/ 60) ;
@@ -338,17 +345,7 @@ const AudioContainer = ({audioSource} : {audioSource : string}) => {
     }
   
 
-    const onLoadedMetadata = () => {
-        // 메타데이터 로드 시 호출될 함수
-        const audioPlayer = audioPlayerRef.current;
-        if (audioPlayer) {
-            const seconds = Math.floor(audioPlayer.duration);
-            setDuration(seconds);
-            if (progressBarRef.current) {
-                progressBarRef.current.max = seconds.toString();
-            }
-        }
-    };
+    
 
     const whilePlaying = () => {
 
@@ -380,34 +377,49 @@ const AudioContainer = ({audioSource} : {audioSource : string}) => {
       const toggleMuteBtn= () => {
 
         const audio = audioPlayerRef.current;
-        setSoundZero((cur) => !cur);
+        const prevValue = soundZero;
+        setSoundZero(!prevValue);
 
         if(audio)
         {
-            if(soundZero ) {
+            if(!prevValue) {
             audio.muted = true;
             }
             else{
-            audio.muted = false
+            audio.muted = false;
             }
         }
 
       }
 
+      const backTen = () => {
+        const  progressBar=  progressBarRef.current ;
+        if(progressBar) {
+            progressBar.value = ( Number(progressBar.value)- 10 ).toString();
+            changeRange();
+        }
+      }
+
+      const forwardTen = () => {
+        const  progressBar=  progressBarRef.current ;
+        if(progressBar) {
+            progressBar.value = ( Number(progressBar.value) + 10 ).toString();
+            changeRange();
+        }
+      }
+
     return (
         <AudioPlayer>
             <audio ref={audioPlayerRef} 
-                   preload="metadata"
-                   onLoadedMetadata={onLoadedMetadata}
+                  
             >
             <source 
-            src="https://cdn.simplecast.com/audio/cae8b0eb-d9a9-480d-a652-0defcbe047f4/episodes/af52a99b-88c0-4638-b120-d46e142d06d3/audio/500344fb-2e2b-48af-be86-af6ac341a6da/default_tc.mp3"  
+            src={audioSource}
             type="audio/mpeg" />
             </audio>
             
-            <ForwardBackWard>
-            <svg height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M125.7 160H176c17.7 0 32 14.3 32 32s-14.3 32-32 32H48c-17.7 0-32-14.3-32-32V64c0-17.7 14.3-32 32-32s32 14.3 32 32v51.2L97.6 97.6c87.5-87.5 229.3-87.5 316.8 0s87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3s-163.8-62.5-226.3 0L125.7 160z"/></svg>
-            30초 전
+            <ForwardBackWard onClick={backTen} >
+                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M459.5 440.6c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29V96c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4L288 214.3V256v41.7L459.5 440.6zM256 352V256 128 96c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4l-192 160C4.2 237.5 0 246.5 0 256s4.2 18.5 11.5 24.6l192 160c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29V352z"/></svg>
             </ForwardBackWard>
             <PlayPause onClick={togglePlayPause}>
                 {
@@ -416,10 +428,10 @@ const AudioContainer = ({audioSource} : {audioSource : string}) => {
                 }
                
             </PlayPause>
-            <ForwardBackWard>
+            <ForwardBackWard onClick={forwardTen}>
 
-            <svg  height="1rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"/></svg>
-            30초 후
+                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M52.5 440.6c-9.5 7.9-22.8 9.7-34.1 4.4S0 428.4 0 416V96C0 83.6 7.2 72.3 18.4 67s24.5-3.6 34.1 4.4L224 214.3V256v41.7L52.5 440.6zM256 352V256 128 96c0-12.4 7.2-23.7 18.4-29s24.5-3.6 34.1 4.4l192 160c7.3 6.1 11.5 15.1 11.5 24.6s-4.2 18.5-11.5 24.6l-192 160c-9.5 7.9-22.8 9.7-34.1 4.4s-18.4-16.6-18.4-29V352z"/></svg>       
+              
             </ForwardBackWard>
 
 
@@ -433,7 +445,9 @@ const AudioContainer = ({audioSource} : {audioSource : string}) => {
                     >
                 </ProgressBar>
             </div>
-            <DurationTime >{(duration && !isNaN(duration)) &&calculateTime(duration)}</DurationTime>
+
+            <DurationTime >{calculateTime(clipDurationTime)}</DurationTime>
+            
             <MuteBtn onClick={toggleMuteBtn}>
             {
                 soundZero ?  
