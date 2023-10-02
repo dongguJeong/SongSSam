@@ -289,7 +289,7 @@ const AudioContainer = ({audioSource, clipDurationTime} : {audioSource : string 
     useEffect(() => {
         const progressBar = progressBarRef.current;
         const audioPlayer =audioPlayerRef.current;
-        if(audioPlayer && progressBar  ) {
+        if(audioPlayer && progressBar && clipDurationTime ) {
          
             const seconds = Math.floor(clipDurationTime);
             setDuration(seconds)

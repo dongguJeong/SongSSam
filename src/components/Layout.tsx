@@ -4,14 +4,20 @@ import styled from "styled-components";
 import LeftMenu from "./LeftMenu";
 
 const Wrapper = styled.div`
+
+position : relative;
+width : 100%;
+height : 100vh;
+min-height : 100vh;
+min-width : 500px;
 `
 
 const Container = styled.div`
-    left : 260px;
+    left : var(--LeftMenu-width);
     position : absolute ;
-    top : 55px;
-    width : calc(100vw - 260px) ;
+    top : var(--navigation-height);
     
+    width : calc(100vw - var(--LeftMenu-width)) ;
     min-height : 100vh;
     background-color : #F9FAFB;
     
@@ -20,15 +26,15 @@ const Container = styled.div`
 function Layout(props : {children : React.ReactNode}){
 
     return(
-        <div>
+        <Wrapper>
             <LeftMenu/>
-            <Wrapper>
+            <div>
                 <Header/>
                 <Container>
                     {props.children}
                 </Container>
-            </Wrapper>
-        </div>
+            </div>
+        </Wrapper>
     )
 
 }

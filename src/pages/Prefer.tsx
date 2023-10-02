@@ -5,14 +5,12 @@ import serverURL from "../asset/Url";
 import { IData } from "../components/Chart";
 
 
-
-
-
 const Wrapper = styled.div`
     display: flex;
     align-items: center;
     padding-top : 50px;
     flex-direction : column;
+    overflow: hidden;
     
 `
 
@@ -38,14 +36,14 @@ const HeaderBtn = styled.div<{bgcolor : string}>`
 
 const Grid = styled.div`
     display : grid;
-    grid-template-columns : repeat(var(--gridNum), 130px);
+    grid-template-columns : repeat(var(--gridNum), var(--preferImgSize));
     grid-gap : 45px;
 `
 
 const ChartContainer = styled.div<{bgpath : string ; isclicked : string | undefined}>`
 
     border-radius : 10px;
-    height : 130px;
+    height :var(--preferChartContainer);
     background-image : url(${prop => prop.bgpath});
     background-size : cover;
     background-position: center;
@@ -71,13 +69,13 @@ const SongTitle = styled.div`
     padding-top : 5px;
     padding-left : 5px;
     text-align : center;
+    font-size : var(--preferFontSize);
 `;
 
 
 interface IClick {
-    genre : string;
     title : string;
-    artist : string;
+    id : number;
 }
 
 
@@ -109,7 +107,7 @@ function Prefer(){
     const [count ,setCount] = useState(0);
     const [clicked, setClicked] = useState<IClick[]>([]);
 
-        const clickPrefer = ( {title ,genre ,artist} : IClick) => {
+        const clickPrefer = ( {title , id} : IClick) => {
 
             const index = clicked.findIndex((i) => i.title === title);
             
@@ -119,7 +117,7 @@ function Prefer(){
                     return ;
                 }
 
-                const temp  = {title,genre,artist};
+                const temp  = {title, id};
                 setClicked((prev) => [...prev , temp]);
                 setCount((cur) => cur+1);
             }
@@ -159,7 +157,7 @@ function Prefer(){
                 </Header>
                 <Grid>
                 {chartData?.map((song,i) => (
-                    <ChartContainer  isclicked={clicked.some((item) => item.title === song.title) ? "true" : undefined} key={i} bgpath={song.imgUrl} onClick={() =>clickPrefer({title : song.title, genre : song.genre, artist : song.artist} )}>
+                    <ChartContainer  isclicked={clicked.some((item) => item.title === song.title) ? "true" : undefined} key={i} bgpath={song.imgUrl} onClick={() =>clickPrefer({title : song.title, id : song.id} )}>
                        
                        <SongTitle>{song.title.length <= 20 ? song.title : song.title.slice(0,20) + '...' }</SongTitle>
                        

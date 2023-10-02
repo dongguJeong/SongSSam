@@ -10,13 +10,12 @@ import { deleteAccessToken } from '../redux/accessTokenSlice';
 import { deleteRefreshToken } from '../redux/refreshTokenSlice';
 import { useDispatch } from 'react-redux';
 import { RootState, persistor } from '../redux/store';
-import { Persistor } from 'redux-persist';
-
+import {REST_API_KEY,REDIRECT_LOGOUT_URI} from './KaKao'
 
 const Wrapper = styled.div`
   background-color :  white;
-  height : 55px;
-  width : calc( 100vw - var(--navigation-width) );
+  height : var(--navigation-height);
+  width : calc( 100vw - var(--LeftMenu-width) );
   color : black;
   position : fixed;
   top : 0;
@@ -218,43 +217,33 @@ function MainHeader() {
     
   }
 
-  const fetchLogOut = async () => {
-    try {
-      const response = await fetch(`https://kapi.kakao.com/v1/user/logout`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const kakaoLogout = async() => {
 
-
-  const kakaoLogOut = async () => {
-    try {
-      await fetchLogOut();
-    } catch (error) {
-      console.error(error);
+    try{
+      const response =await fetch(
+        `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${REDIRECT_LOGOUT_URI}`,
+        {
+          method : 'GET'
+        }
+      );
+      
     }
-  };
+    catch(error) {
+      console.log(error);
+    }
+
+    
+  }
 
   
   const clickLogout = () => {
     dispatch(deleteAccessToken());
     dispatch(deleteRefreshToken());
     persistor.purge();
-    kakaoLogOut();
+    kakaoLogout();
     setClick(cur => false);
-
-
     movePage("/");
   }
-
-
 
 
 

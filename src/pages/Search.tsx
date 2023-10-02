@@ -23,7 +23,6 @@ export default function Search(){
     }
 
     const {target} = useParams();
-    console.log(target);
 
     const [search,setSearch] = useState<IData[]>([]);
 

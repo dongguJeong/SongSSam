@@ -9,6 +9,7 @@ import { IData } from '../components/Chart';
 
 const Wrapper = styled.div`
   width : 80%;
+  
   margin-left : 10%;
   padding-top : 80px;
   padding-bottom : 20px;
@@ -44,7 +45,8 @@ function Search() {
     }, []);
 
     
-  
+    
+
 
   return (
     <Layout>

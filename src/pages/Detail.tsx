@@ -13,16 +13,39 @@ const Wrapper = styled.div`
 `
 
 const Container = styled.div`
+    width : 100%;
+    min-height : 100vh;
+
 `;
 
 const SongContainer = styled.div`
     display : flex; 
+    
+
+    @media screen and (max-width : 700px){
+        flex-direction : column;
+        width : 100%;
+       
+        img{
+            margin : 0 auto;
+            max-width: 100%;
+        }
+
+        div{
+            text-align : center;
+        }
+        
+    }
+
+
+    
+
 
 `;
 
 const SongImg = styled.img`
-    width : 200px;
-    height : 200px;
+    width : var(--Detail-SongImg-size);
+    height : var(--Detail-SongImg-size);
     background-color : gray;
     border-radius : 10px;
     margin-right : 50px;
@@ -36,52 +59,47 @@ const SongCol = styled.div`
 `;
 
 const SongTitle = styled.div`
-    font-size : 45px;
+    font-size : var(--Detail-SongTitle-Fontsize);
     padding : 30px 0px;
     
 `
 const Singer = styled.div`
-    font-size : 30px;
+    font-size : var(--Detail-Singer-Fontsize);
 `
 
 const SampleContainer = styled.div`
     margin-top : 20px;
     display : flex;
     padding : 10px 10px;
-    width : 100%;
+    width : 90%;
+    margin-bottom : 10px;
+    
     
     font-size : 20px;
     background: linear-gradient(108deg, rgb(251, 250, 45) 0.5%, rgb(214, 4, 4) 29.8%, rgb(241, 57, 221) 59.9%, rgb(95, 11, 228) 84.2%);
     box-shadow: 2px 2px 0.5px black;
+    cursor : pointer;
+
+    &:hover{
+        text-decoration : underline;
+        text-decoration-color: white;
+        text-decoration-skip: spaces;
+        text-underline-offset: 5px; 
+        text-decoration-thickness: 1px;
+
+    }
 `
 const SampleWrite = styled.div`
+    font-size : var(--Detail-SampleWrite-Fontsize);
     color : white;
     font-weight : 500;
-    width : 85%;
-    display : flex;
-    align-items : center;
-    justify-content : center;
+    width : 100%;
+    padding-top : 5px;
+    padding-bottom : 5px;
     text-align : center;
-`
-const SampleCheck = styled.div`
-    display : flex;
-    align-items : center;
-    justify-content : center;
-    width : 15%;
-    
-    button{
-        font-size : 15px;
-        padding : 7px 20px;
-        cursor : pointer;
-        color : white;
-        background-color : black;
-        border : none;
-    }
 
-    button:hover{
-        text-decoration : underline;
-    }
-`;
+`
+
 
 
 
@@ -195,13 +213,25 @@ const SFLyric = styled.div`
     height : 50%;
 `
 
+const AlertContainer = styled(SampleContainer)`
+    display : none;
+    @media screen and (max-width : 890px){
+        display : block;
+    }
+`;
 
+const PerfectScoreContainer = styled.div`
+    display : block;
+    @media screen and (max-width : 890px){
+        display : none;
+    }
+`
 
 
 
 export default function Detail() {
 
-    const {title, singer,imgUrl} = useParams();
+    const {title, singer,imgUrl,songId} = useParams();
    
     const [sample, setSample] = useState(false);
     const clickSample = () => {
@@ -227,22 +257,17 @@ export default function Detail() {
             </SongCol>
         </SongContainer>
 
-        <SampleContainer>
-            <SampleWrite>샘플링이 필요합니다</SampleWrite>
-            <SampleCheck>
-                <button onClick={clickSample}>샘플링 하기</button>
-            </SampleCheck>
+        <SampleContainer onClick={clickSample}>
+            <SampleWrite >
+                <span>샘플링이 필요합니다.</span> 
+            </SampleWrite>
+            
         </SampleContainer>
 
-        <SampleContainer>
-            <SampleWrite>내 목소리로 노래부르기</SampleWrite>
-            <SampleCheck>
-                <button>퍼펙트 싱어</button>
-            </SampleCheck>
-        </SampleContainer>
-
-
-
+        <AlertContainer>
+            <span>화면이 좁습니다 888px 이상으로 늘려주세요</span>
+        </AlertContainer>
+       
         {
             sample &&
         <SampleFixed>
@@ -265,12 +290,15 @@ export default function Detail() {
                 </SFMusicSheet>
             </SFContainer>
         </SampleFixed>
-
         }
 
+
+
+        <PerfectScoreContainer>
         {
-            <PerfectScore></PerfectScore>
+            <PerfectScore songId = {songId}></PerfectScore>
         }
+        </PerfectScoreContainer>
         
         <OtherContainer>
             <OtherCol>

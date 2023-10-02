@@ -9,7 +9,7 @@ const ChartContainer = styled.div`
   padding : 20px;
   background-color : white;
   padding-top : 40px;
-  
+  overflow : hidden;
 
 `;
 
@@ -46,13 +46,13 @@ const SongColumn = styled.div`
 `;
 
 const SongImg = styled.img<{bgpath : string}>`
-  width : 70px;
-  height : 70px;
+  width : var(--Chart-imgSize);
+  height : var(--Chart-imgSize);
   background-image : url(${(props) => props.bgpath });
   background-size : cover;
   background-position : center center;
   border-radius : 5px;
-  margin-right : 20px;
+  margin-right : var(--Chart-img-Margin-right);
 `;
 
 
@@ -66,6 +66,11 @@ const SongTitle = styled.h3`
   
   text-align : start;
   width : 300px;
+  cursor : pointer;
+
+   a:hover{
+    text-decoration  : underline;
+   }
   
 `;
 const Singer = styled.h3`
@@ -96,7 +101,6 @@ const SongButton = styled.button`
 
   a:hover{
     
-    
     text-decoration : underline;
   }
 `;
@@ -107,10 +111,17 @@ const ChartHeader= styled.div`
   span:first-child {
     margin-left : 17px;
     margin-right : 110px;  
+    
   }
 
   span:nth-child(2){
     margin-right : 270px; 
+    font-size : var(--ChartHeader-Title-fontSize);
+  }
+
+  span:last-child{
+    
+    font-size : var(--ChartHeader-Singer-fontSize);
   }
   
 `
@@ -124,11 +135,10 @@ const SongRank = styled.div`
 `
 
 export interface IData{
-  SongId : string,
+  id : number,
   title : string,
   imgUrl : string ,
   artist : string,
-  albumId : number,
   genre : string,
 }
 
@@ -156,19 +166,23 @@ export default function Chart( {title,btnTitle,data}: IChart  ){
             <span>순위</span> <span>제목</span> <span>가수</span> 
           </ChartHeader>
           <ChartBox>
-            { data.map((song ,index : number) => <SongContainer key={index}>
+            { data.map((song ,index : number) => <SongContainer key={song.id}>
               <SongColumn>
                 <SongRank>{index + 1}</SongRank>
                 {song.imgUrl ? <SongImg bgpath = {song.imgUrl} /> : <BlackSpace></BlackSpace> }
                   <SongDetail>
-                    <SongTitle>{song.title}</SongTitle>
+                    <SongTitle>
+                      <Link to={`/detail/${song.artist}/${song.title}/${encodeURIComponent(song.imgUrl)}`} >
+                        {song.title}
+                      </Link>
+                    </SongTitle>
                     <Singer>{song.artist}</Singer>
                   </SongDetail>
               </SongColumn>
 
               <SongColumn>
                 <SongButton>
-                  <Link to={`/detail/${song.artist}/${song.title}/${encodeURIComponent(song.imgUrl)}`} > {btnTitle} </Link>
+                  <Link to={`/detail/${song.artist}/${song.title}/${song.id}/${encodeURIComponent(song.imgUrl)}`} > {btnTitle} </Link>
                 </SongButton>
               </SongColumn>
             </SongContainer>)}

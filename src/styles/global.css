@@ -57,33 +57,147 @@ table {
 
 
 :root{
-	--navigation-width : 260px;
+
+
+	--navigation-height : 55px;
 	--PreferBox-height : 550px;
 	--PreferBox-ml : 7%;
 	--SampleFixed-ml : 20%;
-
-	--gridNum : 6;
+	
 	--bgColor : #586BFF;
     --iconColor : #008EF5;
     --deepBlue : #0077B6;
     --fontBlue : #010043;
+
+	--preferImgSize : 130px;
+	--gridNum : 5;
+	--preferChartContainer : 130px;
+	--preferFontSize : 15px;
+
+
+
+	--LeftMenu-width : 250px;
+	--LeftMenu-Header-fontSize : 30px;
+	--LeftMenu-Menu-fontSize : 15px;
+	--LeftMenu-HeaderIcon-width:35px;
+	--LeftMenu-HeaderIcon-height:35px;
+	--LeftMenu-margin-top : 20px;
+	--LeftMenu-SearchBar-height : 35px;
+	--LeftMenu-SearchBar-placeholder-fontsize : 14px;
+	
+
+
+	--Chart-fontSize : 25px;
+	--Chart-imgSize : 70px;
+	--Chart-img-Margin-right : 20px;
+	--ChartHeader-Singer-fontSize : 15px;
+	--ChartHeader-Title-fontSize : 15px;
+
+
+
+	--Profile-ImgSize :200px;
+	--Profile-Title-grayFontSize : 15px;
+	--Profile-Title-NamefontSize : 30px;
+	--Profile-Title-EmailfontSize : 25px;
+	--Profile-Padding-Top : 30px;
+	--Profile-Margin-right : 100px;
+
+
+	--Detail-SongTitle-Fontsize : 45px;
+	--Detail-Singer-Fontsize : 30px;
+	--Detail-SongImg-size : 200px;
+	--Detail-SampleWrite-Fontsize : 20px;
+	--Detail-SampleCheck-Fontsize : 15px;
  }
 
-@media only screen and (min-width : 1500px){
+
+
+
+ @media  (max-width : 991px)  {
 	:root{
-		--PreferBox-ml : 15%;
-		--SampleFixed-ml : 30%;
+		--LeftMenu-width : 200px;
+		--LeftMenu-margin-top : 10px;
+		--LeftMenu-Header-fontSize : 24px;
+		--LeftMenu-HeaderIcon-width:22px;
+		--LeftMenu-HeaderIcon-height:22px;
+		--LeftMenu-Menu-fontSize : 14px;
+		--LeftMenu-SearchBar-placeholder-fontsize : 12px;
+		
+		
+		--gridNum : 4;
+		--preferImgSize : 100px;
+		--preferChartContainer : 100px;
+		--preferFontSize : 12px;
+
+		--Profile-ImgSize :150px;
+		--Profile-Title-grayFontSize : 15px;
+		--Profile-Title-NamefontSize : 25px;
+		--Profile-Title-EmailfontSize : 20px;
+		--Profile-Padding-Top : 10px;
+		
+
+		--Detail-SongTitle-Fontsize : 35px;
+		--Detail-Singer-Fontsize : 20px;
+		
+		--Detail-SampleWrite-Fontsize : 15px;
+		--Detail-SampleCheck-Fontsize : 10px;
+
+
+		
+
 	 }
-	
+}
+
+@media  (max-width : 	880px){
+	:root{
+			--ChartHeader-Singer-fontSize : 0px;
+	}
 }
 
 
-@media only screen and (min-width : 900px)  {
+@media  (max-width : 	820px){
 	:root{
-		--PreferBox-height : 800px;
-		--Canvas-width : 1000px;
-		--Canvas-height : 500px;
-		
-	 }
+			--ChartHeader-Title-fontSize : 0px;
 	}
+}
+
+@media  (max-width : 700px)  {
+	:root{
+		
+		
+		--gridNum : 3;
+		--preferImgSize : 100px;
+		--preferChartContainer : 100px;
+		--preferFontSize : 12px;
+
+		--Profile-ImgSize :0px;
+		--Profile-Title-grayFontSize : 15px;
+		--Profile-Title-NamefontSize : 25px;
+		--Profile-Title-EmailfontSize : 20px;
+		--Profile-Margin-right : 0px;
+		
+	
+	 }
+}
+
+
+
+@media  (max-width : 600px)  {
+	:root{
+		
+		
+		--gridNum : 2;
+		--preferImgSize : 100px;
+		--preferChartContainer : 100px;
+		--preferFontSize : 12px;
+
+		--Chart-imgSize : 0px;
+		--Chart-img-Margin-right : 0px;
+
+		
+	
+
+	 }
+}
+
 

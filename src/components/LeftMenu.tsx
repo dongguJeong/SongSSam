@@ -1,19 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 import "../styles/font.css";
+import '../styles/global.css';
 import {  useNavigate } from "react-router-dom";
 import SearchBBar from "./SearchBar";
 import { useSelector } from "react-redux";
-import store from "../redux/store";
 import { RootState } from "../redux/store";
 
 
 const Wrapper = styled.div`
 
-    width : var(--navigation-width);
+    width : var(--LeftMenu-width);
     min-height : 100vh;
     position : fixed ;
-    top : 0 ;
+    top : 0;
     left : 0;
     border-right :  1px solid #586Bff;  
     display : flex;
@@ -35,42 +35,44 @@ const ItemList = styled.ul``;
 
 const HeaderContainer = styled.div`
     display : flex;
-    padding-top : 20px;
+    padding-top : var(--LeftMenu-margin-top);
     margin-bottom : 40px;
 `
 
 const HeaderTitle = styled.span`
   font-family : "ingrid_darling";
-  font-size : 30px;
+  font-size : var(--LeftMenu-Header-fontSize);
   margin-left : 10px;
 `
 
 const HeaderIcon = styled.img`
    
-    width : 35px;
-    height : 35px;
+    width : var(--LeftMenu-HeaderIcon-width);
+    height : var(--LeftMenu-HeaderIcon-height);
 `
 
 
 
 const Item = styled.li`
-    width : 80%;
+    width : 90%;
     padding : 15px 15px;
     margin-bottom  : 20px;
     display : flex;
     align-items : center;
     cursor : pointer;
+    font-size : var(--LeftMenu-Menu-fontSize);
+
 
     &:hover{
         background-color : white;
         border-radius : 30px;
         color : #010043;
-        cursor : pointer;
+        
     }
 
     svg{
         color : white;
-        height : 1em; 
+        height : var(--LeftMenu-Menu-fontSize); 
         margin-right : 10px;
     }
 
@@ -78,10 +80,7 @@ const Item = styled.li`
         color: #010043;
     }
 
-    div:hover{
-        cursor : pointer;
-    }
-      
+   
     
 `
 

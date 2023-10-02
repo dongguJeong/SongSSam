@@ -47,16 +47,14 @@ export default function Redirect(){
         try {
           const res = await axios.post(`https://${serverURL}/auth/login`, 
           {
-          "authorizationCode": code // 코드를 요청의 본문에 추가
-
+          authorizationCode: code // 코드를 요청의 본문에 추가ㄴ
           }, );
 
 
           dispatch(setAccessToken(res.data.response.accessToken));
           dispatch(setRefreshToken(res.data.response.refreshToken));
           
-          
-
+        
           movePage("/");
           
         } catch (err) {
@@ -71,7 +69,6 @@ export default function Redirect(){
         let code = new URL(window.location.href).searchParams.get("code"); 
         
         if(code){
-            console.log(code);
             kakaoLogin(code);
         }
         else{

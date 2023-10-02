@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import accessTokenSlice from './accessTokenSlice';
 import { persistReducer,persistStore } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import storage from "redux-persist/lib/storage/session";
 import refreshTokenSlice from './refreshTokenSlice';
 
 const rootReducer = combineReducers({
