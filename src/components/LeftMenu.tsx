@@ -10,7 +10,7 @@ import { RootState } from "../redux/store";
 
 const Wrapper = styled.div`
 
-    width : 250px;
+    width : var(--LeftMenu-width);
     min-height : 100vh;
     position : fixed ;
     top : 0;
@@ -19,6 +19,8 @@ const Wrapper = styled.div`
     background-color : #F9F9F9;
     color : black;
     border-right : 1px solid rgba(0,0,0,.15);
+
+    
 `;
 
 const Container = styled.div`

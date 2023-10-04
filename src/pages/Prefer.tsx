@@ -3,6 +3,7 @@ import { styled} from 'styled-components';
 import Layout from "../components/Layout";
 import serverURL from "../asset/Url";
 import { IData } from "../components/Chart";
+import BigTitle from "../components/BigTitle";
 
 
 const Wrapper = styled.div`
@@ -141,6 +142,7 @@ function Prefer(){
 
     return(
         <Layout>
+            <BigTitle title='선호 노래'/>
             <Wrapper>
                 <Header>
 

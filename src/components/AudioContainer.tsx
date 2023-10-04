@@ -76,13 +76,13 @@ const ProgressBar = styled.input`
         border-radius : 10px;
         position : relative;
         width : 100%;
-        height : 5px;
+        height : 3px;
         outline : none;
     }
 
     &::before{
         content : '';
-        height : 5px;
+        height : 3px;
         width : var(--seek-before-width);
         background-color : var(--seek-before-color);
         border-top-left-radius : 10px;
@@ -121,7 +121,7 @@ const ProgressBar = styled.input`
         background-color : var(--seek-before-color);
         border-top-left-radius : 10px;
         border-bottom-left-radius : 10px; 
-        height : 5px;  
+        height : 3px;  
     }
 
     &::-moz-range-thumb{
@@ -165,13 +165,13 @@ const VolumeBar = styled.input`
         border-radius : 10px;
         position : relative;
         width : 100%;
-        height : 5px;
+        height : 3px;
         outline : none;
     }
 
     &::before{
         content : '';
-        height : 5px;
+        height : 3px;
         width : var(--seek-before-width);
         background-color : var(--seek-before-color);
         border-top-left-radius : 10px;
@@ -211,7 +211,7 @@ const VolumeBar = styled.input`
         background-color : var(--seek-before-color);
         border-top-left-radius : 10px;
         border-bottom-left-radius : 10px; 
-        height : 5px;  
+        height : 3px;  
     }
 
     &::-moz-range-thumb{

@@ -69,7 +69,7 @@ export default function SearchBBar ( ){
 
     return (
             <SearchBarForm onSubmit={handleSubmit}>
-            <SearchBar placeholder="아티스트/노래 검색" value={search} onChange={handleChange}>
+            <SearchBar placeholder="검색" value={search} onChange={handleChange}>
             </SearchBar>
             
             <Svg  fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

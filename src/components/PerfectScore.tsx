@@ -73,6 +73,10 @@ const RecordingContainer = styled.div`
 `;
 
 
+const ClipContainer = styled.div`
+  display : flex;
+`
+
 
 
 function PerfectScore({songId} : {songId : string | undefined} ) {
@@ -453,9 +457,10 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
         {clips.map((clip, i) => (
           <div key={i}>
             <h1 style={{marginBottom : '10px'}}>{clip.clipName}</h1>
-            
-            <AudioContainer audioSource={clip.audioURL} clipDurationTime = {clip.clipDurationTime}></AudioContainer>
-            <button onClick={() => sendVoice(clip.blob)}>파일 전송</button>
+            <ClipContainer>
+              <AudioContainer audioSource={clip.audioURL} clipDurationTime = {clip.clipDurationTime}></AudioContainer>
+              <button onClick={() => sendVoice(clip.blob)}>파일 전송</button>
+            </ClipContainer> 
           </div>
         ))}
 

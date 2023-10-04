@@ -15,7 +15,7 @@ const Wrapper = styled.div`
 `;
 
 const Profile = styled.div`
-  width  :50%;
+  width  : 600px;
   display: flex;
   margin-bottom: 40px;
   border : 1px solid var(--iconColor);

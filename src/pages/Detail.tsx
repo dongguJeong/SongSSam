@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import { styled } from 'styled-components';
 import "../styles/global.css";
 import PerfectScore from '../components/PerfectScore';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Wrapper = styled.div` 
   width : 80%;
@@ -170,7 +171,7 @@ export default function Detail() {
     const handlePerfect = () => {
         setPerfect((cur) => !cur);
     }
-    
+   
 
   return (
   <Layout>
@@ -184,7 +185,10 @@ export default function Detail() {
                         <span>{title}</span>
                     </SongTitle>
                     <Singer>
-                        <span>{singer}</span>
+                        <Link to ={`/search/${singer}`}>
+                            <span>{singer}</span>
+                        </Link>
+                        
                     </Singer>
                 </SongCol>
                 

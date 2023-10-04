@@ -14,7 +14,7 @@ import {REST_API_KEY,REDIRECT_LOGOUT_URI} from './KaKao'
 const Wrapper = styled.div`
   background-color :  #FFFFFF;
   height : var(--navigation-height);
-  width : calc( 100vw - var(--LeftMenu-width) );
+  width : calc( 100% - var(--LeftMenu-width) );
   color : black;
   position : fixed;
   top : 0;
