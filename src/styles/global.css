@@ -1,5 +1,4 @@
 
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -27,7 +26,7 @@ footer, header, hgroup, menu, nav, section {
 }
 
 *{
-    box-sizing: border-box;
+	font-family: 'Roboto', sans-serif !important; 
 }
 
 a{
@@ -58,7 +57,6 @@ table {
 
 :root{
 
-
 	--navigation-height : 55px;
 	--PreferBox-height : 550px;
 	--PreferBox-ml : 7%;
@@ -72,62 +70,29 @@ table {
 	--preferImgSize : 130px;
 	--gridNum : 5;
 	--preferChartContainer : 130px;
-	--preferFontSize : 15px;
-
-
 
 	--LeftMenu-width : 250px;
-	--LeftMenu-Header-fontSize : 30px;
-	--LeftMenu-Menu-fontSize : 15px;
-	--LeftMenu-HeaderIcon-width:35px;
-	--LeftMenu-HeaderIcon-height:35px;
-	--LeftMenu-margin-top : 20px;
-	--LeftMenu-SearchBar-height : 35px;
-	--LeftMenu-SearchBar-placeholder-fontsize : 14px;
 	
-
-
-	--Chart-fontSize : 25px;
-	--Chart-imgSize : 70px;
 	--Chart-img-Margin-right : 20px;
-	--ChartHeader-Singer-fontSize : 15px;
-	--ChartHeader-Title-fontSize : 15px;
-
-
-
-	--Profile-ImgSize :200px;
+	
+	--Profile-ImgSize :150px;
 	--Profile-Title-grayFontSize : 15px;
 	--Profile-Title-NamefontSize : 30px;
 	--Profile-Title-EmailfontSize : 25px;
 	--Profile-Padding-Top : 30px;
 	--Profile-Margin-right : 100px;
 
-
-	--Detail-SongTitle-Fontsize : 45px;
-	--Detail-Singer-Fontsize : 30px;
-	--Detail-SongImg-size : 200px;
-	--Detail-SampleWrite-Fontsize : 20px;
-	--Detail-SampleCheck-Fontsize : 15px;
  }
-
-
 
 
  @media  (max-width : 991px)  {
 	:root{
-		--LeftMenu-width : 200px;
-		--LeftMenu-margin-top : 10px;
-		--LeftMenu-Header-fontSize : 24px;
-		--LeftMenu-HeaderIcon-width:22px;
-		--LeftMenu-HeaderIcon-height:22px;
-		--LeftMenu-Menu-fontSize : 14px;
-		--LeftMenu-SearchBar-placeholder-fontsize : 12px;
+		
 		
 		
 		--gridNum : 4;
 		--preferImgSize : 100px;
 		--preferChartContainer : 100px;
-		--preferFontSize : 12px;
 
 		--Profile-ImgSize :150px;
 		--Profile-Title-grayFontSize : 15px;
@@ -136,29 +101,7 @@ table {
 		--Profile-Padding-Top : 10px;
 		
 
-		--Detail-SongTitle-Fontsize : 35px;
-		--Detail-Singer-Fontsize : 20px;
-		
-		--Detail-SampleWrite-Fontsize : 15px;
-		--Detail-SampleCheck-Fontsize : 10px;
-
-
-		
-
 	 }
-}
-
-@media  (max-width : 	880px){
-	:root{
-			--ChartHeader-Singer-fontSize : 0px;
-	}
-}
-
-
-@media  (max-width : 	820px){
-	:root{
-			--ChartHeader-Title-fontSize : 0px;
-	}
 }
 
 @media  (max-width : 700px)  {
@@ -175,8 +118,6 @@ table {
 		--Profile-Title-NamefontSize : 25px;
 		--Profile-Title-EmailfontSize : 20px;
 		--Profile-Margin-right : 0px;
-		
-	
 	 }
 }
 
@@ -193,11 +134,7 @@ table {
 
 		--Chart-imgSize : 0px;
 		--Chart-img-Margin-right : 0px;
-
-		
-	
-
-	 }
+	}
 }
 
 

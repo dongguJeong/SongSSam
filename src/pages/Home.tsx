@@ -2,18 +2,14 @@ import React, { useEffect,useState } from 'react';
 import Layout from '../components/Layout';
 import { styled } from 'styled-components';
 import Chart from '../components/Chart';
-import SearchBBar from '../components/SearchBar';
 import serverURL from "../asset/Url";
 
 import { IData } from '../components/Chart';
+import BigTitle from '../components/BigTitle';
 
 const Wrapper = styled.div`
-  width : 80%;
-  
-  margin-left : 10%;
-  padding-top : 80px;
+  margin : 0 auto;
   padding-bottom : 20px;
-  
 `
 
 
@@ -52,10 +48,8 @@ function Search() {
     <Layout>
 
    <Wrapper>
-
-
-        <SearchBBar small={false} />
-        <Chart title="인기 차트" btnTitle ="커버곡 만들러 가기"  data={chartData} />
+        <BigTitle title = '인기차트'/>
+        <Chart  btnTitle ="커버곡 만들러 가기"  data={chartData} />
       </Wrapper>
       </Layout>
   )

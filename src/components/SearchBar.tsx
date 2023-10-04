@@ -5,70 +5,50 @@ import styled from "styled-components";
 import { ChangeEvent } from 'react';
 
 
-const LeftSearchBarForm = styled.form`
+const SearchBarForm = styled.form`
     width : 100%;
     position : relative;
-    margin-bottom : 30px;
+    margin-bottom : 10px;
+    
+    
 `
 
-const LeftSearchBar = styled.input` 
+const SearchBar = styled.input` 
     width : 100%;
-    height : var(--LeftMenu-SearchBar-height);
-    padding : 6px 15px 5px 15px;
+    height : 34px;
+    padding : 2px 10px;
     outline : none;
-    border-radius : 30px;
-    border : none;
-    outline : none;
-    box-shadow : 0 2px 5px 1px rgba(64,60,67,.16);
+    border : 1px solid rgba(0,0,0,.15);
+    border-radius : 10px;
+    margin-bottom : 10px;
+    
 
     &:focus {
-        box-shadow : 0 2px 5px 1px rgba(255,255,255,.3);
+        outline : 2px solid var(--iconColor);
+        border : transparent;
     }   
 
     &::placeholder{
-        font-size : var(--LeftMenu-SearchBar-placeholder-fontsize); 
+        font-size : 12px; 
         
       }
 `
 
 
 const Svg = styled.svg`
-    width : 15px; 
-    height : 15px;
+    width : 14px; 
+    height : 14px;
     position : absolute;
-    top : 7px;
+    top : 10px;
     right : 10px;
     z-index : 1;
     cursor : pointer;
+    fill : #F9F9F9;
     
 `
 
-const LargeSearchBar = styled.input`
-  width : 100%;
-  height : 50px;
-  border-radius : 30px;
-  padding-left : 15px;
-  margin-bottom : 30px;
-  border : 2px solid var(--iconColor);
 
-
-  &:focus{
-    outline : none;
-  }
-
-  &::placeholder{
-    font-size : 15px; 
-    font-weight : 500;
-  }
-
-`;
-
-interface ISearchBar {
-    small : boolean;
-    
-}
-
-export default function SearchBBar ( {small} : ISearchBar){
+export default function SearchBBar ( ){
 
     const movePage = useNavigate();
 
@@ -79,8 +59,6 @@ export default function SearchBBar ( {small} : ISearchBar){
     const [search, setSearch] = useState("");
 
     
-
-
     const handleSubmit = (e :React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if(search === "")
@@ -89,21 +67,16 @@ export default function SearchBBar ( {small} : ISearchBar){
         setSearch("");
     }
 
-    return small ?
-            <LeftSearchBarForm onSubmit={handleSubmit}>
-            <LeftSearchBar placeholder="아티스트/노래 검색" value={search} onChange={handleChange}>
-            </LeftSearchBar>
+    return (
+            <SearchBarForm onSubmit={handleSubmit}>
+            <SearchBar placeholder="아티스트/노래 검색" value={search} onChange={handleChange}>
+            </SearchBar>
             
             <Svg  fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path>
             </Svg>
-            </LeftSearchBarForm> 
-        :
-            
-            <form onSubmit={handleSubmit}>
-                <LargeSearchBar placeholder="아티스트/노래 검색" value={search} onChange={handleChange}></LargeSearchBar>
-            </form>
-
-        
+            </SearchBarForm> 
+       
+    )
     
 }

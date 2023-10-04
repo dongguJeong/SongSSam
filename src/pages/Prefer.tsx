@@ -43,12 +43,13 @@ const Grid = styled.div`
 const ChartContainer = styled.div<{bgpath : string ; isclicked : string | undefined}>`
 
     border-radius : 10px;
-    height :var(--preferChartContainer);
+    height :120px;
+    width :120px;
     background-image : url(${prop => prop.bgpath});
     background-size : cover;
     background-position: center;
     position : relative;
-
+    cursor : pointer;
     display : flex;
     align-items : center;
     justify-content : center;
@@ -69,7 +70,7 @@ const SongTitle = styled.div`
     padding-top : 5px;
     padding-left : 5px;
     text-align : center;
-    font-size : var(--preferFontSize);
+    font-size : 14px;
 `;
 
 
@@ -92,7 +93,7 @@ function Prefer(){
                 }
               )).json();
             
-            console.log(response);
+            
             setChartData(response);
     
           }catch(err){
@@ -157,11 +158,11 @@ function Prefer(){
                 </Header>
                 <Grid>
                 {chartData?.map((song,i) => (
-                    <ChartContainer  isclicked={clicked.some((item) => item.title === song.title) ? "true" : undefined} key={i} bgpath={song.imgUrl} onClick={() =>clickPrefer({title : song.title, id : song.id} )}>
+                    <ChartContainer  isclicked={clicked.some((item) => item.id === song.id) ? "true" : undefined} key={i} bgpath={song.imgUrl} onClick={() =>clickPrefer({title : song.title, id : song.id} )}>
                        
                        <SongTitle>{song.title.length <= 20 ? song.title : song.title.slice(0,20) + '...' }</SongTitle>
                        
-                       {clicked.some((item) => item.title === song.title) &&
+                       {clicked.some((item) => item.id === song.id) &&
                         
                         <svg xmlns="http://www.w3.org/2000/svg" fill="green" height="2.5em" viewBox="0 0 512 512" >
                         <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>

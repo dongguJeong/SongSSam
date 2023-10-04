@@ -6,18 +6,19 @@ import "../styles/global.css";
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import AudioContainer from '../components/AudioContainer';
+import BigTitle from '../components/BigTitle';
 
 const Wrapper = styled.div`
-  width: 80%;
-  margin-left: 10%;
-  padding-top: 80px;
+  width: 100%;
   position: relative;
+  padding-left : 40px;
 `;
 
 const Profile = styled.div`
+  width  :50%;
   display: flex;
   margin-bottom: 40px;
-  box-shadow: 0px 4px 6px -1px rgb(0, 0, 0, .3);
+  border : 1px solid var(--iconColor);
   border-radius: 15px;
   padding: 30px;
   background-color: white;
@@ -45,13 +46,15 @@ const ProfileCol = styled.div`
 const ProfileTitle = styled.div`
   margin-right: 50px;
   h3 {
+    
     color: rgba(0, 0, 0, 0.4);
     font-size: var(--Profile-Title-grayFontSize);
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   h1 {
-    font-size: var(--Profile-Title-NamefontSize);
+    font-size: 30px;
+    font-weight : 400;
   }
 
   margin-bottom: 30px;
@@ -60,13 +63,18 @@ const ProfileTitle = styled.div`
 const ProfileEmail = styled(ProfileTitle)`
   margin-bottom: 0;
   h1 {
-    font-size: var(--Profile-Title-EmailfontSize);
+    font-size: 23px;
   }
 `;
 
 const ProfileInner = styled.div`
-  padding-top: var(--Profile-Padding-Top);
+  padding-top: 10px;
 `;
+
+const AudioTitle = styled.div`
+  margin-bottom : 20px;
+  font-size : 20px;
+`
 
 interface IProfile {
   id: number;
@@ -159,7 +167,10 @@ function MyPage() {
 
   return (
     <Layout>
+
+      <BigTitle title='내 정보'/>
       <Wrapper>
+        
         <Profile>
           <Square bgpath={profileImage} />
           <ProfileCol>
@@ -175,18 +186,25 @@ function MyPage() {
             </ProfileInner>
           </ProfileCol>
         </Profile>
-      </Wrapper>
-      {wavFile
-        ? wavFile.map((i, index) => (
-            <div key={index}>
-              
 
-              <audio controls>
-                <source src={URL.createObjectURL(i)} type='audio/wav'></source>
-              </audio>
-            </div>
-          ))
-        : null}
+        <AudioTitle>
+          <span >커버곡</span>
+        </AudioTitle>
+        {wavFile
+          ? wavFile.map((i, index) => (
+              <div key={index}>
+                
+
+                <audio controls>
+                  <source src={URL.createObjectURL(i)} type='audio/wav'></source>
+                </audio>
+              </div>
+            ))
+          : null}
+
+      </Wrapper>
+
+      
     </Layout>
   );
 }

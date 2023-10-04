@@ -4,7 +4,6 @@ import {  useSelector } from 'react-redux';
 import styled from 'styled-components';
 import '../styles/global.css';
 import AudioContainer from './AudioContainer';
-import serverURL from '../asset/Url';
 import { RootState } from '../redux/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -39,7 +38,7 @@ const RecordStartBtn = styled.button`
   margin-right : 10px;
   box-shadow: ${(props) =>
     props.disabled
-      ? '2px 4px 6px -1px rgb(0,0,0,.3)'
+      ? 'none'
       : '2px 4px 6px -1px rgba(0,142,245,1)'};
 
   &:hover {
@@ -430,7 +429,7 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
 
   return (
     <div>
-      <h1>음계 :  {voiceOctave} </h1>
+      <h1 style={{marginBottom : '10px'}}>음계 :  {voiceOctave} </h1>
 
       <canvas height={canvasHeight} width={canvasWidth} ref={canvasRef}></canvas>
 
@@ -453,7 +452,7 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
         <SectionTitle>녹음 클립들</SectionTitle>
         {clips.map((clip, i) => (
           <div key={i}>
-            <h1>{clip.clipName}</h1>
+            <h1 style={{marginBottom : '10px'}}>{clip.clipName}</h1>
             
             <AudioContainer audioSource={clip.audioURL} clipDurationTime = {clip.clipDurationTime}></AudioContainer>
             <button onClick={() => sendVoice(clip.blob)}>파일 전송</button>

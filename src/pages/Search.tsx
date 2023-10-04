@@ -1,20 +1,17 @@
 import { useParams } from "react-router-dom";
 import Layout from "../components/Layout";
 import React, { useEffect,useState } from "react";
-import serverURL from "../asset/Url";
 import Chart, { IData } from "../components/Chart";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import BigTitle from "../components/BigTitle";
 
 const Wrapper = styled.div`
-  width : 80%;
-  margin-left : 10%;
-  padding-top : 80px;
-  padding-bottom : 20px;
+margin : 0 auto;
+padding-bottom : 20px;
   
 `
-
 export default function Search(){
 
 
@@ -30,12 +27,11 @@ export default function Search(){
 
     const accessToken = useSelector((state: RootState) => state.accessToken);
 
-    
 
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await (await fetch(`https://${serverURL}/song/search?target=${target}&mode=0`,
+            const response = await (await fetch(`https://songssam.site:8443/song/search?target=${target}&mode=0`,
               {
                 method: "GET",
               }
@@ -57,8 +53,9 @@ export default function Search(){
 
     return(
         <Layout>
+            <BigTitle title={makeTitle()}/>
             <Wrapper>
-              <Chart title={makeTitle()} btnTitle ="커버곡 만들러 가기"  data={search} />
+              <Chart  btnTitle ="커버곡 만들러 가기"  data={search} />
             </Wrapper>
         </Layout>
     )

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import "../styles/font.css";
 import '../styles/global.css';
-import {  useNavigate } from "react-router-dom";
+import { useLocation, useNavigate} from "react-router-dom";
 import SearchBBar from "./SearchBar";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
@@ -10,16 +10,15 @@ import { RootState } from "../redux/store";
 
 const Wrapper = styled.div`
 
-    width : var(--LeftMenu-width);
+    width : 250px;
     min-height : 100vh;
     position : fixed ;
     top : 0;
     left : 0;
-    border-right :  1px solid #586Bff;  
     display : flex;
-    background-color : #0077B6;
-    color : white;
-
+    background-color : #F9F9F9;
+    color : black;
+    border-right : 1px solid rgba(0,0,0,.15);
 `;
 
 const Container = styled.div`
@@ -35,52 +34,39 @@ const ItemList = styled.ul``;
 
 const HeaderContainer = styled.div`
     display : flex;
-    padding-top : var(--LeftMenu-margin-top);
-    margin-bottom : 40px;
+    padding-top : 7px;
+    margin-bottom : 20px;
 `
 
 const HeaderTitle = styled.span`
-  font-family : "ingrid_darling";
-  font-size : var(--LeftMenu-Header-fontSize);
-  margin-left : 10px;
+  padding-left : 5px;
+  font-size : 22px;
+  font-weight : 500; 
 `
-
-const HeaderIcon = styled.img`
-   
-    width : var(--LeftMenu-HeaderIcon-width);
-    height : var(--LeftMenu-HeaderIcon-height);
-`
-
-
 
 const Item = styled.li`
-    width : 90%;
-    padding : 15px 15px;
-    margin-bottom  : 20px;
+    width : 100%;
+    padding : 10px 5px;
     display : flex;
     align-items : center;
     cursor : pointer;
-    font-size : var(--LeftMenu-Menu-fontSize);
-
+    font-size : 14px;
+    font-weight : 400;
+    
 
     &:hover{
-        background-color : white;
-        border-radius : 30px;
+        background-color : #E6E6E7;
+        border-radius : 10px;
         color : #010043;
         
     }
 
     svg{
-        color : white;
-        height : var(--LeftMenu-Menu-fontSize); 
+        color : var(--iconColor);
+        height : 14px; 
         margin-right : 10px;
     }
 
-    &:hover > svg {
-        color: #010043;
-    }
-
-   
     
 `
 
@@ -89,6 +75,10 @@ const Item = styled.li`
 function LeftMenu(){
 
     const move = useNavigate();
+
+    
+    const location = useLocation();
+
 
     const goMypage = () => {
         
@@ -109,14 +99,16 @@ function LeftMenu(){
         <Wrapper>
          <Container>
          <HeaderContainer>
-             <HeaderIcon src='/img/music_note.png' /> 
-             <HeaderTitle >Song SSam</HeaderTitle>
+             <HeaderTitle >SongSSam</HeaderTitle>
          </HeaderContainer>
           <ItemList>
 
-            <SearchBBar small={true} ></SearchBBar>
+            <SearchBBar />
          
-            <Item onClick={() => move("/")}>
+            <Item onClick={() => move("/")} 
+                  style = {{backgroundColor : location.pathname === '/' ? '#E6E6E7 ' : 'transparent' ,
+                            borderRadius : '10px',
+                            }}>
 
             <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" strokeWidth="2" viewBox="0 0 512 512">
                 <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
@@ -124,7 +116,11 @@ function LeftMenu(){
                 <span >노래 검색하기</span>
             </Item>
             
-            <Item onClick={accessToken ? goMypage : alertMypage}>
+            <Item onClick={accessToken ? goMypage : alertMypage}
+                  style = {{backgroundColor : location.pathname === '/mypage' ? '#E6E6E7 ' : 'transparent' ,
+                  borderRadius : '10px',
+                  }}
+            >
                 <svg  fill="currentColor" xmlns="http://www.w3.org/2000/svg" strokeWidth="2"  viewBox="0 0 448 512">
                     <path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z"/>
                 </svg>

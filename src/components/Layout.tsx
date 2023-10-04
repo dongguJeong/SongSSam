@@ -9,7 +9,7 @@ position : relative;
 width : 100%;
 height : 100vh;
 min-height : 100vh;
-min-width : 500px;
+
 `
 
 const Container = styled.div`
@@ -19,7 +19,7 @@ const Container = styled.div`
     
     width : calc(100vw - var(--LeftMenu-width)) ;
     min-height : 100vh;
-    background-color : #F9FAFB;
+    background-color : #FFFFFF;
     
 `;
 
