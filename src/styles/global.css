@@ -70,7 +70,7 @@ table {
     --fontBlue : #010043;
 
 	--preferImgSize : 130px;
-	--gridNum : 5;
+	--gridNum : 6;
 	--preferChartContainer : 130px;
 
 	--LeftMenu-width : 250px;
@@ -86,15 +86,22 @@ table {
 
  }
 
+ @media screen and (max-width : 1290px){
+	:root{
+		--gridNum : 5;
+	}
+ }
+
+ @media screen and (max-width : 1100px){
+	:root{
+		--gridNum : 4;
+	}
+ }
+
 
  @media  (max-width : 991px)  {
 	:root{
 		
-		
-		
-		--gridNum : 4;
-		--preferImgSize : 100px;
-		--preferChartContainer : 100px;
 
 		--Profile-ImgSize :150px;
 		--Profile-Title-grayFontSize : 15px;
@@ -106,15 +113,21 @@ table {
 	 }
 }
 
+@media screen and (max-width : 920px){
+	:root{
+		--gridNum : 3;
+	}
+ }
+
+ @media screen and (max-width : 740px){
+	:root{
+		--gridNum : 2;
+	}
+ }
+
 @media  (max-width : 700px)  {
 	:root{
 		
-		
-		--gridNum : 3;
-		--preferImgSize : 100px;
-		--preferChartContainer : 100px;
-		--preferFontSize : 12px;
-
 		--Profile-ImgSize :0px;
 		--Profile-Title-grayFontSize : 15px;
 		--Profile-Title-NamefontSize : 25px;
@@ -130,10 +143,6 @@ table {
 		
 		--LeftMenu-width : 33.8843vw;
 		
-		--gridNum : 2;
-		--preferImgSize : 100px;
-		--preferChartContainer : 100px;
-		--preferFontSize : 12px;
 
 		--Chart-imgSize : 0px;
 		--Chart-img-Margin-right : 0px;

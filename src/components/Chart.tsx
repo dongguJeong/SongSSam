@@ -122,7 +122,7 @@ const SongButton = styled.button`
   height : 40px;
   border-radius : 5px;
   width : 120px;
-  background-color :  #339DFF;
+  background-color :  #191970;
   border : none;
   color : white;
 
@@ -260,7 +260,6 @@ export default function Chart( {btnTitle,data}: IChart  ){
                   </SongButtonContainer>
               </SongColumn>
 
-              
             </SongContainer>)}
 
           </ChartBox>

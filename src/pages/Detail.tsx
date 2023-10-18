@@ -218,7 +218,7 @@ export default function Detail() {
 
         <OtherContainer>
             <OtherCol>
-            <OtherTitle>비슷한 음역대의 다른 곡</OtherTitle>
+            <OtherTitle>추천 곡</OtherTitle>
             <OtherListContainer>
                 {
                     [1,2,3,4].map((_,i) => <OtherList key={i}>

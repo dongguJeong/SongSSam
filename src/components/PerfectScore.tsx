@@ -26,6 +26,7 @@ interface ISaveVoice{
 const SectionTitle = styled.h1`
   margin-top : 10px;
   margin-bottom : 10px;
+  font-size  :14px;
 `
 const RecordStartBtn = styled.button`
   border : none;
@@ -47,7 +48,7 @@ const RecordStartBtn = styled.button`
 `
 
 const RecordBtnContainer = styled.div`
-  margin-bottom : 15px;
+  margin-bottom : 30px;
   margin-top : 10px;
   display : flex;
 
@@ -73,10 +74,50 @@ const RecordingContainer = styled.div`
 `;
 
 
-const ClipContainer = styled.div`
+const ClipInnerContainer = styled.div`
   display : flex;
 `
 
+const SendBtn = styled.div`
+
+ width : 45px;
+ height : 45px;
+ border-radius : 50%;
+ border : 2px solid black;
+ display : flex;
+ justify-content: center;
+ align-items : center;
+ font-size : 12px;
+ cursor : pointer;
+ transition : all .1s;
+
+ &:hover{
+  background : black;
+  color : white;
+ }
+
+ 
+ 
+`
+
+
+const ClipTitle = styled.div`
+  font-size : 14px;
+  
+  margin-top   : 10px;
+  font-weight : 500;
+  padding-left : 10px;
+  
+`
+
+const ClipContainer = styled.div`
+  border  : 2px solid black;
+  background : white;
+  width : 550px;
+  border-radius : 10px;
+  
+  
+`
 
 
 function PerfectScore({songId} : {songId : string | undefined} ) {
@@ -130,9 +171,6 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
 
   const canvasHalf = canvasWidth / 4;
   const redlineWidth = 3
-  
-  
-
   const barwidth = canvasHalf/buffersize;
 
   const lineNumber = 16;
@@ -354,7 +392,7 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
 
     if(!accessToken){
       alert("로그인이 필요한 서비스입니다");
-      movePage('/');
+      return
     }
     
 
@@ -385,7 +423,7 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
   const saveClip = () => {
     const clipName = `${count}번 클립`;
     setCount((prev) => prev + 1);
-    const blob = new Blob(chunks, { type: 'audio/wav' });
+    const blob = new Blob(chunks, { type: 'audio/mp3' });
     setChunks(() => []);
     const audioURL = window.URL.createObjectURL(blob);
     const clipDurationTime = (recordingEndTime - recordingStartTime) / 1000; // 밀리초를 초로 변환
@@ -453,15 +491,16 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
 
         
       <section>
-        <SectionTitle>녹음 클립들</SectionTitle>
+        
         {clips.map((clip, i) => (
-          <div key={i}>
-            <h1 style={{marginBottom : '10px'}}>{clip.clipName}</h1>
-            <ClipContainer>
+          <ClipContainer key={i}>
+            <ClipTitle >{clip.clipName}</ClipTitle>
+            <ClipInnerContainer>
               <AudioContainer audioSource={clip.audioURL} clipDurationTime = {clip.clipDurationTime}></AudioContainer>
-              <button onClick={() => sendVoice(clip.blob)}>파일 전송</button>
-            </ClipContainer> 
-          </div>
+              
+              <SendBtn onClick={() => sendVoice(clip.blob)}>파일<br/>전송</SendBtn>
+            </ClipInnerContainer> 
+          </ClipContainer>
         ))}
 
          

@@ -48,14 +48,20 @@ export default function Search(){
     
         fetchData(); 
       }, [target,accessToken]);
-
+      
 
 
     return(
         <Layout>
             <BigTitle title={makeTitle()}/>
             <Wrapper>
+
+              {
+                search ? 
               <Chart  btnTitle ="커버곡 만들러 가기"  data={search} />
+                :
+              <h1>{target}에 대한 검색 결과가 없습니다</h1>
+            }
             </Wrapper>
         </Layout>
     )

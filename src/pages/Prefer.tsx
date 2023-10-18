@@ -7,22 +7,19 @@ import BigTitle from "../components/BigTitle";
 
 
 const Wrapper = styled.div`
+    pading-top : 20px;
     display: flex;
     align-items: center;
-    padding-top : 50px;
     flex-direction : column;
     overflow: hidden;
     
 `
 
 const Header = styled.div`
-    
     text-align : center;
     width : 200px;
     height : 70px;
-    font-size  : 17px;
-
-    
+    font-size  : 16px;
     
 `;
 
@@ -31,11 +28,12 @@ const HeaderBtn = styled.div<{bgcolor : string}>`
     border-radius : 7px;
     text-align : center;
     padding : 5px 10px;
-    margin-top : 10px;
+    margin-top : 10px;    
 `
 
 
 const Grid = styled.div`
+    margin-top  :5px;
     display : grid;
     grid-template-columns : repeat(var(--gridNum), var(--preferImgSize));
     grid-gap : 45px;
@@ -44,8 +42,8 @@ const Grid = styled.div`
 const ChartContainer = styled.div<{bgpath : string ; isclicked : string | undefined}>`
 
     border-radius : 10px;
-    height :120px;
-    width :120px;
+    height :110px;
+    width :110px;
     background-image : url(${prop => prop.bgpath});
     background-size : cover;
     background-position: center;
@@ -71,7 +69,7 @@ const SongTitle = styled.div`
     padding-top : 5px;
     padding-left : 5px;
     text-align : center;
-    font-size : 14px;
+    font-size : 13px;
 `;
 
 

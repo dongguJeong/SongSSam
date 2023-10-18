@@ -4,12 +4,13 @@ import '../styles/global.css';
 
 const AudioPlayer = styled.div`
     display : flex;
-    width : 500px;
-    background : white;
+    width : 490px;
+  
     --primary : #50bcdf;
-    border-radius : 50px;
-    border : 1px solid black;
+    background-color : transparent;
+    
     align-items : center;
+    
 
 
 
@@ -23,6 +24,7 @@ const ForwardBackWard = styled.div`
     justify-content : center;
     padding : 10px 10px;
     cursor : pointer;
+    fill : black;
 
     &:hover{
         color : var(--primary);
@@ -57,9 +59,9 @@ const PlayPause = styled.div`
 const ProgressBar = styled.input`
     --bar-bg : #A3A096;
     --seek-before-width : 0;
-    --seek-before-color : #FFBA46;
+    --seek-before-color : #;
     --knobby : #000000;
-    --selectedKnobby : #26c9c3;
+    --selectedKnobby : #000000;
     appearance : none;
 
     background : var(--bar-bg);
@@ -147,9 +149,9 @@ const ProgressBar = styled.input`
 const VolumeBar = styled.input`
     --bar-bg : #A3A096;
     --seek-before-width : 100%;
-    --seek-before-color : #FFBA46;
+    --seek-before-color : #000000;
     --knobby : #000000;
-    --selectedKnobby : #26c9c3;
+    --selectedKnobby : #000000;
     appearance : none;
 
     background : var(--bar-bg);
@@ -239,14 +241,16 @@ const CurrentTime = styled.div`
     width : 70px;
     height : 20px;
     text-align : center;
-    padding-top : 2px;
+    padding-top : 4px;
+    font-size : 12px;
     
 `
 const DurationTime = styled.div`
     text-align : center;
     width : 70px;
     height : 20px;
-    padding-top : 2px;
+    padding-top : 4px;
+    font-size : 12px;
 
     
 `
@@ -412,7 +416,7 @@ const AudioContainer = ({audioSource, clipDurationTime} : {audioSource : string 
       }
 
     return (
-        <AudioPlayer>
+        <AudioPlayer >
             <audio ref={audioPlayerRef} 
                   
             >

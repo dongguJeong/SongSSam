@@ -196,7 +196,7 @@ function MyPage() {
                 
 
                 <audio controls>
-                  <source src={URL.createObjectURL(i)} type='audio/wav'></source>
+                  <source src={URL.createObjectURL(i)} type='audio/mp3'></source>
                 </audio>
               </div>
             ))
