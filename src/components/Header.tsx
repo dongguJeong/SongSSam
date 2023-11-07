@@ -127,10 +127,10 @@ const Overlay = styled.div`
   position : fixed;
   top : 0;
   left : 0;
-
   width : 100%;
   height : 100%;
   background-color : rgba(133, 133, 133,0.5);
+  cursor : pointer;
 `
 
 
@@ -142,7 +142,7 @@ function MainHeader() {
   const [click, setClick] = useState(false);
   
   const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
-  
+
   const clickLogin = () =>{
     
     setClick((cur) => true);
@@ -158,13 +158,10 @@ function MainHeader() {
           method : 'GET'
         }
       );
-      
     }
     catch(error) {
       console.log(error);
     }
-
-    
   }
 
   
@@ -216,7 +213,7 @@ function MainHeader() {
                   
                 
                 <Link  to={KAKAO_AUTH_URL}>
-                  <img src='/img/kakao.png' alt='카카오톡'/>
+                  <img style={{width : '270px'}} src='/img/kakao.png' alt='카카오톡'/>
                 </Link>
                 
               </LoginInnerContainer>

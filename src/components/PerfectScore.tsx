@@ -388,7 +388,7 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
 
   //녹음 기능
   const handleStartRecording = () => {
-    console.log("녹음 시작");
+    
 
     if(!accessToken){
       alert("로그인이 필요한 서비스입니다");
@@ -410,8 +410,6 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
 
   const handleStopRecording = () => {
 
-    console.log("녹음 끝");
-    
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       setRecording(false);
@@ -437,9 +435,11 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
 
 
   const sendVoice = (음성파일 : Blob) => {
-    const voiceURL = `https://songssam.site:8443/member/upload`;
+
+    const mp3File = new Blob([음성파일] , {'type' : 'audio/mpeg'});
+    const voiceURL = `https://songssam.site:8443/member/upload?songId=${songId}`;
     const formData = new FormData();
-    formData.append('file', 음성파일, `${songId}.wav`);
+    formData.append('file', mp3File, `${songId}.mp3`);
   
     // fetch를 사용하여 서버로 전송
     fetch(voiceURL, {

@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styled from "styled-components";
 import { ChangeEvent } from 'react';
-
+import { useDispatch } from 'react-redux';
+import { setLoadingTrue } from "../redux/loadingSlice";
 
 const SearchBarForm = styled.form`
     width : 100%;
@@ -57,12 +58,16 @@ export default function SearchBBar ( ){
     };
 
     const [search, setSearch] = useState("");
+    const dispatch = useDispatch();  
+
 
     
     const handleSubmit = (e :React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if(search === "")
             return;
+
+        dispatch(setLoadingTrue());
         movePage(`/search/${search}`);
         setSearch("");
     }

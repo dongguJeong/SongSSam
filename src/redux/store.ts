@@ -3,10 +3,12 @@ import accessTokenSlice from './accessTokenSlice';
 import { persistReducer,persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage/session";
 import refreshTokenSlice from './refreshTokenSlice';
+import loadingSlice from './loadingSlice';
 
 const rootReducer = combineReducers({
   accessToken : accessTokenSlice,
   refreshToken : refreshTokenSlice,
+  loadingToken : loadingSlice,
 })
 
 const persistConfig = {

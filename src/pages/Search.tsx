@@ -3,15 +3,31 @@ import Layout from "../components/Layout";
 import React, { useEffect,useState } from "react";
 import Chart, { IData } from "../components/Chart";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import BigTitle from "../components/BigTitle";
+import LoadingCircle from "../components/LoadingCircle";
+import { setLoadingfalse } from "../redux/loadingSlice";
 
 const Wrapper = styled.div`
 margin : 0 auto;
 padding-bottom : 20px;
   
 `
+
+const CircleWrapper = styled.div`
+ position : fixed;
+ 
+ width : 100vw;
+ height : 100vh;
+ top : 0;
+ left : 0;
+ background-color : transparent;
+ display : flex;
+ justify-content : center;
+ align-items : center;
+`
+
 export default function Search(){
 
 
@@ -19,14 +35,11 @@ export default function Search(){
         return ` "${target}" 에 대한 검색 결과`
     }
 
+    const dispatch = useDispatch();
     const {target} = useParams();
 
     const [search,setSearch] = useState<IData[]>([]);
-
-    
-
-    const accessToken = useSelector((state: RootState) => state.accessToken);
-
+    const loading = useSelector((state : RootState) => state.loadingToken.loading);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,30 +50,34 @@ export default function Search(){
               }
             )).json();
 
-            console.log(response);
             setSearch(response);
-
+            
             
           } catch (error) {
             console.error('Error fetching data:', error);
           }
+          finally{
+            dispatch(setLoadingfalse);
+          }
         };
     
         fetchData(); 
-      }, [target,accessToken]);
+      }, [target,loading]);
       
-
-
+      
     return(
         <Layout>
             <BigTitle title={makeTitle()}/>
             <Wrapper>
 
               {
-                search ? 
-              <Chart  btnTitle ="커버곡 만들러 가기"  data={search} />
+              loading ?
+
+              <CircleWrapper>
+                <LoadingCircle/>
+              </CircleWrapper>
                 :
-              <h1>{target}에 대한 검색 결과가 없습니다</h1>
+              <Chart  btnTitle ="커버곡 만들러 가기"  data={search} />
             }
             </Wrapper>
         </Layout>

@@ -6,33 +6,16 @@ import { setAccessToken } from "../redux/accessTokenSlice";
 import { setRefreshToken } from "../redux/refreshTokenSlice";
 import { useDispatch } from 'react-redux';
 import serverURL from "../asset/Url";
+import LoadingCircle from "../components/LoadingCircle";
 
 
 const Wrapper = styled.div`
-    width : 100vw;
-    height : 100vh;
+    width : 100%;
+    height : 100%;
     display : flex;
     justify-content : center;
     align-items : center;
     background-color : ${prop => prop.theme.iconColor};
-`
-
-const Circle = styled.div`
-    width: 48px;
-    height: 48px;
-    border-radius : 50%;
-    border: 5px solid #FFF;
-    border-bottom-color: #FF3D00;
-    animation: rotation 1s linear infinite;
-
-    @keyframes rotation {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-    } 
 `
 
 
@@ -79,7 +62,7 @@ export default function Redirect(){
     
     return (
        <Wrapper>
-            <Circle/>
+            <LoadingCircle/>
        </Wrapper>
 
     )

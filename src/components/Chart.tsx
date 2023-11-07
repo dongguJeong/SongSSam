@@ -122,9 +122,9 @@ const SongButton = styled.button`
   height : 40px;
   border-radius : 5px;
   width : 120px;
-  background-color :  #191970;
+  background-color :  #F6B941;
   border : none;
-  color : white;
+  color : black;
 
   &:hover{
     box-shadow: 0px 4px 6px -1px rgb(0, 0, 0, .3);

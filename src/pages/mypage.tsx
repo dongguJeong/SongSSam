@@ -86,7 +86,7 @@ interface IProfile {
 
 interface IVocal {
   id: null;
-  awsUrl: string;
+  originUrl: string;
   spectr: [];
   createdAt: string;
   user: null;
@@ -143,15 +143,15 @@ function MyPage() {
   useEffect(() => {
     if (vocalData) {
       for (let vocal of vocalData) {
-        console.log(vocal.awsUrl);
-        downloadWavFile(vocal.awsUrl);
+        
+        downloadWavFile(vocal.originUrl);
       }
     }
   }, [vocalData]);
 
-  const downloadWavFile = async (awsUrl: string) => {
+  const downloadWavFile = async (originUrl: string) => {
     try {
-      const response = await fetch(`https://songssam.site:8443/member/download?url=${awsUrl}`, {
+      const response = await fetch(`https://songssam.site:8443/member/download?url=${originUrl}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
