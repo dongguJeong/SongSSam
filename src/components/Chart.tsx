@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const ChartContainer = styled.div`
   width : 100%;  
@@ -151,6 +153,10 @@ const SongButton = styled.button`
 `;
 
 
+const RedButton = styled(SongButton)`
+  color : white;
+  background-color : red;
+`
 
 
 const ChartHeader= styled.div`
@@ -198,6 +204,7 @@ export interface IData{
   imgUrl : string ,
   artist : string,
   genre : string,
+  vocalUrl : null | string,
 }
 
 export interface IChart {
@@ -207,7 +214,7 @@ export interface IChart {
 }
 
 
-const BlackSpace = styled.div`
+const BlankSpace = styled.div`
   width : 90px;
   background-color : transparent;
 `
@@ -215,14 +222,19 @@ const BlackSpace = styled.div`
 export default function Chart( {btnTitle,data}: IChart  ){
   
   const movePage = useNavigate();
-  
+  const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
+
+
   const goToDetail = ({artist , title, imgUrl, id} : {artist : string, title : string, imgUrl : string , id : number}) => {
     movePage(`/detail/${artist}/${title}/${id}/${encodeURIComponent(imgUrl)}`);
   }
 
+  const goToRequest = () => {
+    movePage('/request');
+  };
+
     return(
 
-        
         <ChartContainer>
           <ChartHeader>
             <span>순위</span> <span>제목</span> <span>가수</span> 
@@ -238,14 +250,11 @@ export default function Chart( {btnTitle,data}: IChart  ){
                   <SongImg bgpath = {song.imgUrl}  
                           onClick={() => goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id})}/> 
                   : 
-                  <BlackSpace></BlackSpace> 
+                  <BlankSpace></BlankSpace> 
                 }
-
                   <SongDetail>
                     <SongTitle onClick={() => goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id})}>
-                      
-                        {song.title}
-                      
+                        {song.title}           
                     </SongTitle>
                     <Singer onClick={()=>goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id})}>
                         {song.artist}
@@ -254,9 +263,16 @@ export default function Chart( {btnTitle,data}: IChart  ){
                   </SongColumnLeft>
 
                   <SongButtonContainer>
-                    <SongButton onClick={()=>goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id})}>
+                      {
+                      song.vocalUrl === null ?
+                      <RedButton onClick={() => goToRequest()} >
+                      노래 업로드하기
+                     </RedButton> 
+                      :
+                      <SongButton onClick={()=>goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id})}>
                        {btnTitle} 
-                    </SongButton>
+                      </SongButton>
+                      }
                   </SongButtonContainer>
               </SongColumn>
 

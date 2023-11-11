@@ -18,6 +18,13 @@ const Wrapper = styled.div`
     background-color : ${prop => prop.theme.iconColor};
 `
 
+const Container = styled.div`
+  width : 100%;
+  height : 100%;
+  display : flex;
+  justify-content : center;
+  align-items : center;
+`
 
 
 export default function Redirect(){
@@ -33,11 +40,8 @@ export default function Redirect(){
           authorizationCode: code // 코드를 요청의 본문에 추가ㄴ
           }, );
 
-
           dispatch(setAccessToken(res.data.response.accessToken));
-          dispatch(setRefreshToken(res.data.response.refreshToken));
-          
-        
+          dispatch(setRefreshToken(res.data.response.refreshToken));        
           movePage("/");
           
         } catch (err) {
@@ -62,7 +66,10 @@ export default function Redirect(){
     
     return (
        <Wrapper>
+          <Container>
             <LoadingCircle/>
+          </Container>
+            
        </Wrapper>
 
     )

@@ -80,14 +80,14 @@ const ClipInnerContainer = styled.div`
 
 const SendBtn = styled.div`
 
- width : 45px;
- height : 45px;
+ width : 40px;
+ height : 40px;
  border-radius : 50%;
  border : 2px solid black;
  display : flex;
  justify-content: center;
  align-items : center;
- font-size : 12px;
+ font-size : 10px;
  cursor : pointer;
  transition : all .1s;
 
@@ -501,6 +501,7 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
               <SendBtn onClick={() => sendVoice(clip.blob)}>파일<br/>전송</SendBtn>
             </ClipInnerContainer> 
           </ClipContainer>
+          
         ))}
 
          

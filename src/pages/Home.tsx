@@ -3,7 +3,6 @@ import Layout from '../components/Layout';
 import { styled } from 'styled-components';
 import Chart from '../components/Chart';
 import serverURL from "../asset/Url";
-
 import { IData } from '../components/Chart';
 import BigTitle from '../components/BigTitle';
 
@@ -23,11 +22,9 @@ function Search() {
       try {
         const response = await (await fetch(`https://${serverURL}/song/chartjson`,
           {
-            method: "GET",
-            
+            method: "GET",         
           }
-        )).json();
-        
+        )).json();        
         
         setChartData(response);
 
@@ -40,18 +37,13 @@ function Search() {
 
     }, []);
 
-    
-    
-
-
   return (
     <Layout>
-
-   <Wrapper>
+      <Wrapper>
         <BigTitle title = '인기차트'/>
         <Chart  btnTitle ="커버곡 만들러 가기"  data={chartData} />
       </Wrapper>
-      </Layout>
+    </Layout>
   )
 };
 

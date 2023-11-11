@@ -5,15 +5,9 @@ import '../styles/global.css';
 const AudioPlayer = styled.div`
     display : flex;
     width : 490px;
-  
     --primary : #50bcdf;
     background-color : transparent;
-    
     align-items : center;
-    
-
-
-
 `
 
 const ForwardBackWard = styled.div`
@@ -70,8 +64,6 @@ const ProgressBar = styled.input`
     width : 100%;
     height : 3px;
     outline : none;
-   
-
 
     &::-moz-range-track{
         background : var(--bar-bg);

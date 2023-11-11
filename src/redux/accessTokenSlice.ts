@@ -2,7 +2,6 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export type accessTokenState = {
     accessToken : string | null,
-    
 }
 
 

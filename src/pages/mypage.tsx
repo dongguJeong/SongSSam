@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import styled from 'styled-components';
-
 import "../styles/global.css";
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';

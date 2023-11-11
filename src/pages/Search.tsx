@@ -51,13 +51,11 @@ export default function Search(){
             )).json();
 
             setSearch(response);
-            
+            console.log(search);
+            dispatch(setLoadingfalse());
             
           } catch (error) {
             console.error('Error fetching data:', error);
-          }
-          finally{
-            dispatch(setLoadingfalse);
           }
         };
     
@@ -72,7 +70,6 @@ export default function Search(){
 
               {
               loading ?
-
               <CircleWrapper>
                 <LoadingCircle/>
               </CircleWrapper>

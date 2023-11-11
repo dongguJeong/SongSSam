@@ -4,7 +4,8 @@ import Layout from "../components/Layout";
 import serverURL from "../asset/Url";
 import { IData } from "../components/Chart";
 import BigTitle from "../components/BigTitle";
-
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const Wrapper = styled.div`
     pading-top : 20px;
@@ -73,16 +74,13 @@ const SongTitle = styled.div`
 `;
 
 
-interface IClick {
-    title : string;
-    id : number;
-}
-
-
 function Prefer(){
 
     const [chartData, setChartData] = useState<IData[]>([]);
-    
+    const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
+    const [count ,setCount] = useState(0);
+    const [clicked, setClicked] = useState<number[]>([]);
+
     useEffect(() => {
         const fetchData = async () => {
           try {
@@ -91,46 +89,53 @@ function Prefer(){
                   method: "GET",
                 }
               )).json();
-            
-            
             setChartData(response);
-    
           }catch(err){
             console.log("실패!");
             console.log(err);
           }
         };
         fetchData();
-    
         }, []);
 
-    const [count ,setCount] = useState(0);
-    const [clicked, setClicked] = useState<IClick[]>([]);
 
-        const clickPrefer = ( {title , id} : IClick) => {
-
-            const index = clicked.findIndex((i) => i.title === title);
-            
+        const clickPrefer = ( id : number) => {
+            const index = clicked.findIndex((i) => i === id);
             if( index === -1) //추가
             {
                 if(count === 10){
                     return ;
                 }
-
-                const temp  = {title, id};
+                const temp  = id;
                 setClicked((prev) => [...prev , temp]);
                 setCount((cur) => cur+1);
             }
-
             else{ // 삭제
                 setClicked([ ...clicked.slice(0,index), ...clicked.slice(index+1) ] );
                 setCount((cur) => cur-1);
             }  
-            
         }
 
         const handleSubmit = () => {
-            
+            const uploadPrefer = async () => {
+                try {
+                  const response = await fetch(`https://songssam.site:8443/member/user_list`, {
+                    method: "POST",
+                    headers: {
+                      Authorization: `Bearer ${accessToken}`,
+                      "Content-Type": "application/json",
+                    },
+                    body : JSON.stringify(clicked),
+                  });
+                  if (response.ok) {
+                    console.log("요청 성공");
+                  }
+                } catch (error) {
+                  console.error("선호 노래 업로드 실패:", error);
+                }
+              };
+           
+            uploadPrefer()
             alert("제출했습니다");
         }
 
@@ -158,11 +163,11 @@ function Prefer(){
                 </Header>
                 <Grid>
                 {chartData?.map((song,i) => (
-                    <ChartContainer  isclicked={clicked.some((item) => item.id === song.id) ? "true" : undefined} key={i} bgpath={song.imgUrl} onClick={() =>clickPrefer({title : song.title, id : song.id} )}>
+                    <ChartContainer  isclicked={clicked.some((id) => id === song.id) ? "true" : undefined} key={i} bgpath={song.imgUrl} onClick={() =>clickPrefer(song.id )}>
                        
                        <SongTitle>{song.title.length <= 20 ? song.title : song.title.slice(0,20) + '...' }</SongTitle>
                        
-                       {clicked.some((item) => item.id === song.id) &&
+                       {clicked.some((id) => id=== song.id) &&
                         
                         <svg xmlns="http://www.w3.org/2000/svg" fill="green" height="2.5em" viewBox="0 0 512 512" >
                         <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>
