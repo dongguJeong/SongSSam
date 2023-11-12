@@ -4,30 +4,25 @@
 
 npm start
 
-![메인화면]<img width="1440" alt="스크린샷 2023-10-07 오후 3 39 14" src="https://github.com/ckj18/SongSSam/assets/133619736/f7eab821-bedc-4d3b-8a66-c0fa19e82b35">
+## 메인 화면
+<img width="800" alt="스크린샷 2023-11-12 오후 8 31 56" src="https://github.com/ckj18/SongSSam/assets/133619736/23f4174d-5c1a-48e3-849a-d4978611b244">
 
+## 곡 상세 페이지
+<img width="800" alt="스크린샷 2023-11-12 오후 8 32 16" src="https://github.com/ckj18/SongSSam/assets/133619736/9433f93a-5f98-4ba3-b069-1e2858b51a4a">
 
+## 퍼펙트 스코어 확인 
+<img width="1420" alt="스크린샷 2023-11-12 오후 8 33 30" src="https://github.com/ckj18/SongSSam/assets/133619736/6d816de1-e994-4ffc-85f7-28c466588f04">
 
+## 녹음 종료 클릭 시 오디오 컴포넌트 생성
+<img width="400" alt="스크린샷 2023-11-12 오후 8 33 42" src="https://github.com/ckj18/SongSSam/assets/133619736/f86c511b-60a7-4187-b333-821891d15d69">
 
+## 내 정보
 
+## 선호 노래 조사
+<img width="800" alt="스크린샷 2023-11-12 오후 8 33 52" src="https://github.com/ckj18/SongSSam/assets/133619736/8bb431ff-3caf-49a8-9d37-e38c32b104e2">
 
-![화면 축소시]<img width="485" alt="스크린샷 2023-10-07 오후 7 53 04" src="https://github.com/ckj18/SongSSam/assets/133619736/a2d49c09-b2a0-4556-b190-7faa1fe10faa">
+### 선택 시
+<img width="800" alt="스크린샷 2023-11-12 오후 8 34 04" src="https://github.com/ckj18/SongSSam/assets/133619736/9dcf3c1f-0ab5-456e-a4d2-406f36cd3b36">
 
-
-
-![퍼펙트 스코어 클릭시]<img width="1002" alt="스크린샷 2023-10-07 오후 7 53 20" src="https://github.com/ckj18/SongSSam/assets/133619736/48d06a3b-4ebe-4b5e-bdf5-f641ea63bb44">
-
-
-![녹음 버튼 클릭 시 오디오 컴포넌트 생성]<img width="614" alt="스크린샷 2023-10-15 오후 11 57 35" src="https://github.com/ckj18/SongSSam/assets/133619736/2072fdda-1869-4ca1-8621-b9f362af6fcd">
-
-
-
-![마이 페이지]<img width="1438" alt="스크린샷 2023-10-07 오후 7 54 02" src="https://github.com/ckj18/SongSSam/assets/133619736/6933829d-558e-4c9f-946e-1d6a5ff84f03">
-
-
-![선호노래 조사]<img width="1440" alt="스크린샷 2023-10-07 오후 7 54 08" src="https://github.com/ckj18/SongSSam/assets/133619736/1d6e139d-54d1-4d9c-b034-3f4a6e46b1e6">
-
-
-
-
-![선택시]<img width="485" alt="스크린샷 2023-10-07 오후 7 54 24" src="https://github.com/ckj18/SongSSam/assets/133619736/f73b681f-c1b5-4b64-9d2a-a9c1ca772c94">
+## 노래 업로드
+<img width="800" alt="스크린샷 2023-11-12 오후 8 34 27" src="https://github.com/ckj18/SongSSam/assets/133619736/1809c077-11cf-4628-8e3a-3e324a92ed7b">
