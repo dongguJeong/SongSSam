@@ -41,6 +41,11 @@
 
 
 
+<img width="1192" alt="스크린샷 2023-11-12 오후 9 06 40" src="https://github.com/ckj18/SongSSam/assets/133619736/86d54827-8b7b-481c-82f2-78fdd3bdd7d1">
+
+
+
+
 ## 내 정보
 
 
