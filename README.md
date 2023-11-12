@@ -69,5 +69,7 @@
  
 <img width="800" alt="스크린샷 2023-11-12 오후 8 34 27" src="https://github.com/ckj18/SongSSam/assets/133619736/1809c077-11cf-4628-8e3a-3e324a92ed7b">
 
+
  
 
+<img width="1183" alt="스크린샷 2023-11-12 오후 9 08 47" src="https://github.com/ckj18/SongSSam/assets/133619736/13d9cdf6-e34d-4619-b5a0-af526815b9fc">
