@@ -2,10 +2,10 @@
 
 ## 실행 방법 
 
-git clone https://github.com/ckj18/SongSSam.git
+> git clone https://github.com/ckj18/SongSSam.git
 
 
-npm start
+> npm start
 
 
 ## 메인 화면
@@ -29,6 +29,8 @@ npm start
 <img width="1430" alt="스크린샷 2023-11-12 오후 8 43 36" src="https://github.com/ckj18/SongSSam/assets/133619736/32163b67-c0b9-45d9-be9c-86127e921b70">
 
  **곡 상세 페이지에서 파일 업로드를 하면 업로드한 파일 이름과 상관없이 해당 곡의 songId로 알아서 이름이 바뀌어 서버에 전송이 됩니다**
+
+ 
  **MP3 파일만 업로드 가능**
 
 ## 내 정보
@@ -45,5 +47,7 @@ npm start
 <img width="800" alt="스크린샷 2023-11-12 오후 8 34 27" src="https://github.com/ckj18/SongSSam/assets/133619736/1809c077-11cf-4628-8e3a-3e324a92ed7b">
 
  **노래 업로드에서 업로드 시에는 파일 이름으로 서버에 전송이 됩니다**
+
+ 
  **mp3 파일만 업로드 가능**
 
