@@ -3,6 +3,8 @@
 ## 실행 방법 
 
 git clone https://github.com/ckj18/SongSSam.git
+
+
 npm start
 
 
