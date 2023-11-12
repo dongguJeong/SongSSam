@@ -3,8 +3,9 @@ import Layout from '../components/Layout';
 import { styled } from 'styled-components';
 import "../styles/global.css";
 import PerfectScore from '../components/PerfectScore';
-import { useParams , useNavigate} from 'react-router-dom';
+import { useParams} from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import UploadFormat from '../components/UploadFormat';
 
 const Wrapper = styled.div` 
   width : 80%;
@@ -170,15 +171,41 @@ const PerfectScoreContainer = styled.div`
     }
 `
 
+const UploadLabel = styled.label`
+    width : 80px;
+    height : 30px;
+    background-color  : red;
+    color : white;
+    font-size : 13px;
+    padding-top : 9px;
+    padding-left : 11px;
+    border-radius : 5px;
+    margin-left : 10px;
+    cursor : pointer;
+`;
+
+const UploadInput = styled.input`
+    display : none;
+`;
+
+const FFlex = styled.div`
+    display : flex;
+`
+
 export default function Detail() {
 
     const {title, singer,imgUrl,songId} = useParams();
     const [perfect,setPerfect] = useState(false);
     const [play , setPlay] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [up, setUp] = useState(false);
 
     const handlePerfect = () => {
         setPerfect((cur) => !cur);
+    }
+
+    const handleUp = () => {
+        setUp((cur) => !cur);
     }
 
     useEffect(() => {
@@ -222,6 +249,7 @@ export default function Detail() {
         }
     };
     
+   
   return (
   <Layout>
      <Wrapper>
@@ -241,12 +269,22 @@ export default function Detail() {
                         </Singer>
                     </SongInfoContainerTop>
                     <PlayBtnContainer>
-                    <PlayBtn onClick={handlePlay}>노래 듣기</PlayBtn>
+                    <FFlex> 
+                        <PlayBtn onClick={handlePlay}>노래 듣기</PlayBtn>
+                        
+                        <UploadLabel>
+                            <span>노래 업로드</span>
+                            <UploadInput type='file' accept='audio/mpeg'/>
+                        </UploadLabel>
+                    </FFlex>  
+
                 </PlayBtnContainer>
                 </SongCol>
                 
             </SongInfoContainer>
         </SongContainer>
+        
+
 
         <SampleButton>
                     <span>샘플링이 필요합니다</span> 
@@ -255,6 +293,9 @@ export default function Detail() {
                     <span>퍼펙트 스코어</span> 
         </SampleButton>
 
+        <SampleButton onClick={handleUp}>
+                    <span>파일 업로드가 필요합니다</span> 
+        </SampleButton>
         {
             perfect &&
             <PerfectScoreContainer > 
@@ -263,6 +304,12 @@ export default function Detail() {
             </PerfectScoreContainer>
         }
 
+        <div style={{marginTop : '10px'}}>
+        {
+            up && <UploadFormat Id={Number(songId)}/>
+        }
+        </div>
+        
         <OtherContainer>
             <OtherCol>
             <OtherTitle>추천 곡</OtherTitle>
@@ -277,6 +324,8 @@ export default function Detail() {
             </OtherCol>
         </OtherContainer>
        </Container>
+        
+        
     </Wrapper>
    
   </Layout>

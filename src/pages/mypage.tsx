@@ -108,7 +108,6 @@ function MyPage() {
   const [vocalData, setVocalData] = useState<IVocal[]>([]);
   const [wavFile, setWavFile] = useState<IMp3[]>([]);
   const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // 프로필 데이터 가져오기
   useEffect(() => {
