@@ -8,6 +8,7 @@ const AudioPlayer = styled.div`
     --primary : #50bcdf;
     background-color : transparent;
     align-items : center;
+
 `
 
 const ForwardBackWard = styled.div`
@@ -53,9 +54,9 @@ const PlayPause = styled.div`
 const ProgressBar = styled.input`
     --bar-bg : #A3A096;
     --seek-before-width : 0;
-    --seek-before-color : #;
+    --seek-before-color : #000000;
     --knobby : #000000;
-    --selectedKnobby : #000000;
+    --selectedKnobby : #26c9c3;
     appearance : none;
 
     background : var(--bar-bg);
@@ -143,7 +144,7 @@ const VolumeBar = styled.input`
     --seek-before-width : 100%;
     --seek-before-color : #000000;
     --knobby : #000000;
-    --selectedKnobby : #000000;
+    --selectedKnobby : #26c9c3;
     appearance : none;
 
     background : var(--bar-bg);
@@ -281,25 +282,24 @@ const AudioContainer = ({audioSource, clipDurationTime} : {audioSource : string 
     const audioPlayerRef = useRef<HTMLAudioElement  | null>(null);
     const progressBarRef = useRef<HTMLInputElement | null>(null);
     let animationRef : any = null; 
-    
-
 
     // 해당 오디오의 총 녹음된 음성의 재생 시간 표시
     useEffect(() => {
         const progressBar = progressBarRef.current;
         const audioPlayer =audioPlayerRef.current;
+
         if(audioPlayer && progressBar && clipDurationTime ) {
-         
             const seconds = Math.floor(clipDurationTime);
             setDuration(seconds)
             progressBar.max = seconds.toString();
+            return;
         }
-    },[audioPlayerRef])
+    },[audioPlayerRef]);
 
-    
  
     //시간을 00:00초로 표시
     const calculateTime = (secs : number) => {
+
         const minutes = Math.floor(secs/ 60) ;
         const returnedMinute = minutes < 10 ? `0${minutes}` : `${minutes}`;
         const seconds = Math.floor(secs% 60) ;
@@ -313,13 +313,10 @@ const AudioContainer = ({audioSource, clipDurationTime} : {audioSource : string 
         const audioPlayer = audioPlayerRef.current;
         setIsPlaying(!prevValue);
         
-        
         if (audioPlayer ) {
             if (!prevValue) {
                 audioPlayer.play();
                 requestAnimationFrame(whilePlaying);
-                    
-                    
             }
              else {
                 audioPlayer.pause();
@@ -328,10 +325,6 @@ const AudioContainer = ({audioSource, clipDurationTime} : {audioSource : string 
         }
     }
     
-
-
-
-
     const changeRange = () => {
         const progressBar = progressBarRef.current;
         const audioPlayer = audioPlayerRef.current;
@@ -342,9 +335,6 @@ const AudioContainer = ({audioSource, clipDurationTime} : {audioSource : string 
             setCurrentTime(parseFloat(progressBar.value)); 
         }
     }
-  
-
-    
 
     const whilePlaying = () => {
 
@@ -364,12 +354,10 @@ const AudioContainer = ({audioSource, clipDurationTime} : {audioSource : string 
         const volumeBar = volumeBarRef.current;
         const audioPlayer = audioPlayerRef.current;
 
-
         if(volumeBar && audioPlayer) {
             const volumeValue = parseFloat(volumeBar.value);
             volumeBar.style.setProperty('--seek-before-width',`${volumeValue}%`);
             audioPlayer.volume = volumeValue/100;
-            
         }
       }
 

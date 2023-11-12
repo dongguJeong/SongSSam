@@ -18,7 +18,7 @@ const Container = styled.div`
     top : var(--navigation-height);
     
     width : calc(100vw - var(--LeftMenu-width)) ;
-    min-height : 100vh;
+    min-height : 92vh;
     background-color : #FFFFFF;
     
 `;

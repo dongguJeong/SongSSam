@@ -18,16 +18,9 @@ interface ISaveVoice{
   clipName : string,
   audioURL : string,
   blob : Blob,
-  clipDurationTime : number ,
-  
+  clipDurationTime : number ,  
 }
 
-
-const SectionTitle = styled.h1`
-  margin-top : 10px;
-  margin-bottom : 10px;
-  font-size  :14px;
-`
 const RecordStartBtn = styled.button`
   border : none;
   color : white;
@@ -90,6 +83,8 @@ const SendBtn = styled.div`
  font-size : 10px;
  cursor : pointer;
  transition : all .1s;
+ margin-left : 20px;
+ margin-top : 20px;
 
  &:hover{
   background : black;
@@ -113,12 +108,14 @@ const ClipTitle = styled.div`
 const ClipContainer = styled.div`
   border  : 2px solid black;
   background : white;
-  width : 550px;
+  width : 480px;
   border-radius : 10px;
-  
-  
+  margin-bottom : 10px;
 `
 
+const Flex = styled.div`
+ display : flex;
+`
 
 function PerfectScore({songId} : {songId : string | undefined} ) {
   const [recording, setRecording] = useState(false);
@@ -223,12 +220,10 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
        else{
         voiceArray.current.push({startX : startX,endX : endX, startY: 0, endY : 0});
        }
-      
 
     }else{
       midi = 0;
       voiceArray.current.push({startX : startX, endX : endX, startY: 0, endY :0});
-    
     }
 
     requestAnimationFrame(() => updatePitch(analyserNode, detector, input, sampleRate));
@@ -276,7 +271,6 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
       });
   }, []);
 
-
   //음성을 미디 번호로 변환
   const freqToNote = (freq : number) => {
     return Math.round(12 * (Math.log(freq / 440.0) / Math.log(2))) + 69;
@@ -285,22 +279,16 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
   function midiToNote(midiNumber : number) {
     const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     const octave = Math.floor((midiNumber - 12) / 12); // 12 미디 번호마다 1 옥타브 증가
-  
     const noteName = noteNames[midiNumber % 12];
     
     return `${noteName}${octave}`;
   }
 
-
   //마이크 음성 시각화 하는 로직
-
-  
-  function 프레임마다실행할거(){
+    function 프레임마다실행할거(){
 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d');
-    
-
 
     //오선지  그리기
     if(ctx && canvas){
@@ -308,22 +296,18 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
 
-    
     ctx.clearRect(0,0,canvas.width, canvas.height);
-
     ctx.fillStyle = 'white';
     canvas.style.border = '1px solid black';
     canvas.style.borderRadius = '10px';
     canvas.style.boxShadow = '0px 4px 6px -1px rgb(0,0,0,.3)';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    
     ctx.strokeStyle = 'black';
 
     for (let i = 1; i <= lineHeight; i++) {
       const y = i * lineHeight;
       ctx.beginPath();
       ctx.moveTo(0, y);
-      
       
       if(i=== 7){
         ctx.lineWidth = 5;
@@ -344,7 +328,6 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
     ctx.stroke();
 
     //사용자 음성을 화면에 시각화
-    
     ctx.strokeStyle =" blue";
 
     for (const voice of voiceArray.current) {
@@ -451,9 +434,9 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
     })
       .then((response) => {
         if (response.ok) {
-          console.log('데이터 전송 성공');
+          alert("파일 전송을 성공했습니다");
         } else {
-          console.error('데이터 전송 실패');
+          alert("파일 전송을 실패했습니다");
         }
       })
       .catch((error) => {
@@ -493,15 +476,16 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
       <section>
         
         {clips.map((clip, i) => (
-          <ClipContainer key={i}>
-            <ClipTitle >{clip.clipName}</ClipTitle>
-            <ClipInnerContainer>
-              <AudioContainer audioSource={clip.audioURL} clipDurationTime = {clip.clipDurationTime}></AudioContainer>
-              
-              <SendBtn onClick={() => sendVoice(clip.blob)}>파일<br/>전송</SendBtn>
-            </ClipInnerContainer> 
-          </ClipContainer>
-          
+          <Flex key={i}>
+            <ClipContainer >
+              <ClipTitle >{clip.clipName}</ClipTitle>
+              <ClipInnerContainer>
+                <AudioContainer audioSource={clip.audioURL} clipDurationTime = {clip.clipDurationTime}></AudioContainer>
+              </ClipInnerContainer> 
+            </ClipContainer>
+
+            <SendBtn onClick={() => sendVoice(clip.blob)}>파일<br/>전송</SendBtn>
+          </Flex>
         ))}
 
          

@@ -6,14 +6,14 @@ import MyPage from "./pages/mypage";
 import Redirect from "./pages/login";
 import Search from './pages/Search';
 import Prefer from "./pages/Prefer";
-import Request from './pages/Request';
+import Upload from './pages/Upload';
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path='/request' element = {<Request></Request>} ></Route>
+          <Route path='/request' element = {<Upload></Upload>} ></Route>
           <Route path = "/prefer" element={<Prefer/>}></Route>
           <Route path='/search/:target' element ={<Search></Search>}></Route>
           <Route path ="/login" element={<Redirect/>}> </Route>

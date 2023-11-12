@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import Layout from '../components/Layout';
 import styled from 'styled-components';
 import "../styles/global.css";
@@ -91,11 +91,24 @@ interface IVocal {
   user: null;
 }
 
+interface IMp3{
+  mp3 : Blob,
+  duration : number,
+}
+
+const AudioWrapper = styled.div`
+  border : 1px solid black;
+  width : 500px;
+  border-radius : 5px;
+  margin-bottom : 10px;
+`
+
 function MyPage() {
   const [profileData, setProfileData] = useState<IProfile>();
   const [vocalData, setVocalData] = useState<IVocal[]>([]);
-  const [wavFile, setWavFile] = useState<Blob[]>([]);
+  const [wavFile, setWavFile] = useState<IMp3[]>([]);
   const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // 프로필 데이터 가져오기
   useEffect(() => {
@@ -148,19 +161,32 @@ function MyPage() {
     }
   }, [vocalData]);
 
+  const getDuration = async (blob: Blob): Promise<number> => {
+    const arrayBuffer = await blob.arrayBuffer();
+    const audioContext = new (window.AudioContext)();
+    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+    return audioBuffer.duration;
+  };
+  
+
   const downloadWavFile = async (originUrl: string) => {
     try {
       const response = await fetch(`https://songssam.site:8443/member/download?url=${originUrl}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      });
+      }); 
+
       const blob = await response.blob();
-      setWavFile(prev => [...prev, blob]);
+      const duration  = await getDuration(blob);
+      console.log(duration);
+      setWavFile(prev => [...prev, {mp3 : blob, duration : duration}]);
     } catch (error) {
       console.error('파일 다운로드 중 오류 발생:', error);
     }
   };
+
+
 
   const profileImage = profileData?.profileUrl !== undefined ? profileData.profileUrl : '/img/user-solid.svg';
 
@@ -191,13 +217,10 @@ function MyPage() {
         </AudioTitle>
         {wavFile
           ? wavFile.map((i, index) => (
-              <div key={index}>
+              <AudioWrapper key={index}>
                 
-
-                <audio controls>
-                  <source src={URL.createObjectURL(i)} type='audio/mp3'></source>
-                </audio>
-              </div>
+                <AudioContainer audioSource={URL.createObjectURL(i.mp3)} clipDurationTime={i.duration}></AudioContainer>
+              </AudioWrapper>
             ))
           : null}
 
