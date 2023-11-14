@@ -205,6 +205,7 @@ export interface IData{
   artist : string,
   genre : string,
   vocalUrl : null | string,
+  originUrl : string,
 }
 
 export interface IChart {
@@ -225,8 +226,8 @@ export default function Chart( {btnTitle,data}: IChart  ){
   const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
 
 
-  const goToDetail = ({artist , title, imgUrl, id} : {artist : string, title : string, imgUrl : string , id : number}) => {
-    movePage(`/detail/${artist}/${title}/${id}/${encodeURIComponent(imgUrl)}`);
+  const goToDetail = ({artist , title, imgUrl, id, originUrl } : {artist : string, title : string, imgUrl : string , id : number, originUrl : string}) => {
+    movePage(`/detail/${artist}/${title}/${id}/${encodeURIComponent(imgUrl)}/${originUrl}`);
   }
 
   const goToRequest = () => {
@@ -248,15 +249,15 @@ export default function Chart( {btnTitle,data}: IChart  ){
 
                 {song.imgUrl ? 
                   <SongImg bgpath = {song.imgUrl}  
-                          onClick={() => goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id})}/> 
+                          onClick={() => goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id , originUrl : song.originUrl === null ? 'null' : song.originUrl.split('/')[1]})}/> 
                   : 
                   <BlankSpace></BlankSpace> 
                 }
                   <SongDetail>
-                    <SongTitle onClick={() => goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id})}>
+                    <SongTitle onClick={() => goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id,originUrl : song.originUrl === null ? 'null' : song.originUrl.split('/')[1]})}>
                         {song.title}           
                     </SongTitle>
-                    <Singer onClick={()=>goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id})}>
+                    <Singer onClick={()=>goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id, originUrl : song.originUrl === null ? 'null' : song.originUrl.split('/')[1]})}>
                         {song.artist}
                     </Singer>
                   </SongDetail>
@@ -264,13 +265,13 @@ export default function Chart( {btnTitle,data}: IChart  ){
 
                   <SongButtonContainer>
                       {
-                      song.vocalUrl === null ?
-                      <RedButton onClick={() => goToRequest()} >
+                      song.originUrl === null ?
+                      <RedButton onClick={() => goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl, id : song.id, originUrl : song.originUrl === null ? 'null' : song.originUrl.split('/')[1]})} >
                       노래 업로드하기
                      </RedButton> 
                       :
-                      <SongButton onClick={()=>goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id})}>
-                       {btnTitle} 
+                      <SongButton onClick={()=>goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl, id : song.id, originUrl : song.originUrl === null ? 'null' : song.originUrl.split('/')[1]})}>
+                        {btnTitle}
                       </SongButton>
                       }
                   </SongButtonContainer>

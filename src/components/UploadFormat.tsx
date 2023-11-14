@@ -153,6 +153,8 @@ export default function UploadFormat (Id : {Id? :number}){
 
     
       const handleUpload = (file : Blob, songId: string ) => {
+
+        console.log(songId);
         const fetchData = async () => {
           const formData = new FormData();
           const mp3File = new Blob([file] , {'type' : 'audio/mpeg'});

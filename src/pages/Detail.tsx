@@ -194,25 +194,23 @@ const FFlex = styled.div`
 
 export default function Detail() {
 
-    const {title, singer,imgUrl,songId} = useParams();
+    const {title, singer,imgUrl,songId, originUrl} = useParams();
     const [perfect,setPerfect] = useState(false);
     const [play , setPlay] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const [up, setUp] = useState(false);
+    
+    console.log(originUrl);
 
     const handlePerfect = () => {
         setPerfect((cur) => !cur);
     }
 
-    const handleUp = () => {
-        setUp((cur) => !cur);
-    }
-
+    
     useEffect(() => {
 
         const handleDownloadMp3 = async () => {
             try {
-              const URL = `https://songssam.site:8443/song/download?url=origin/21dc6515-eb25-4cf7-abe8-5f5d585a8a4e`;
+              const URL = `https://songssam.site:8443/song/download?url=origin/${originUrl}`;
               const newAudio = new Audio(URL);
               audioRef.current = newAudio;
 
@@ -270,12 +268,19 @@ export default function Detail() {
                     </SongInfoContainerTop>
                     <PlayBtnContainer>
                     <FFlex> 
-                        <PlayBtn onClick={handlePlay}>노래 듣기</PlayBtn>
+                        {
+                            originUrl === 'null' ? 
                         
-                        <UploadLabel>
-                            <span>노래 업로드</span>
-                            <UploadInput type='file' accept='audio/mpeg'/>
-                        </UploadLabel>
+                            <UploadLabel>
+                                <span>노래 업로드</span>
+                                <UploadInput type='file' accept='audio/mpeg'/>
+                            </UploadLabel>
+
+                            :
+
+                            <PlayBtn onClick={handlePlay}>노래 듣기</PlayBtn>
+                        }
+                        
                     </FFlex>  
 
                 </PlayBtnContainer>
@@ -292,10 +297,27 @@ export default function Detail() {
         <SampleButton onClick={handlePerfect}>
                     <span>퍼펙트 스코어</span> 
         </SampleButton>
-
-        <SampleButton onClick={handleUp}>
+       
+       {
+        originUrl ==='null '  ? 
+        
+        <SampleButton >
                     <span>파일 업로드가 필요합니다</span> 
         </SampleButton>
+        :
+        null
+       }
+        
+
+        <div style={{marginTop : '10px'}}>
+        {
+            originUrl === 'null' ?
+             <UploadFormat Id={Number(songId)}/>
+            :
+            null
+        }
+        </div>
+
         {
             perfect &&
             <PerfectScoreContainer > 
@@ -304,11 +326,7 @@ export default function Detail() {
             </PerfectScoreContainer>
         }
 
-        <div style={{marginTop : '10px'}}>
-        {
-            up && <UploadFormat Id={Number(songId)}/>
-        }
-        </div>
+        
         
         <OtherContainer>
             <OtherCol>
