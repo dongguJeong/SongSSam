@@ -121,6 +121,14 @@ const ResetBtn = styled(RecordStartBtn)`
 const DeleteBtn = styled(SendBtn)`
 `
 
+const Warning = styled.div`
+ margin-bottom : 10px;
+ font-size : 25px;
+ text-align : center;
+ color : red;
+ 
+`
+
 function PerfectScore({songId , instUrl} : {songId : string | undefined , instUrl : string | undefined}) {
   const [recording, setRecording] = useState(false);
   const [clips, setClips] = useState<ISaveVoice[]>([]);
@@ -142,7 +150,7 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
       });
   }, []);
 
-  const buffersize = 100;
+  const buffersize = 150;
   const voiceArray = useRef<INote[]>(new Array(buffersize));
   
   
@@ -219,11 +227,11 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
 
 
     //목소리 분석
-    if (Math.round(clarity * 100) > 90) {
+    if (Math.round(clarity * 100) > 80) {
 
       //들어온 목소리에 대해서 미디 번호를 알아내고
       midi = freqToNote(Math.round(pitch * 10) / 10);
-      setVoiceOctave((prev ) => prev = midiToNote(midi));
+      setVoiceOctave((prev) => prev = midiToNote(midi));
 
       if( (midi <= 최고음) && (midi >= 최저음) ){
        const startY= 최고음시작점+Math.abs(최고음 - midi) * 0.5 * lineHeight;
@@ -234,10 +242,6 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
 
     requestAnimationFrame(() => updatePitch(analyserNode, detector, input, sampleRate));
   }
-
-  
-  //getUserMedia 설정
-  
 
   const onSuccess = (stream : MediaStream) => {
      mediaRecorderRef.current = new MediaRecorder(stream);
@@ -265,6 +269,8 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
     }
   };
 
+  
+ 
   
 
   //음성을 미디 번호로 변환
@@ -351,17 +357,14 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
     }
   }
 
-
-    useEffect(() => {
-     
+    useEffect(() => {  
       프레임마다실행할거();
-
     },[canvasWidth]);
+
 
 
   //녹음 기능
   const handleStartRecording = () => {
-
     if(!accessToken){
       alert("로그인이 필요한 서비스입니다");
       return
@@ -382,7 +385,6 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
   };
 
   const handleStopRecording = () => {
-
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       setRecording(false);
@@ -436,8 +438,7 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
         console.error('데이터 전송 오류:', error);
         // 오류 처리 로직을 추가하세요.
       });
-  }
-  
+  };
 
   useEffect(() => {
     if (chunks.length > 0 && !recording) {
@@ -477,6 +478,9 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
 
   return (
     <div>
+      <Warning >❗️반드시 이어폰을 착용 후 사용해주십쇼 ❗️</Warning>
+      <Warning>음표 출력이 비정상적으로 빨라지나면 새로고침을 누르세요</Warning>
+
       <h1 style={{marginBottom : '10px'}}>음계 :  {voiceOctave} </h1>
 
       <canvas height={canvasHeight} width={canvasWidth} ref={canvasRef}></canvas>
