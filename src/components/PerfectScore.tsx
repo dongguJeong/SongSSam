@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import '../styles/global.css';
 import AudioContainer from './AudioContainer';
 import { RootState } from '../redux/store';
-import { useNavigate } from 'react-router-dom';
 
 interface INote{
   startX : number,
@@ -90,9 +89,6 @@ const SendBtn = styled.div`
   background : black;
   color : white;
  }
-
- 
- 
 `
 
 
@@ -117,7 +113,15 @@ const Flex = styled.div`
  display : flex;
 `
 
-function PerfectScore({songId} : {songId : string | undefined} ) {
+const ResetBtn = styled(RecordStartBtn)`
+ width : 70px;
+ height : 70px;
+`
+
+const DeleteBtn = styled(SendBtn)`
+`
+
+function PerfectScore({songId , instUrl} : {songId : string | undefined , instUrl : string | undefined}) {
   const [recording, setRecording] = useState(false);
   const [clips, setClips] = useState<ISaveVoice[]>([]);
   const [count, setCount] = useState(1);
@@ -125,9 +129,20 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
   const [voiceOctave , setVoiceOctave] = useState('');
   const [recordingStartTime, setRecordingStartTime] = useState<number >(0);
   const [recordingEndTime, setRecordingEndTime] = useState<number>(0);
+  const [audioElement , setAudioElement] = useState(new Audio());
 
+  const constraint = { audio: true };
 
-  const buffersize = 75;
+  useEffect(() => {
+    navigator.mediaDevices
+      .getUserMedia(constraint)
+      .then(onSuccess)
+      .catch((error) => {
+        console.error('마이크 권한을 허용하지 않았습니다', error);
+      });
+  }, []);
+
+  const buffersize = 100;
   const voiceArray = useRef<INote[]>(new Array(buffersize));
   
   
@@ -143,6 +158,7 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
   const canvasHeight = 500;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+
   useEffect(() => {
     const handleResize = () => {
       const newCanvasWidth = calculateCanvasWidth();
@@ -150,8 +166,6 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
       requestAnimationFrame(() => {
         프레임마다실행할거();
       });
-
-
     };
 
     // 화면 크기 변경 이벤트 리스너 등록
@@ -166,15 +180,15 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
 
 
 
-  const canvasHalf = canvasWidth / 4;
+  const canvasHalf = canvasWidth / 2;
   const redlineWidth = 3
   const barwidth = canvasHalf/buffersize;
 
-  const lineNumber = 16;
+  const lineNumber = 16+12;
   const lineHeight = canvasHeight / lineNumber; 
 
   let 기준음 = 48;
-  let 최고음 = 기준음+12;
+  let 최고음 = 기준음+12+12+12;
   let 최저음 = 기준음 - 12;
   const 최고음시작점 = lineHeight/2; 
 
@@ -205,7 +219,7 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
 
 
     //목소리 분석
-    if (Math.round(clarity * 100) > 80) {
+    if (Math.round(clarity * 100) > 90) {
 
       //들어온 목소리에 대해서 미디 번호를 알아내고
       midi = freqToNote(Math.round(pitch * 10) / 10);
@@ -216,14 +230,6 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
        const endY = startY + lineHeight;
        voiceArray.current.push({startX : startX,endX : endX, startY: startY, endY :endY});
       }
-
-       else{
-        voiceArray.current.push({startX : startX,endX : endX, startY: 0, endY : 0});
-       }
-
-    }else{
-      midi = 0;
-      voiceArray.current.push({startX : startX, endX : endX, startY: 0, endY :0});
     }
 
     requestAnimationFrame(() => updatePitch(analyserNode, detector, input, sampleRate));
@@ -231,7 +237,7 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
 
   
   //getUserMedia 설정
-  const constraint = { audio: true };
+  
 
   const onSuccess = (stream : MediaStream) => {
      mediaRecorderRef.current = new MediaRecorder(stream);
@@ -260,16 +266,6 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
   };
 
   
-
-  
-  useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia(constraint)
-      .then(onSuccess)
-      .catch((error) => {
-        console.error('마이크 권한을 허용하지 않았습니다', error);
-      });
-  }, []);
 
   //음성을 미디 번호로 변환
   const freqToNote = (freq : number) => {
@@ -304,12 +300,12 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     ctx.strokeStyle = 'black';
 
-    for (let i = 1; i <= lineHeight; i++) {
+    for (let i = 1; i <= lineHeight+12; i++) {
       const y = i * lineHeight;
       ctx.beginPath();
       ctx.moveTo(0, y);
       
-      if(i=== 7){
+      if(i=== 7 || i=== 13 || i==19 ){
         ctx.lineWidth = 5;
       }
       else{
@@ -363,28 +359,22 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
     },[canvasWidth]);
 
 
-
-  ////////////////////
-
-
-  const movePage = useNavigate();
-
   //녹음 기능
   const handleStartRecording = () => {
-    
 
     if(!accessToken){
       alert("로그인이 필요한 서비스입니다");
       return
-    }
-    
+    };
 
     if (mediaRecorderRef.current) {
-
-    setChunks(() => []); // Reset chunks
+    setChunks(() => []);
     mediaRecorderRef.current.start();
     setRecording(true);
     setRecordingStartTime(Date.now());
+    if(instUrl !== null && audioElement.paused){
+        audioElement.play();
+      }
     }
     else{
       console.log("미디어 레코더 없음");
@@ -396,8 +386,11 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       setRecording(false);
-      
       setRecordingEndTime(Date.now());
+      if(instUrl !== null && audioElement.played.length > 0){
+        audioElement.pause();
+      }
+      
     }
   };
 
@@ -452,6 +445,36 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
     }
   }, [chunks, recording]);
 
+  useEffect (() => {
+    const downloadInstFile = async () => {
+        try {
+          if(instUrl !== 'null'){
+            const response = await fetch(`https://songssam.site:8443/song/download_inst?url=inst/${instUrl}`); 
+            const blob = await response.blob();
+            const audioURL = URL.createObjectURL(blob);
+            setAudioElement(new Audio(audioURL));
+          }
+          
+        } catch (error) {
+          console.error('파일 다운로드 중 오류 발생:', error);
+        }
+      };
+
+       downloadInstFile();
+
+  },[instUrl]);
+  
+  const handleReset = () => {
+    if(audioElement){
+      audioElement.currentTime = 0
+    }
+  };
+
+  const handleDelete = (clipName : string) => {
+    const temp = clips.filter(clip => clip.clipName !== clipName);
+    setClips((cur) => cur = temp );
+  }
+
   return (
     <div>
       <h1 style={{marginBottom : '10px'}}>음계 :  {voiceOctave} </h1>
@@ -466,13 +489,24 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
         <RecordStopBtn onClick={handleStopRecording} disabled={!recording}>
           <span>녹음종료</span>
         </RecordStopBtn>
+        <ResetBtn>
+          <svg width="30px" height="30px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" onClick={handleReset}>
+            <g fill="none" 
+                fill-rule="evenodd" 
+                stroke='#FFFFFF' 
+                stroke-linecap="round"
+                strokeWidth='1.5'
+                stroke-linejoin="round" 
+                transform="matrix(0 1 1 0 2.5 2.5)">
+            <path d="m3.98652376 1.07807068c-2.38377179 1.38514556-3.98652376 3.96636605-3.98652376 6.92192932 0 4.418278 3.581722 8 8 8s8-3.581722 8-8-3.581722-8-8-8"/>
+            <path d="m4 1v4h-4" transform="matrix(1 0 0 -1 0 6)"/>
+            </g>
+          </svg>
+        </ResetBtn>
         <RecordingContainer>
           {recording ? <span>녹음 중</span> : <div></div>}
         </RecordingContainer>
-
       </RecordBtnContainer>
-
-        
       <section>
         
         {clips.map((clip, i) => (
@@ -483,12 +517,10 @@ function PerfectScore({songId} : {songId : string | undefined} ) {
                 <AudioContainer audioSource={clip.audioURL} clipDurationTime = {clip.clipDurationTime}></AudioContainer>
               </ClipInnerContainer> 
             </ClipContainer>
-
             <SendBtn onClick={() => sendVoice(clip.blob)}>파일<br/>전송</SendBtn>
+            <DeleteBtn onClick={() => {handleDelete(clip.clipName)}}> 삭제 </DeleteBtn>
           </Flex>
         ))}
-
-         
       </section>
     </div>
   );

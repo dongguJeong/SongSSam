@@ -142,7 +142,7 @@ function MainHeader() {
   const [click, setClick] = useState(false);
   
   const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
-
+ 
   const clickLogin = () =>{
     
     setClick((cur) => true);

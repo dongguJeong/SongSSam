@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+
 
 const ChartContainer = styled.div`
   width : 100%;  
@@ -205,7 +204,8 @@ export interface IData{
   artist : string,
   genre : string,
   vocalUrl : null | string,
-  originUrl : string,
+  originUrl : null | string,
+  instUrl : null | string,
 }
 
 export interface IChart {
@@ -223,17 +223,24 @@ const BlankSpace = styled.div`
 export default function Chart( {btnTitle,data}: IChart  ){
   
   const movePage = useNavigate();
-  const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
 
+  const goToDetail = (song : IData) => {
+    const {artist , title, id, imgUrl} = song;
+    let originUrl = 'null';
+    let instUrl   = 'null';
 
-  const goToDetail = ({artist , title, imgUrl, id, originUrl } : {artist : string, title : string, imgUrl : string , id : number, originUrl : string}) => {
-    movePage(`/detail/${artist}/${title}/${id}/${encodeURIComponent(imgUrl)}/${originUrl}`);
+    if(song.originUrl !== null){
+      originUrl = song.originUrl.split('/')[1];
+    }
+
+    if(song.instUrl !== null){
+      instUrl = song.instUrl.split('/')[1];
+    }
+
+    movePage(`/detail/${artist}/${title}/${id}/${encodeURIComponent(imgUrl)}/${originUrl}/${instUrl}`);
   }
 
-  const goToRequest = () => {
-    movePage('/request');
-  };
-
+  
     return(
 
         <ChartContainer>
@@ -249,15 +256,25 @@ export default function Chart( {btnTitle,data}: IChart  ){
 
                 {song.imgUrl ? 
                   <SongImg bgpath = {song.imgUrl}  
-                          onClick={() => goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id , originUrl : song.originUrl === null ? 'null' : song.originUrl.split('/')[1]})}/> 
+                          onClick={() => 
+                            goToDetail(song)
+                          }
+                    /> 
                   : 
                   <BlankSpace></BlankSpace> 
                 }
                   <SongDetail>
-                    <SongTitle onClick={() => goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id,originUrl : song.originUrl === null ? 'null' : song.originUrl.split('/')[1]})}>
+                    <SongTitle 
+                      onClick={() => 
+                        goToDetail(song)
+                      }
+                    >
                         {song.title}           
                     </SongTitle>
-                    <Singer onClick={()=>goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl,id : song.id, originUrl : song.originUrl === null ? 'null' : song.originUrl.split('/')[1]})}>
+                    <Singer onClick={()=>
+                        goToDetail(song)
+                      }
+                    >
                         {song.artist}
                     </Singer>
                   </SongDetail>
@@ -266,11 +283,17 @@ export default function Chart( {btnTitle,data}: IChart  ){
                   <SongButtonContainer>
                       {
                       song.originUrl === null ?
-                      <RedButton onClick={() => goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl, id : song.id, originUrl : song.originUrl === null ? 'null' : song.originUrl.split('/')[1]})} >
+                      <RedButton onClick={() => 
+                        goToDetail(song)
+                        }
+                      >
                       노래 업로드하기
                      </RedButton> 
                       :
-                      <SongButton onClick={()=>goToDetail({artist :song.artist,title :song.title, imgUrl: song.imgUrl, id : song.id, originUrl : song.originUrl === null ? 'null' : song.originUrl.split('/')[1]})}>
+                      <SongButton onClick={()=>
+                        goToDetail(song)
+                        }
+                      >
                         {btnTitle}
                       </SongButton>
                       }

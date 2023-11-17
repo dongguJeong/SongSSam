@@ -194,7 +194,7 @@ const FFlex = styled.div`
 
 export default function Detail() {
 
-    const {title, singer,imgUrl,songId, originUrl} = useParams();
+    const {title, singer,imgUrl,songId, originUrl,instUrl} = useParams();
     const [perfect,setPerfect] = useState(false);
     const [play , setPlay] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -270,27 +270,20 @@ export default function Detail() {
                     <FFlex> 
                         {
                             originUrl === 'null' ? 
-                        
                             <UploadLabel>
                                 <span>노래 업로드</span>
                                 <UploadInput type='file' accept='audio/mpeg'/>
                             </UploadLabel>
-
                             :
-
                             <PlayBtn onClick={handlePlay}>노래 듣기</PlayBtn>
                         }
-                        
                     </FFlex>  
-
                 </PlayBtnContainer>
                 </SongCol>
                 
             </SongInfoContainer>
         </SongContainer>
-        
-
-
+    
         <SampleButton>
                     <span>샘플링이 필요합니다</span> 
         </SampleButton>
@@ -322,12 +315,10 @@ export default function Detail() {
             perfect &&
             <PerfectScoreContainer > 
                     <AlertContainer> <span>화면이 좁습니다</span> </AlertContainer>
-                    <PerfectScore songId = {songId}/>
+                    <PerfectScore songId = {songId} instUrl = {instUrl} />
             </PerfectScoreContainer>
         }
 
-        
-        
         <OtherContainer>
             <OtherCol>
             <OtherTitle>추천 곡</OtherTitle>

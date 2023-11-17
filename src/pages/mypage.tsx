@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import AudioContainer from '../components/AudioContainer';
 import BigTitle from '../components/BigTitle';
+import axios from 'axios';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -89,11 +90,13 @@ interface IVocal {
   spectr: [];
   createdAt: string;
   user: null;
+  songId : number;
 }
 
 interface IMp3{
   mp3 : Blob,
   duration : number,
+  songId : number,
 }
 
 const AudioWrapper = styled.div`
@@ -101,6 +104,25 @@ const AudioWrapper = styled.div`
   width : 500px;
   border-radius : 5px;
   margin-bottom : 10px;
+`
+
+const Flex = styled.div`
+  display : flex;
+`
+const DeleteBtn = styled.div`
+  margin-left : 15px;
+
+  cursor : pointer;
+  padding-top : 15px;
+  text-align : center;
+  font-size : 12px;
+  
+  color : blue;
+
+  & : hover{
+    color : #26c9c3;
+  }
+  
 `
 
 function MyPage() {
@@ -155,7 +177,7 @@ function MyPage() {
     if (vocalData) {
       for (let vocal of vocalData) {
         
-        downloadWavFile(vocal.originUrl);
+        downloadWavFile(vocal.originUrl , vocal.songId);
       }
     }
   }, [vocalData]);
@@ -168,7 +190,8 @@ function MyPage() {
   };
   
 
-  const downloadWavFile = async (originUrl: string) => {
+  const downloadWavFile = async (originUrl: string , songId : number) => {
+    console.log(songId);
     try {
       const response = await fetch(`https://songssam.site:8443/member/download?url=${originUrl}`, {
         headers: {
@@ -178,12 +201,36 @@ function MyPage() {
 
       const blob = await response.blob();
       const duration  = await getDuration(blob);
-      console.log(duration);
-      setWavFile(prev => [...prev, {mp3 : blob, duration : duration}]);
+      setWavFile(prev => [...prev, {mp3 : blob, duration : duration ,songId : songId }]);
     } catch (error) {
       console.error('파일 다운로드 중 오류 발생:', error);
     }
   };
+
+  const handleDelete = async(songId : number) => {
+    console.log(songId);
+    try{
+      const res = await axios.post(`https://songssam.site:8443/member/deleteVocalFile?songId=${songId}`,
+      {},
+        {
+          headers : {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      );
+      
+      if(res.status === 200){
+        console.log(res);
+        const temp = wavFile.filter(i => i.songId !== songId);
+        setWavFile(temp);
+        alert("삭제를 성공했습니다");
+
+      }
+    }
+    catch(e){
+      alert("삭제를 실패했습니다")
+    }    
+  }
 
 
 
@@ -216,10 +263,14 @@ function MyPage() {
         </AudioTitle>
         {wavFile
           ? wavFile.map((i, index) => (
+            <Flex key = {index}>
               <AudioWrapper key={index}>
-                
                 <AudioContainer audioSource={URL.createObjectURL(i.mp3)} clipDurationTime={i.duration}></AudioContainer>
               </AudioWrapper>
+               <DeleteBtn onClick={() => handleDelete(i.songId)}>
+                <span>삭제</span>
+              </DeleteBtn>
+            </Flex> 
             ))
           : null}
 
