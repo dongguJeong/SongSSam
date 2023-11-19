@@ -460,7 +460,7 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
   return (
     <div>
       
-      <Warning>이어폰 착용 후 사용해주십쇼. <br/> 음표 표시가 갑자기 빨라진다면 새로고침을 하십쇼</Warning>
+      <Warning> 음표 표시가 갑자기 빨라진다면 새로고침을 하십쇼</Warning>
 
       <h1 style={{marginBottom : '10px'}}>음계 :  {voiceOctave} </h1>
 

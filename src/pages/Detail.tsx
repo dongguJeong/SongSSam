@@ -3,9 +3,12 @@ import Layout from '../components/Layout';
 import { styled } from 'styled-components';
 import "../styles/global.css";
 import PerfectScore from '../components/PerfectScore';
-import { useParams} from 'react-router-dom';
+import { useNavigate, useParams} from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import UploadFormat from '../components/UploadFormat';
+import { useSelector } from 'react-redux';
+import { RootState, persistor } from '../redux/store';
+import { IData } from '../components/Chart';
 
 
 const Wrapper = styled.div` 
@@ -141,7 +144,7 @@ const Square = styled.div`
     width : 130px;
     height : 130px;
     border-radius : 10px;
-    background-color : gray;
+   
 `
 
 const OtherContainer = styled.div`
@@ -157,7 +160,15 @@ const OtherListContainer = styled.div`
     grid-template-columns : repeat(4,130px);
     grid-gap : 30px;
 `
-const OtherList = styled.div``;
+const OtherList = styled.div<{bgpath : string}>`
+    background-image: url(${props => props.bgpath});
+    background-size : contain;
+    background-repeat : no-repeat;
+    cursor : pointer;
+    position : relative;
+    overflow : hidden ;
+    border-radius : 10px;
+`;
 
 const OtherCol = styled.div`
     margin-top : 20px;
@@ -193,8 +204,18 @@ const FFlex = styled.div`
     display : flex;
 `
 
-const PerfectBtn = styled(SampleButton)<{loading  : boolean}>`
-    display: ${(props) => (props.loading ? 'none' : 'block')};
+const PerfectBtn = styled(SampleButton)<{loading  : string}>`
+    display: ${(props) => (props.loading === 'true' ? 'none' : 'block')};
+`
+
+const OtherList__title = styled.div`
+    position : absolute 
+    bottom : -20px;
+    left : 0px;
+    text-align : center;
+    padding-top : 10px;
+    font-size : 12px;
+
 `
 
 export default function Detail() {
@@ -205,8 +226,10 @@ export default function Detail() {
     const [audioSource , setAudioSource] = useState('');
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [loading, setLoading] = useState(true); 
-
+    const [recommendList , setRecommendList] = useState<IData[] | null>(null);
     
+    const movePage = useNavigate();
+    const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
 
     const handlePerfect = () => {
         setPerfect((cur) => !cur);
@@ -277,6 +300,41 @@ export default function Detail() {
           downloadInstFile();
       },[instUrl]);
     
+      useEffect( () => {
+        const getRecommendList = async() => {
+         try{
+            const res = await fetch('https://songssam.site:8443/member/user_recommand_list',{
+                headers :{
+                    Authorization : `Bearer ${accessToken}`
+                }
+            });
+            const JSON = await res.json();
+            setRecommendList(JSON);
+            }
+            catch(e){
+                console.log(e);
+            }   
+        }
+        getRecommendList();
+        
+      },[accessToken]);
+
+      const goToDetail = (song : IData) => {
+        const {artist , title, id, imgUrl} = song;
+        let originUrl = 'null';
+        let instUrl   = 'null';
+    
+        if(song.originUrl !== null){
+          originUrl = song.originUrl.split('/')[1];
+        }
+    
+        if(song.instUrl !== null){
+          instUrl = song.instUrl.split('/')[1];
+        }
+    
+        movePage(`/detail/${artist}/${title}/${id}/${encodeURIComponent(imgUrl)}/${originUrl}/${instUrl}`);
+      }
+
    
   return (
   <Layout>
@@ -317,7 +375,7 @@ export default function Detail() {
         <SampleButton>
                     <span>샘플링이 필요합니다</span> 
         </SampleButton>
-        <PerfectBtn onClick={handlePerfect} loading = {loading}>
+        <PerfectBtn onClick={handlePerfect} loading = {loading.toString()}>
                     <span>퍼펙트 스코어</span> 
         </PerfectBtn>
        
@@ -355,8 +413,15 @@ export default function Detail() {
             <OtherTitle>추천 곡</OtherTitle>
             <OtherListContainer>
                 {
-                    [1,2,3,4].map((_,i) => <OtherList key={i}>
+                    recommendList && recommendList.map((song,i) => 
+                    <OtherList 
+                        key={i} 
+                        bgpath = {song.imgUrl} 
+                        onClick={() => goToDetail(song)}>
                         <Square />
+                        <OtherList__title >
+                            {song.title}
+                        </OtherList__title>
                     </OtherList>
                     )
                 }

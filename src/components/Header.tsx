@@ -176,11 +176,9 @@ function MainHeader() {
 
   const loginclose = () => {
      setClick((cur) => false);
-  }
+  };
 
-  
-
-  return <> 
+  return (
 
     <Wrapper>
       <Container>
@@ -218,7 +216,7 @@ function MainHeader() {
       
     </Wrapper>
 
-  </>
+  )
 }
 
 export default MainHeader;

@@ -139,10 +139,6 @@ function Prefer(){
             alert("제출했습니다");
         }
 
-        useEffect(() => {
-            console.log(clicked);
-          }, [clicked]);
-
     return(
         <Layout>
             <BigTitle title='선호 노래'/>

@@ -13,8 +13,6 @@ const ChartContainer = styled.div`
 
 `;
 
-
-
 const ChartBox = styled.div`
 
   background-color : white;
@@ -241,7 +239,6 @@ export default function Chart( {btnTitle,data}: IChart  ){
   }
   
     return(
-
         <ChartContainer>
           <ChartHeader>
             <span>순위</span> <span>제목</span> <span>가수</span> 
