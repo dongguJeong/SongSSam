@@ -48,12 +48,6 @@ const Column = styled.div`
 `;  
 
 
-
-const LinkContainer = styled.ul`
-  display : flex;
-
-  
-` 
 const LoginBtn = styled.div`
 
   color : white;

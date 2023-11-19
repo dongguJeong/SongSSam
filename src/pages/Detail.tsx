@@ -408,7 +408,10 @@ export default function Detail() {
             </PerfectScoreContainer>
         }
 
-        <OtherContainer>
+        {
+            accessToken &&
+            
+            <OtherContainer>
             <OtherCol>
             <OtherTitle>추천 곡</OtherTitle>
             <OtherListContainer>
@@ -428,6 +431,8 @@ export default function Detail() {
             </OtherListContainer>
             </OtherCol>
         </OtherContainer>
+        }
+        
        </Container>
         
         
