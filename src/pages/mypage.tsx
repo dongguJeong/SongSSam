@@ -143,6 +143,7 @@ function MyPage() {
         });
 
         const data = await res.json();
+        console.log(data);
         setProfileData(data.response);
       } catch (err) {
         console.log(err);
@@ -259,7 +260,7 @@ function MyPage() {
         </Profile>
 
         <AudioTitle>
-          <span >커버곡</span>
+          <span >녹음 목록</span>
         </AudioTitle>
         {wavFile
           ? wavFile.map((i, index) => (

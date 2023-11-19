@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PitchDetector } from 'pitchy';
-import {  useSelector } from 'react-redux';
+import {  useSelector} from 'react-redux';
 import styled from 'styled-components';
 import '../styles/global.css';
 import AudioContainer from './AudioContainer';
@@ -48,7 +48,7 @@ const RecordBtnContainer = styled.div`
 const RecordStopBtn = styled(RecordStartBtn)``;
 
 const RecordingContainer = styled.div`
-
+  
   display : flex;
   align-items : center;
   justify-content : center;
@@ -57,6 +57,7 @@ const RecordingContainer = styled.div`
   color : red;
   font-weight : 500;
   animation : blink 1s ease-in infinite;
+  padding-top  :13px;
 
   @keyframes blink {
     50% {
@@ -126,10 +127,24 @@ const Warning = styled.div`
  font-size : 25px;
  text-align : center;
  color : red;
- 
 `
 
-function PerfectScore({songId , instUrl} : {songId : string | undefined , instUrl : string | undefined}) {
+const InstContainer = styled.div`
+ padding-left : 10px;
+ padding-top : 10px;
+  height : 70px;
+
+`
+
+const InstContainer__Title = styled.div`
+ margin-right : 10px;
+`
+
+const NoInst = styled.div`
+  margin-top : 15px;
+`
+
+function PerfectScore({songId , audioSource} : {songId : string | undefined , audioSource : string}) {
   const [recording, setRecording] = useState(false);
   const [clips, setClips] = useState<ISaveVoice[]>([]);
   const [count, setCount] = useState(1);
@@ -137,7 +152,7 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
   const [voiceOctave , setVoiceOctave] = useState('');
   const [recordingStartTime, setRecordingStartTime] = useState<number >(0);
   const [recordingEndTime, setRecordingEndTime] = useState<number>(0);
-  const [audioElement , setAudioElement] = useState(new Audio());
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const constraint = { audio: true };
 
@@ -172,7 +187,7 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
       const newCanvasWidth = calculateCanvasWidth();
       setCanvasWidth(newCanvasWidth);
       requestAnimationFrame(() => {
-        프레임마다실행할거();
+        draw();
       });
     };
 
@@ -185,9 +200,6 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
     };
   }, []);
 
-
-
-
   const canvasHalf = canvasWidth / 2;
   const redlineWidth = 3
   const barwidth = canvasHalf/buffersize;
@@ -199,10 +211,8 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
   let 최고음 = 기준음+12+12+12;
   let 최저음 = 기준음 - 12;
   const 최고음시작점 = lineHeight/2; 
-
   
   //음성정보
-
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
@@ -245,7 +255,6 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
 
   const onSuccess = (stream : MediaStream) => {
      mediaRecorderRef.current = new MediaRecorder(stream);
-    
      mediaRecorderRef.current.ondataavailable = (e) => {
       if (e.data.size > 0) {
         setChunks((prev ) => [...prev, e.data]);
@@ -269,10 +278,6 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
     }
   };
 
-  
- 
-  
-
   //음성을 미디 번호로 변환
   const freqToNote = (freq : number) => {
     return Math.round(12 * (Math.log(freq / 440.0) / Math.log(2))) + 69;
@@ -287,7 +292,7 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
   }
 
   //마이크 음성 시각화 하는 로직
-    function 프레임마다실행할거(){
+    function draw(){
 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d');
@@ -338,7 +343,6 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
           voice?.startY !== undefined && 
           voice?.endX !== undefined && 
           voice?.endY !== undefined){
-      
         
         if( voice.startY === 0 ) {   
          ctx.fillStyle = "white";
@@ -353,14 +357,13 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
     
       }
     }
-    requestAnimationFrame(프레임마다실행할거);
+    requestAnimationFrame(draw);
     }
   }
 
-    useEffect(() => {  
-      프레임마다실행할거();
-    },[canvasWidth]);
-
+  useEffect(() => {  
+    draw();
+  },[canvasWidth]);
 
 
   //녹음 기능
@@ -375,8 +378,8 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
     mediaRecorderRef.current.start();
     setRecording(true);
     setRecordingStartTime(Date.now());
-    if(instUrl !== null && audioElement.paused){
-        audioElement.play();
+      if (audioRef.current) {
+        audioRef.current.play();
       }
     }
     else{
@@ -389,10 +392,9 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
       mediaRecorderRef.current.stop();
       setRecording(false);
       setRecordingEndTime(Date.now());
-      if(instUrl !== null && audioElement.played.length > 0){
-        audioElement.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
       }
-      
     }
   };
 
@@ -403,14 +405,10 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
     setChunks(() => []);
     const audioURL = window.URL.createObjectURL(blob);
     const clipDurationTime = (recordingEndTime - recordingStartTime) / 1000; // 밀리초를 초로 변환
-
-
     setClips((prev) => [...prev, { clipName, audioURL, blob , clipDurationTime}]);
   };
 
-
   const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
-
 
   const sendVoice = (음성파일 : Blob) => {
 
@@ -446,28 +444,11 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
     }
   }, [chunks, recording]);
 
-  useEffect (() => {
-    const downloadInstFile = async () => {
-        try {
-          if(instUrl !== 'null'){
-            const response = await fetch(`https://songssam.site:8443/song/download_inst?url=inst/${instUrl}`); 
-            const blob = await response.blob();
-            const audioURL = URL.createObjectURL(blob);
-            setAudioElement(new Audio(audioURL));
-          }
-          
-        } catch (error) {
-          console.error('파일 다운로드 중 오류 발생:', error);
-        }
-      };
-
-       downloadInstFile();
-
-  },[instUrl]);
+  
   
   const handleReset = () => {
-    if(audioElement){
-      audioElement.currentTime = 0
+    if(audioRef.current){
+      audioRef.current.currentTime = 0
     }
   };
 
@@ -478,8 +459,8 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
 
   return (
     <div>
-      <Warning >❗️반드시 이어폰을 착용 후 사용해주십쇼 ❗️</Warning>
-      <Warning>음표 출력이 비정상적으로 빨라지나면 새로고침을 누르세요</Warning>
+      
+      <Warning>이어폰 착용 후 사용해주십쇼. <br/> 음표 표시가 갑자기 빨라진다면 새로고침을 하십쇼</Warning>
 
       <h1 style={{marginBottom : '10px'}}>음계 :  {voiceOctave} </h1>
 
@@ -493,20 +474,31 @@ function PerfectScore({songId , instUrl} : {songId : string | undefined , instUr
         <RecordStopBtn onClick={handleStopRecording} disabled={!recording}>
           <span>녹음종료</span>
         </RecordStopBtn>
-        <ResetBtn>
-          <svg width="30px" height="30px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" onClick={handleReset}>
+        
+        <ResetBtn onClick={handleReset}>
+          <svg width="30px" height="30px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" >
             <g fill="none" 
-                fill-rule="evenodd" 
+                fillRule="evenodd" 
                 stroke='#FFFFFF' 
-                stroke-linecap="round"
+                strokeLinecap="round"
                 strokeWidth='1.5'
-                stroke-linejoin="round" 
+                strokeLinejoin="round" 
                 transform="matrix(0 1 1 0 2.5 2.5)">
             <path d="m3.98652376 1.07807068c-2.38377179 1.38514556-3.98652376 3.96636605-3.98652376 6.92192932 0 4.418278 3.581722 8 8 8s8-3.581722 8-8-3.581722-8-8-8"/>
             <path d="m4 1v4h-4" transform="matrix(1 0 0 -1 0 6)"/>
             </g>
           </svg>
         </ResetBtn>
+
+          <InstContainer>
+            <InstContainer__Title>
+            { audioSource === 'null' ?  <NoInst>노래에 대한 inst가 없습니다</NoInst> : <span>Inst 듣기</span>}
+            </InstContainer__Title>
+            {audioSource !== 'null' && (
+            <audio ref={audioRef} src={audioSource} controls></audio>
+            )}
+          </InstContainer>
+
         <RecordingContainer>
           {recording ? <span>녹음 중</span> : <div></div>}
         </RecordingContainer>

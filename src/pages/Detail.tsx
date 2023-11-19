@@ -7,6 +7,7 @@ import { useParams} from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import UploadFormat from '../components/UploadFormat';
 
+
 const Wrapper = styled.div` 
   width : 80%;
   margin-left : 10%;
@@ -192,20 +193,25 @@ const FFlex = styled.div`
     display : flex;
 `
 
+const PerfectBtn = styled(SampleButton)<{loading  : boolean}>`
+    display: ${(props) => (props.loading ? 'none' : 'block')};
+`
+
 export default function Detail() {
 
     const {title, singer,imgUrl,songId, originUrl,instUrl} = useParams();
     const [perfect,setPerfect] = useState(false);
     const [play , setPlay] = useState(false);
+    const [audioSource , setAudioSource] = useState('');
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [loading, setLoading] = useState(true); 
+
     
-    console.log(originUrl);
 
     const handlePerfect = () => {
         setPerfect((cur) => !cur);
     }
 
-    
     useEffect(() => {
 
         const handleDownloadMp3 = async () => {
@@ -246,6 +252,30 @@ export default function Detail() {
             }
         }
     };
+
+    useEffect (() => {
+        const downloadInstFile = async () => {
+            
+            try {
+                if(instUrl !== 'null'){
+                   const response = await fetch(`https://songssam.site:8443/song/download_inst?url=inst/${instUrl}`); 
+                    const blob = await response.blob();
+                    const audioURL = URL.createObjectURL(blob); 
+                    setAudioSource(audioURL);
+                }
+                else{
+                    setAudioSource('null');
+                } 
+               
+            } catch (error) {
+              console.error('파일 다운로드 중 오류 발생:', error);
+            }
+            finally{
+                setLoading(false);
+            }
+          };
+          downloadInstFile();
+      },[instUrl]);
     
    
   return (
@@ -287,9 +317,9 @@ export default function Detail() {
         <SampleButton>
                     <span>샘플링이 필요합니다</span> 
         </SampleButton>
-        <SampleButton onClick={handlePerfect}>
+        <PerfectBtn onClick={handlePerfect} loading = {loading}>
                     <span>퍼펙트 스코어</span> 
-        </SampleButton>
+        </PerfectBtn>
        
        {
         originUrl ==='null '  ? 
@@ -300,7 +330,6 @@ export default function Detail() {
         :
         null
        }
-        
 
         <div style={{marginTop : '10px'}}>
         {
@@ -311,11 +340,13 @@ export default function Detail() {
         }
         </div>
 
+       
         {
             perfect &&
             <PerfectScoreContainer > 
+                   
                     <AlertContainer> <span>화면이 좁습니다</span> </AlertContainer>
-                    <PerfectScore songId = {songId} instUrl = {instUrl} />
+                    <PerfectScore songId = {songId} audioSource = {audioSource}/>
             </PerfectScoreContainer>
         }
 

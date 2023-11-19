@@ -239,7 +239,6 @@ export default function Chart( {btnTitle,data}: IChart  ){
 
     movePage(`/detail/${artist}/${title}/${id}/${encodeURIComponent(imgUrl)}/${originUrl}/${instUrl}`);
   }
-
   
     return(
 
