@@ -7,23 +7,17 @@ const Title = styled.div`
     padding-top : 60px;
     font-size : 34px;
     margin-bottom : 30px;
-    padding-left : 45px;
-    font-weight : 600;
-   
+    font-weight : 600; 
 `;
-
 
 export default function BigTitle({title} : {title : string}) {
 
     return (
-        
         <Title>
             <span>
             {title}
             </span>
         </Title>
-
-
     )
 
 }

@@ -5,20 +5,12 @@ import styled from 'styled-components';
 import '../styles/global.css';
 import AudioContainer from './AudioContainer';
 import { RootState } from '../redux/store';
+import { ISaveVoice,INote } from '../asset/Interface';
 
-interface INote{
-  startX : number,
-  endX : number,
-  startY : number,
-  endY : number,
-}
 
-interface ISaveVoice{
-  clipName : string,
-  audioURL : string,
-  blob : Blob,
-  clipDurationTime : number ,  
-}
+const Wrapper = styled.div`
+  margin-bottom  : 100px;
+`
 
 const RecordStartBtn = styled.button`
   border : none;
@@ -58,6 +50,7 @@ const RecordingContainer = styled.div`
   font-weight : 500;
   animation : blink 1s ease-in infinite;
   padding-top  :13px;
+  margin-left : 20px;
 
   @keyframes blink {
     50% {
@@ -83,7 +76,7 @@ const SendBtn = styled.div`
  font-size : 10px;
  cursor : pointer;
  transition : all .1s;
- margin-left : 20px;
+ margin-left : 10px;
  margin-top : 20px;
 
  &:hover{
@@ -122,16 +115,9 @@ const ResetBtn = styled(RecordStartBtn)`
 const DeleteBtn = styled(SendBtn)`
 `
 
-const Warning = styled.div`
- margin-bottom : 10px;
- font-size : 25px;
- text-align : center;
- color : red;
-`
-
 const InstContainer = styled.div`
  padding-left : 10px;
- padding-top : 10px;
+ padding-top : 5px;
   height : 70px;
 
 `
@@ -141,7 +127,39 @@ const InstContainer__Title = styled.div`
 `
 
 const NoInst = styled.div`
-  margin-top : 15px;
+  margin-top : 20px;
+`
+
+const YesInst = styled.span`
+`
+
+
+const Warning__Container = styled.div`
+ margin-left : 10px;
+ cursor : pointer;
+
+ &:hover > div {
+  opacity: 1;
+}
+`
+
+const PerfectTitle = styled.div`
+ display : flex;
+ position : relative;
+`
+
+const Warning__Message = styled.div`
+opacity: 0;
+transition: opacity 0.1s ease-in-out;
+transition-delay: 0.5s;
+padding : 3px 5px;
+background-color : #E2E2E2;
+border-radius : 5px;
+position : absolute ;
+left : -2px;
+bottom : -15px;
+font-size : 12px;
+color : gray;
 `
 
 function PerfectScore({songId , audioSource} : {songId : string | undefined , audioSource : string}) {
@@ -170,7 +188,7 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
   
   
   // Canvas 설정
-  const canvasWidthRatio = 0.65;
+  const canvasWidthRatio = 0.75;
 
   const calculateCanvasWidth = () => {
     const screenWidth = window.innerWidth;
@@ -238,7 +256,7 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
 
     //목소리 분석
     if (Math.round(clarity * 100) > 80) {
-
+      
       //들어온 목소리에 대해서 미디 번호를 알아내고
       midi = freqToNote(Math.round(pitch * 10) / 10);
       setVoiceOctave((prev) => prev = midiToNote(midi));
@@ -344,12 +362,8 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
           voice?.endX !== undefined && 
           voice?.endY !== undefined){
         
-        if( voice.startY === 0 ) {   
-         ctx.fillStyle = "white";
-        }
-        else{
-          ctx.fillStyle = "blue";
-        }
+        ctx.fillStyle = "blue";
+        
       ctx.fillRect(voice.startX,voice.startY, barwidth,lineHeight);
   
       voice.startX -= barwidth;
@@ -399,7 +413,7 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
   };
 
   const saveClip = () => {
-    const clipName = `${count}번 클립`;
+    const clipName = `${count}번 녹음`;
     setCount((prev) => prev + 1);
     const blob = new Blob(chunks, { type: 'audio/mp3' });
     setChunks(() => []);
@@ -455,15 +469,30 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
   const handleDelete = (clipName : string) => {
     const temp = clips.filter(clip => clip.clipName !== clipName);
     setClips((cur) => cur = temp );
+  };
+
+  const audioStyle = () => {
   }
 
   return (
-    <div>
-      
-      <Warning> 음표 표시가 갑자기 빨라진다면 새로고침을 하십쇼</Warning>
-
-      <h1 style={{marginBottom : '10px'}}>음계 :  {voiceOctave} </h1>
-
+    <Wrapper>
+    
+        <PerfectTitle>
+          <h1 style={{marginBottom : '10px' , width : '80px'}}>음계 :  {voiceOctave} </h1>
+          <Warning__Container>
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              height="1em"
+              fill="orange" 
+              viewBox="0 0 512 512">
+              <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/>
+            </svg>
+            <Warning__Message>
+              <span>음표가 갑자기 빨라진다면 새로고침을 해보십쇼</span>
+            </Warning__Message>
+          </Warning__Container>
+        </PerfectTitle>
+    
       <canvas height={canvasHeight} width={canvasWidth} ref={canvasRef}></canvas>
 
       <RecordBtnContainer>
@@ -492,15 +521,18 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
 
           <InstContainer>
             <InstContainer__Title>
-            { audioSource === 'null' ?  <NoInst>노래에 대한 inst가 없습니다</NoInst> : <span>Inst 듣기</span>}
+            { audioSource === 'null' ?  <NoInst>노래에 대한 inst가 없습니다</NoInst> : <YesInst> Inst 듣기</YesInst>}
             </InstContainer__Title>
             {audioSource !== 'null' && (
-            <audio ref={audioRef} src={audioSource} controls></audio>
+            <div style={{height : '40px', marginTop : '10px'}}>
+              <audio ref={audioRef} src={audioSource} style={{height : '100%'}} controls></audio>
+            </div>
+              
             )}
           </InstContainer>
 
         <RecordingContainer>
-          {recording ? <span>녹음 중</span> : <div></div>}
+          {recording ? <span>녹음 중</span> : null }
         </RecordingContainer>
       </RecordBtnContainer>
       <section>
@@ -518,7 +550,7 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
           </Flex>
         ))}
       </section>
-    </div>
+    </Wrapper>
   );
 }
 

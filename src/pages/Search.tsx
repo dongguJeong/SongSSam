@@ -1,18 +1,19 @@
 import { useParams } from "react-router-dom";
 import Layout from "../components/Layout";
 import React, { useEffect,useState } from "react";
-import Chart, { IData } from "../components/Chart";
+import Chart from "../components/Chart";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import BigTitle from "../components/BigTitle";
 import LoadingCircle from "../components/LoadingCircle";
 import { setLoadingfalse } from "../redux/loadingSlice";
+import { IData } from "../asset/Interface";
 
 const Wrapper = styled.div`
 margin : 0 auto;
-padding-bottom : 20px;
-  
+padding-bottom : 20px;  
+padding : 0 40px;
 `
 
 const CircleWrapper = styled.div`
@@ -28,8 +29,27 @@ const CircleWrapper = styled.div`
  align-items : center;
 `
 
-export default function Search(){
+const FilterContainer = styled.div`
+  width : 100%;
+  display : flex;
+  justify-content : flex-end;
+  padding-right : 20px;
+  padding-top : 50px;
+  padding-bottom : 10px;
 
+`
+
+const Filter = styled.select`
+  font-size : 12px;
+  width : 85px;
+  padding-top : 2px;
+  padding-bottom : 2px;
+  padding-left : 2px;
+`
+
+
+
+export default function Search(){
 
     const makeTitle = () => {
         return ` "${target}" 에 대한 검색 결과`
@@ -39,7 +59,13 @@ export default function Search(){
     const {target} = useParams();
 
     const [search,setSearch] = useState<IData[]>([]);
+    const [filterValue, setFilterValue] = useState("chartjson");
+
     const loading = useSelector((state : RootState) => state.loadingToken.loading);
+
+    const handleFilterChange = (e : React.ChangeEvent<HTMLSelectElement>) => {
+      setFilterValue(e.target.value);
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,12 +75,9 @@ export default function Search(){
                 method: "GET",
               }
             )).json();
-
             setSearch(response);
-            console.log(search);
             dispatch(setLoadingfalse());
-            
-          } catch (error) {
+          }catch (error) {
             console.error('Error fetching data:', error);
           }
         };
@@ -65,16 +88,26 @@ export default function Search(){
       
     return(
         <Layout>
-            <BigTitle title={makeTitle()}/>
+            
             <Wrapper>
-
+            <BigTitle title={makeTitle()}/>
+            <FilterContainer>
+              <Filter onChange={handleFilterChange}>
+                      <option value="chartjson">전체</option>
+                      <option value="uploaded_list">업로드 완료</option>
+                      <option value="completed_list">전처리 완료</option>
+              </Filter>
+            </FilterContainer>  
               {
               loading ?
               <CircleWrapper>
                 <LoadingCircle/>
               </CircleWrapper>
                 :
-              <Chart  btnTitle ="커버곡 만들러 가기"  data={search} />
+              <Chart  
+                smallTitle="목록"
+                btnTitle ="커버곡 만들러 가기"  
+                data={search} />
             }
             </Wrapper>
         </Layout>

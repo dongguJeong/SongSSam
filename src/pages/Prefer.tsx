@@ -2,18 +2,17 @@ import React, { useEffect,useState } from "react";
 import { styled} from 'styled-components';
 import Layout from "../components/Layout";
 import serverURL from "../asset/Url";
-import { IData } from "../components/Chart";
+import { IData} from '../asset/Interface'
 import BigTitle from "../components/BigTitle";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 
 const Wrapper = styled.div`
-    pading-top : 20px;
     display: flex;
     align-items: center;
     flex-direction : column;
     overflow: hidden;
-    
+    padding : 0px 40px;
 `
 
 const Header = styled.div`
@@ -141,8 +140,8 @@ function Prefer(){
 
     return(
         <Layout>
-            <BigTitle title='선호 노래'/>
             <Wrapper>
+             <BigTitle title='선호 노래'/> 
                 <Header>
 
                     <span> 선택한 곡  개수 {count} / 10 </span>
@@ -150,12 +149,11 @@ function Prefer(){
                     <HeaderBtn bgcolor = {count === 10 ? "rgba(255, 165, 0,1)" : "rgba(255, 165, 0, 0.5)" }
                                 style = {{cursor : count === 10 ?  "pointer" :  "not-allowed"}}
                                 onClick={count === 10 ? handleSubmit : undefined}
-                    >
-                                
-                        제출
+                    >   
+                      제출
                     </HeaderBtn> 
 
-                    { count === 10 &&  <span>10개 모두 선택했습니다</span>}
+                    {count === 10 &&  <span>10개 모두 선택했습니다</span>}
                 </Header>
                 <Grid>
                 {chartData?.map((song,i) => (
@@ -169,11 +167,10 @@ function Prefer(){
                         <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>
                         
                         }
-
-
                     </ChartContainer>
-                ))}
-
+                    )
+                  )
+                }
                 </Grid>
             </Wrapper>
         </Layout>

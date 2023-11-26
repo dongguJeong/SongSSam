@@ -9,18 +9,15 @@ position : relative;
 width : 100%;
 height : 100vh;
 min-height : 100vh;
-
 `
 
 const Container = styled.div`
     left : var(--LeftMenu-width);
     position : absolute ;
     top : var(--navigation-height);
-    
     width : calc(100vw - var(--LeftMenu-width)) ;
     min-height : 92vh;
     background-color : #FFFFFF;
-    
 `;
 
 function Layout(props : {children : React.ReactNode}){
@@ -36,7 +33,6 @@ function Layout(props : {children : React.ReactNode}){
             </div>
         </Wrapper>
     )
-
 }
 
 export default Layout;

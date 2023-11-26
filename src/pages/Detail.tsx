@@ -3,30 +3,31 @@ import Layout from '../components/Layout';
 import { styled } from 'styled-components';
 import "../styles/global.css";
 import PerfectScore from '../components/PerfectScore';
-import { useNavigate, useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import UploadFormat from '../components/UploadFormat';
 import { useSelector } from 'react-redux';
-import { RootState, persistor } from '../redux/store';
-import { IData } from '../components/Chart';
+import { RootState} from '../redux/store';
+import { IAI, IData} from '../asset/Interface';
+import { MakeString } from '../asset/functions';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 const Wrapper = styled.div` 
-  width : 80%;
-  margin-left : 10%;
-  padding-top : 80px;
-  
+  margin : 0 auto;
+  padding : 0 40px;
+  padding-top : 60px;
 `
 
 const Container = styled.div`
     width : 100%;
-   
-
 `;
 
 const SongContainer = styled.div`
     display : flex; 
-    margin-bottom  : 20px;
+    
+    margin-bottom  : 50px;
 
     @media screen and (max-width : 890px){
         display : block;
@@ -105,6 +106,10 @@ const PlayBtn = styled.div`
     color :white;
     padding-top : 8px;
     padding-left : 14px;
+
+    &:hover{
+        text-decoration : underline;
+    }
 `
 
 const SampleButton = styled.div`
@@ -134,7 +139,6 @@ const SampleButton = styled.div`
 `
 const AlertContainer = styled(SampleButton) `
     display: none;
-
     @media screen and (max-width : 890px){
         display : block;
     }
@@ -148,17 +152,16 @@ const Square = styled.div`
 `
 
 const OtherContainer = styled.div`
-    margin-top : 100px;
+    
 `
 
 const OtherTitle = styled.div`
     font-size : 20px;
-    margin-bottom  : 20px;
 `
 const OtherListContainer = styled.div`
     display : grid;
-    grid-template-columns : repeat(4,130px);
-    grid-gap : 30px;
+    grid-template-columns : repeat(3,130px);
+    grid-gap : 100px;
 `
 const OtherList = styled.div<{bgpath : string}>`
     background-image: url(${props => props.bgpath});
@@ -204,9 +207,7 @@ const FFlex = styled.div`
     display : flex;
 `
 
-const PerfectBtn = styled(SampleButton)<{loading  : string}>`
-    display: ${(props) => (props.loading === 'true' ? 'none' : 'block')};
-`
+
 
 const OtherList__title = styled.div`
     position : absolute 
@@ -218,6 +219,116 @@ const OtherList__title = styled.div`
 
 `
 
+const PerfectBtn = styled(PlayBtn)`
+    color : white;
+    background-color : black;
+    padding : 0;
+    text-align : center;
+    padding-top: 8px;
+    margin-left  :10px;
+`
+
+const AIBtn = styled(PlayBtn)`
+    background-color : green;
+    padding : 0;
+    text-align : center;
+    padding-top : 8px;
+    margin-left : 10px;
+    width : 110px;
+`
+
+const AIContainer = styled.div`
+    position : fixed;
+    top : 70px;
+    left : 28%;
+    width : 700px;
+    min-height : 500px;
+    background-color : white;
+    border-radius : 10px;
+    z-index : 2;
+    border : 2px solid blue;
+    padding : 20px 20px;
+`
+
+const Overlay = styled.div`
+  position : fixed;
+  top : 0;
+  left : 0;
+  width : 100%;
+  height : 100%;
+  background-color : transparent;
+  cursor : pointer;
+  
+`
+
+const AIContainer__Title = styled.div`
+    font-size : 20px;
+    width : 100%;
+    position : relative;
+    margin-bottom : 20px;
+`
+
+const AIContainer__Grid = styled.div`
+    display : grid;
+    grid-template-columns : repeat(3, 1fr);
+`
+
+const AIContainer__Grid__Container = styled.div`
+    border : 1px dashed var(--iconColor);
+    height : 240px;
+`
+
+const AIContainer__Grid__Container__flex = styled.div`
+    display : flex;
+    height : 100%;
+    width : 100%;
+    flex-direction : column;
+    justify-content : center;
+    align-items : center;
+`
+
+const AI_Img = styled.div`
+    width : 100px;
+    height : 100px;
+    border-radius : 50%;
+    background-color : red;
+    margin-bottom : 50px;
+`
+
+const AI_NAME = styled.div`
+    font-size : 15px;
+`
+
+const CloseBtn = styled.div`
+  position : absolute ;
+  top : -5px;
+  right : 5px;
+  width : 30px;
+  height : 30px;
+  display : flex;
+  justify-content : center;
+  align-items : center;
+  background-color : rgba(0,0,0,0.2);
+  border-radius : 50%;
+  cursor : pointer;
+
+  svg{
+  border-radius : 50%;
+  width : 15px;
+  height : 15px;
+  }
+`
+
+const WholeWrapper = styled.div`
+  position : fixed;
+  top : 0;
+  left : 0;
+  width : 100vw;
+  height : 100vh;
+  background-color : rgba(133, 133, 133,0.5);
+  z-index : 2
+`
+
 export default function Detail() {
 
     const {title, singer,imgUrl,songId, originUrl,instUrl} = useParams();
@@ -227,13 +338,26 @@ export default function Detail() {
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [loading, setLoading] = useState(true); 
     const [recommendList , setRecommendList] = useState<IData[] | null>(null);
-    
-    const movePage = useNavigate();
+    const [AI, setAI] = useState(false);
+    const [AIData,setAIData] = useState<IAI[]>([]);
+    const [targetAI, setTargetAI] = useState(null);
+
     const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
+    const movePage = useNavigate();
 
     const handlePerfect = () => {
         setPerfect((cur) => !cur);
     }
+    const handleAI = () => {
+        setAI((cur) => !cur);
+    }
+
+    const closeAI =()=> {
+        setAI((cur) => !cur);
+        
+    }
+
+
 
     useEffect(() => {
 
@@ -254,7 +378,6 @@ export default function Detail() {
           };
       
           handleDownloadMp3();
-
           return () => {
             if (audioRef.current) {
                 audioRef.current.pause();
@@ -278,7 +401,6 @@ export default function Detail() {
 
     useEffect (() => {
         const downloadInstFile = async () => {
-            
             try {
                 if(instUrl !== 'null'){
                    const response = await fetch(`https://songssam.site:8443/song/download_inst?url=inst/${instUrl}`); 
@@ -310,6 +432,7 @@ export default function Detail() {
             });
             const JSON = await res.json();
             setRecommendList(JSON);
+            console.log(recommendList);
             }
             catch(e){
                 console.log(e);
@@ -319,23 +442,37 @@ export default function Detail() {
         
       },[accessToken]);
 
-      const goToDetail = (song : IData) => {
-        const {artist , title, id, imgUrl} = song;
-        let originUrl = 'null';
-        let instUrl   = 'null';
-    
-        if(song.originUrl !== null){
-          originUrl = song.originUrl.split('/')[1];
+      useEffect(()=>{
+        const fetchData = async () => {
+            try{
+                const data = await(await fetch('https://songssam.site:8443/ddsp/sampleVoiceList')).json();
+                setAIData(data);
+            }
+            catch(e){
+                console.log(e);
+            }
         }
-    
-        if(song.instUrl !== null){
-          instUrl = song.instUrl.split('/')[1];
-        }
-    
-        movePage(`/detail/${artist}/${title}/${id}/${encodeURIComponent(imgUrl)}/${originUrl}/${instUrl}`);
-      }
+        fetchData();
+        
+      },[]);
 
-   
+      const clickAI = (id : number) => {
+
+        const data = {
+            targetVoiceId : id,
+            targetSongId : songId,
+        }
+        const requestAI = async() => {
+            try{
+                const res = axios.post('https://songssam.site:8443/ddsp/makesong',data).then(() => alert("성공"));
+            }
+            catch(e){
+                console.log(e);
+            }
+        }
+        requestAI();
+      };
+
   return (
   <Layout>
      <Wrapper>
@@ -365,6 +502,10 @@ export default function Detail() {
                             :
                             <PlayBtn onClick={handlePlay}>노래 듣기</PlayBtn>
                         }
+
+                        <PerfectBtn onClick={handlePerfect}>노래 부르기</PerfectBtn>
+                        <AIBtn onClick={handleAI}>AI 커버곡 만들기</AIBtn>
+
                     </FFlex>  
                 </PlayBtnContainer>
                 </SongCol>
@@ -372,18 +513,12 @@ export default function Detail() {
             </SongInfoContainer>
         </SongContainer>
     
-        <SampleButton>
-                    <span>샘플링이 필요합니다</span> 
-        </SampleButton>
-        <PerfectBtn onClick={handlePerfect} loading = {loading.toString()}>
-                    <span>퍼펙트 스코어</span> 
-        </PerfectBtn>
        
        {
         originUrl ==='null '  ? 
         
         <SampleButton >
-                    <span>파일 업로드가 필요합니다</span> 
+            <span>파일 업로드가 필요합니다</span> 
         </SampleButton>
         :
         null
@@ -398,29 +533,58 @@ export default function Detail() {
         }
         </div>
 
-       
         {
-            perfect &&
+            perfect && 
             <PerfectScoreContainer > 
-                   
                     <AlertContainer> <span>화면이 좁습니다</span> </AlertContainer>
                     <PerfectScore songId = {songId} audioSource = {audioSource}/>
             </PerfectScoreContainer>
         }
 
         {
+            AI &&
+            <WholeWrapper>
+            <Overlay onClick={closeAI}></Overlay>
+            <AIContainer >
+                <AIContainer__Title>
+                    <span>원하는 목소리를 선택해주세요</span>
+                    <CloseBtn onClick={closeAI} >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill='white'  viewBox="0 0 384 512"><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/>
+                        </svg>
+                    </CloseBtn>
+                </AIContainer__Title>
+                <AIContainer__Grid>
+                    {AIData?.map((AI) => 
+                    <AIContainer__Grid__Container 
+                        key={AI.id}
+                        onClick={() => clickAI(AI.id)}
+                    >
+                        <AIContainer__Grid__Container__flex>
+                            <AI_Img ></AI_Img>
+                            <AI_NAME>{AI.name}</AI_NAME>
+                        </AIContainer__Grid__Container__flex>    
+                    </AIContainer__Grid__Container>)}
+                </AIContainer__Grid>
+            </AIContainer>
+            
+            </WholeWrapper>
+        }
+
+        <OtherTitle>이런 곡은 어떠세요</OtherTitle>
+        {
             accessToken &&
             
             <OtherContainer>
             <OtherCol>
-            <OtherTitle>추천 곡</OtherTitle>
+            
             <OtherListContainer>
+            
                 {
                     recommendList && recommendList.map((song,i) => 
                     <OtherList 
                         key={i} 
                         bgpath = {song.imgUrl} 
-                        onClick={() => goToDetail(song)}>
+                        onClick={() => movePage(MakeString(song))}>
                         <Square />
                         <OtherList__title >
                             {song.title}
@@ -432,10 +596,7 @@ export default function Detail() {
             </OtherCol>
         </OtherContainer>
         }
-        
        </Container>
-        
-        
     </Wrapper>
    
   </Layout>

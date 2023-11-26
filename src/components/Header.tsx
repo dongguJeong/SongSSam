@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import {KAKAO_AUTH_URL} from "../components/KaKao";
 
-
 import "../styles/global.css";
 import { useNavigate } from 'react-router-dom';
 import {  useSelector } from 'react-redux/es/hooks/useSelector';
@@ -59,8 +58,6 @@ const LoginBtn = styled.div`
 
 `
 
-
-
 const LoginContainer = styled.div`
 
   width : 300px;
@@ -74,19 +71,13 @@ const LoginContainer = styled.div`
   
 `
 
-
 const LoginInnerContainer = styled.div`
   display : flex;
   flex-direction : column;
   align-items : center;
   padding-top : 100px;
   position : relative;
-
-  
-
 `;
-
-
 
 const LogoImg = styled.img`
 
@@ -96,13 +87,12 @@ const LogoImg = styled.img`
   
 `
 
-
 const CloseBtn = styled.div`
   position : absolute ;
   top : 5px;
   right : 5px;
   width : 30px;
-  height : 30px;
+  height : 30px;  
   display : flex;
   justify-content : center;
   align-items : center;
@@ -136,11 +126,9 @@ function MainHeader() {
   const [click, setClick] = useState(false);
   
   const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
- 
+
   const clickLogin = () =>{
-    
     setClick((cur) => true);
-    
   }
 
   const kakaoLogout = async() => {
@@ -190,7 +178,6 @@ function MainHeader() {
           click && 
           <Overlay onClick={loginclose}>
             <LoginContainer >
-
               <LoginInnerContainer >
 
                 <CloseBtn onClick={loginclose}>
@@ -205,9 +192,7 @@ function MainHeader() {
               </LoginInnerContainer>
             </LoginContainer>
           </Overlay>
-        
       }
-      
     </Wrapper>
 
   )

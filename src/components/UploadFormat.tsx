@@ -8,7 +8,6 @@ import axios from "axios";
 
 const UploadBox = styled.div<{dragging : string}>`
   background-color : white;
-  padding-left : 45px;
 `;
 
 const UploadButton = styled.label<{dragging : string}>`
@@ -193,7 +192,6 @@ export default function UploadFormat (Id : {Id? :number}){
             );
             if (response.status === 200) {
               alert("전처리 요청 성공");
-              console.log(response);
             }
           } catch (error) {
             alert("전처리 요청 실패 :");
@@ -255,10 +253,6 @@ export default function UploadFormat (Id : {Id? :number}){
           }
         }
       }
-
-      useEffect(() => {
-        console.log(selectedFile);
-      },[selectedFile])
 
       const deleteProgress = (key : string) => {
         setUploadProgress((prev) => {

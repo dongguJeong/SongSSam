@@ -1,9 +1,6 @@
 import styled from "styled-components";
-import React from "react";
-import { IChart} from "../asset/Interface";
-import { MakeString } from "../asset/functions";
-import { useNavigate } from "react-router-dom";
-
+import React, { useEffect,useState } from "react";
+import { IAI_Cover } from "../asset/Interface";
 
 const ChartContainer = styled.div`
   width : 100%;  
@@ -184,41 +181,33 @@ const BlankSpace = styled.div`
   background-color : transparent;
 `
 
+export default function AI_Chart(){
 
-export default function Chart( {btnTitle,data, smallTitle}: IChart){
-  
-  const movePage = useNavigate();
-
+    const [coverData , setCoverData] = useState<IAI_Cover[]>([]);
+    
+   
     return(
         <ChartContainer>
           <ChartHeader>
-            <span>{smallTitle}</span> <span>제목</span> <span>가수</span> 
+            <span>목록</span> <span>제목</span> <span>AI가수</span> <span>원곡가수</span> <span>노래듣기</span>
           </ChartHeader>
           <ChartBox>
-            { data.map((song ,index : number) => <SongContainer key={song.id}>
+            { [1,2,3,4].map((song ,index : number) => <SongContainer key={song.id}>
               <SongColumn>
                 <SongColumnLeft>
                 <SongRank>{index + 1}</SongRank>
                 {song.imgUrl ? 
-                  <SongImg bgpath = {song.imgUrl}  
-                          onClick={() => 
-                            movePage(MakeString(song))
-                          }
-                    /> 
+                  <SongImg bgpath = {song.imgUrl} /> 
                   : 
                   <BlankSpace></BlankSpace> 
                 }
                   <SongDetail>
                     <SongTitle 
-                      onClick={() => 
-                        movePage(MakeString(song))
-                      }
+                      
                     >
                         {song.title}           
                     </SongTitle>
-                    <Singer onClick={()=>
-                        movePage(MakeString(song))
-                      }
+                    <Singer 
                     >
                         {song.artist}
                     </Singer>
@@ -226,22 +215,9 @@ export default function Chart( {btnTitle,data, smallTitle}: IChart){
                   </SongColumnLeft>
 
                   <SongButtonContainer>
-                      {
-                      song.originUrl === null ?
-                      <RedButton onClick={() => 
-                        movePage(MakeString(song))
-                        }
-                      >
-                      노래 업로드하기
-                     </RedButton> 
-                      :
-                      <SongButton onClick={()=>
-                        movePage(MakeString(song))
-                        }
-                      >
-                        {btnTitle}
-                      </SongButton>
-                      }
+                      
+                      <audio controls></audio>
+                      
                   </SongButtonContainer>
               </SongColumn>
             </SongContainer>)}

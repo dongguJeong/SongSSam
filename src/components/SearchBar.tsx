@@ -10,8 +10,6 @@ const SearchBarForm = styled.form`
     width : 100%;
     position : relative;
     margin-bottom : 10px;
-    
-    
 `
 
 const SearchBar = styled.input` 
@@ -22,7 +20,6 @@ const SearchBar = styled.input`
     border : 1px solid rgba(0,0,0,.15);
     border-radius : 10px;
     margin-bottom : 10px;
-    
 
     &:focus {
         outline : 2px solid var(--iconColor);
@@ -31,8 +28,7 @@ const SearchBar = styled.input`
 
     &::placeholder{
         font-size : 12px; 
-        
-      }
+    }
 `
 
 
@@ -59,8 +55,6 @@ export default function SearchBBar ( ){
 
     const [search, setSearch] = useState("");
     const dispatch = useDispatch();  
-
-
     
     const handleSubmit = (e :React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

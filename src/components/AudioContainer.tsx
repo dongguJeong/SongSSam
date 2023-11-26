@@ -229,7 +229,6 @@ const VolumeBar = styled.input`
     }
 `
 
-
 const CurrentTime = styled.div`
     width : 70px;
     height : 20px;
@@ -253,8 +252,8 @@ const MuteBtn = styled.div`
     cursor : pointer;
     margin-right : 10px;
     --selectedKnobby : #26c9c3;
-    
     transition : all .1s;
+
     svg:hover{
         transform : scale(1.2);
         fill : var(--selectedKnobby);
@@ -277,7 +276,6 @@ const AudioContainer = ({audioSource, clipDurationTime} : {audioSource : string 
     const [duration,setDuration] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [soundZero, setSoundZero] = useState(false);
-
     const volumeBarRef = useRef<HTMLInputElement | null>(null);
     const audioPlayerRef = useRef<HTMLAudioElement  | null>(null);
     const progressBarRef = useRef<HTMLInputElement | null>(null);
@@ -376,7 +374,6 @@ const AudioContainer = ({audioSource, clipDurationTime} : {audioSource : string 
             audio.muted = false;
             }
         }
-
       }
 
       const backTen = () => {
@@ -397,9 +394,7 @@ const AudioContainer = ({audioSource, clipDurationTime} : {audioSource : string 
 
     return (
         <AudioPlayer >
-            <audio ref={audioPlayerRef} 
-                  
-            >
+            <audio ref={audioPlayerRef}>
             <source 
             src={audioSource}
             type="audio/mpeg" />
