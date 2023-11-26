@@ -191,7 +191,7 @@ export default function AI_Chart(){
           <ChartHeader>
             <span>목록</span> <span>제목</span> <span>AI가수</span> <span>원곡가수</span> <span>노래듣기</span>
           </ChartHeader>
-          <ChartBox>
+          {/* <ChartBox>
             { [1,2,3,4].map((song ,index : number) => <SongContainer key={song.id}>
               <SongColumn>
                 <SongColumnLeft>
@@ -221,7 +221,7 @@ export default function AI_Chart(){
                   </SongButtonContainer>
               </SongColumn>
             </SongContainer>)}
-          </ChartBox>
+          </ChartBox> */}
         </ChartContainer>
     );
  };

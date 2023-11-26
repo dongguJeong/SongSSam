@@ -2,8 +2,9 @@
 
 ## 실행 방법 
 
-> git clone https://github.com/ckj18/SongSSam.git
+> git clone -b front --single-branch https://github.com/ckj18/SongSSam
 
+> npm install
 
 > npm start
 
@@ -61,10 +62,10 @@
 ## 노래 업로드
 
 
-**(매우 중요)노래 업로드에서 업로드 시에는 파일 이름을 *파일이름.mp3* 형식으로 만들어야 합니다.  **
+**(매우 중요)노래 업로드에서 업로드 시에는 파일 이름을 *songId.mp3* 형식으로 만들어야 합니다.  **
 
 
-** '.' 을 스플릿한 다음에 0번째 배열을 songId로 삼아 서버로 전송합니다 ** 
+** 점을 기준으로 스플릿한 다음에 0번째 배열을 songId로 삼아 서버로 전송합니다 ** 
 
 
 
