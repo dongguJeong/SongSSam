@@ -2,8 +2,9 @@
 
 ## 실행 방법 
 
-> git clone https://github.com/ckj18/SongSSam.git
+> git clone -b front --single-branch https://github.com/ckj18/SongSSam
 
+> npm install
 
 > npm start
 
