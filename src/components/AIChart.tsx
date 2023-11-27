@@ -1,12 +1,14 @@
 import styled from "styled-components";
 import React, { useEffect,useState } from "react";
-import { IAI_Cover } from "../asset/Interface";
+import { IAI_Cover} from "../asset/Interface";
+
 
 const ChartContainer = styled.div`
   width : 100%;  
   border-radius : 15px;
   background-color : white;
   overflow : hidden;
+  padding-bottom : 50px;
 `;
 
 const ChartBox = styled.div`
@@ -130,24 +132,15 @@ const SongButton = styled.button`
   }
 `;
 
-
-const RedButton = styled(SongButton)`
-  color : black;
-  background-color :  #F6B941;
-`
-
-
 const ChartHeader= styled.div`
   padding-bottom : 10px;
   border-bottom : 1px solid #E5E5E5;
   font-size : 12px;
   color : #707070;
 
-  
   span:first-child {
     margin-left : 17px;
-    margin-right : 120px;  
-    
+    margin-right : 120px;
   }
 
   span:nth-child(2){
@@ -156,16 +149,13 @@ const ChartHeader= styled.div`
     @media screen and (max-width : 850px){
       display : none;
      }
-    
   }
 
   span:last-child{
-    
     @media screen and (max-width : 850px){
       display : none;
      }
   }
-  
 `
 const SongRank = styled.div`
   
@@ -180,53 +170,121 @@ const BlankSpace = styled.div`
   width : 90px;
   background-color : transparent;
 `
+const Grid = styled.div`
+  display : grid;
+  grid-template-columns : 100px 1fr;
+  margin-bottom  :20px;
+`
 
-export default function AI_Chart(){
+const AI_Img = styled.img`
+  height : 90px;
+  width : 90px;
+  background-color : gray;
+  border-radius : 10px;
+  justify-content : center;
+`
 
-    const [coverData , setCoverData] = useState<IAI_Cover[]>([]);
-    
-   
-    return(
+const Title__Container = styled.div`
+  display : flex;
+`
+
+const Title = styled.span`
+  align-self : end;
+  font-size : 34px;
+  font-weight : 600;
+ 
+`
+
+const Title_Small = styled.span`
+  font-size : 15px;
+  margin-left : 10px;
+`
+
+export default function AiChart( {ptrId, Ai_Name} : {ptrId : number, Ai_Name : string} ){
+  
+  const [AiCovers , setAiCover] = useState<IAI_Cover[]>([]);
+  const [wavFile, setWavFile] = useState<string[]>([]);
+  const [Loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCover = async() => {
+      try{
+        const res = await fetch(`https://songssam.site:8443/ddsp/generatedSongList?ptrId=${ptrId}`);
+        const JSON = await res.json();
+        setAiCover(JSON);
+        console.log(JSON);
+      }
+      catch(e){
+        console.log(e);
+      }
+    }
+    fetchCover();
+  },[]);
+
+  useEffect(() => {
+    if (AiCovers) {
+      for (let AiCover of AiCovers) {
+        setLoading(false);
+        downloadWavFile(AiCover.generatedUrl);
+      }
+      setLoading(false);
+    }
+  }, [AiCovers]);
+
+  const downloadWavFile = async (generatedUrl: string) => {
+    try {
+      const response = await fetch(`https://songssam.site:8443/song/download?url=${generatedUrl}`); 
+      const blob = await response.blob();
+      const audioSrc =  window.URL.createObjectURL(blob);
+      setWavFile((prev) => [...prev, audioSrc]);
+    } catch (error) {
+      console.error('파일 다운로드 중 오류 발생:', error);
+    }
+  };
+
+  return(
+      <>
+        <Grid>
+          <AI_Img/>
+          <Title__Container>
+            <Title>{Ai_Name}<Title_Small>가 부른</Title_Small></Title> 
+          </Title__Container>
+        </Grid>
+        
         <ChartContainer>
           <ChartHeader>
-            <span>목록</span> <span>제목</span> <span>AI가수</span> <span>원곡가수</span> <span>노래듣기</span>
+            <span>목록</span> <span>제목</span> <span>가수</span> 
           </ChartHeader>
-          {/* <ChartBox>
-            { [1,2,3,4].map((song ,index : number) => <SongContainer key={song.id}>
+          <ChartBox>
+            { AiCovers.map((AI ,index : number) => <SongContainer key={index}>
               <SongColumn>
                 <SongColumnLeft>
                 <SongRank>{index + 1}</SongRank>
-                {song.imgUrl ? 
-                  <SongImg bgpath = {song.imgUrl} /> 
+                {AI.song.imgUrl ? 
+                  <SongImg bgpath = {AI.song.imgUrl}  /> 
                   : 
                   <BlankSpace></BlankSpace> 
                 }
                   <SongDetail>
-                    <SongTitle 
-                      
-                    >
-                        {song.title}           
+                    <SongTitle>
+                        {AI.song.title}           
                     </SongTitle>
-                    <Singer 
-                    >
-                        {song.artist}
+                    <Singer>
+                        {AI.song.artist}
                     </Singer>
                   </SongDetail>
                   </SongColumnLeft>
-
                   <SongButtonContainer>
-                      
-                      <audio controls></audio>
-                      
+                  {Loading ? (
+                    <span>다운로드 중입니다</span>
+                  ) : (
+                    <audio controls src={wavFile[index]}></audio>
+                  )}
                   </SongButtonContainer>
               </SongColumn>
             </SongContainer>)}
-          </ChartBox> */}
+          </ChartBox>
         </ChartContainer>
-    );
+    </>
+    )
  };
-
-
- 
-
-  

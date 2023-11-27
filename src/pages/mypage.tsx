@@ -220,7 +220,6 @@ function MyPage() {
   useEffect(() => {
     if (vocalData) {
       for (let vocal of vocalData) {
-        
         downloadWavFile(vocal.originUrl , vocal.songId);
       }
     }

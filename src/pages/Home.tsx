@@ -5,6 +5,7 @@ import Chart from '../components/Chart';
 import serverURL from "../asset/Url";
 import BigTitle from '../components/BigTitle';
 import { IData } from '../asset/Interface';
+import AiChart from '../components/AIChart';
 
 const Wrapper = styled.div`
   margin : 0 auto;
@@ -31,12 +32,15 @@ const Filter = styled.select`
 `
 
 
-function Search() {
+function Home() {
 
   const [chartData, setChartData] = useState<IData[]>([]);
   const [filterValue, setFilterValue] = useState("chartjson");
   
   useEffect(() => {
+    if(filterValue === 'Ai'){
+      return;
+    }
     const fetchData = async () => {
       try {
         const response = await (await fetch(`https://${serverURL}/song/${filterValue}`,
@@ -53,13 +57,13 @@ function Search() {
       }
     };
     fetchData();
-
     }, [filterValue]);
 
   const handleFilterChange = (e : React.ChangeEvent<HTMLSelectElement>) => {
     setFilterValue(e.target.value);
-  }
+  };
 
+  
   return (
     <Layout>
       <Wrapper>
@@ -69,20 +73,37 @@ function Search() {
                   <option value="chartjson">전체</option>
                   <option value="uploaded_list">업로드 완료</option>
                   <option value="completed_list">전처리 완료</option>
+                  <option value='Ai'>Ai 커버곡</option>
           </Filter>
         </FilterContainer>
-        <Chart  
+        {
+          filterValue !== 'Ai'  ?
+          <Chart  
           btnTitle ="커버곡 만들러 가기"  
           data={chartData}
           smallTitle='순위'
-        />
+          />
+          :
+          null
+        }
+        
+        {
+          filterValue === 'Ai' ? 
+          <>
+            <AiChart ptrId={1} Ai_Name='10cm'></AiChart>
+            <AiChart ptrId={3} Ai_Name='10cm'></AiChart>
+          </>
+          :
+          null
+        }
+        
       </Wrapper>
     </Layout>
   )
 };
 
 
-export default Search;
+export default Home;
 
 
 

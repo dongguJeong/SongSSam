@@ -4,7 +4,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import axios from "axios";
 
-
+const Wrapper = styled.div`
+  margin-bottom : 50px;
+  margin-top : 50px;
+`
 
 const UploadBox = styled.div<{dragging : string}>`
   background-color : white;
@@ -264,8 +267,7 @@ export default function UploadFormat (Id : {Id? :number}){
 
     return(
        
-           <div>
-            
+           <Wrapper>
             
             <UploadBox
               onDragOver={handleDragOver}
@@ -366,7 +368,7 @@ export default function UploadFormat (Id : {Id? :number}){
              
             </ProgressWrapper>
 
-            </div>
+            </Wrapper>
         
     )
 }

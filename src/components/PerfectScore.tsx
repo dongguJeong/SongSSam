@@ -471,9 +471,6 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
     setClips((cur) => cur = temp );
   };
 
-  const audioStyle = () => {
-  }
-
   return (
     <Wrapper>
     

@@ -160,7 +160,7 @@ const OtherTitle = styled.div`
 `
 const OtherListContainer = styled.div`
     display : grid;
-    grid-template-columns : repeat(3,130px);
+    grid-template-columns : repeat(4,130px);
     grid-gap : 100px;
 `
 const OtherList = styled.div<{bgpath : string}>`
@@ -271,6 +271,7 @@ const AIContainer__Title = styled.div`
 const AIContainer__Grid = styled.div`
     display : grid;
     grid-template-columns : repeat(3, 1fr);
+    gap : 10px;
 `
 
 const AIContainer__Grid__Container = styled.div`
@@ -285,6 +286,7 @@ const AIContainer__Grid__Container__flex = styled.div`
     flex-direction : column;
     justify-content : center;
     align-items : center;
+    cursor : pointer
 `
 
 const AI_Img = styled.div`
@@ -349,6 +351,14 @@ export default function Detail() {
         setPerfect((cur) => !cur);
     }
     const handleAI = () => {
+        if(!accessToken){
+            alert("로그인이 필요합니다");
+            return;
+        }
+        if(originUrl === 'null'){
+            alert("노래 업로드가 필요합니다");
+            return;
+        }
         setAI((cur) => !cur);
     }
 

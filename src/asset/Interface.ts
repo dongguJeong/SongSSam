@@ -60,6 +60,7 @@ export interface IAI{
 
 export interface IAI_Cover{
   id : number,
+  generatedUrl : string,
   song : IData,
   ptrData : IAI,
 }
