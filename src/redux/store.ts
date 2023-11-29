@@ -4,11 +4,15 @@ import { persistReducer,persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage/session";
 import refreshTokenSlice from './refreshTokenSlice';
 import loadingSlice from './loadingSlice';
+import instSlice from './instSlice';
+import songSlice from './songSlice';
 
 const rootReducer = combineReducers({
   accessToken : accessTokenSlice,
   refreshToken : refreshTokenSlice,
   loadingToken : loadingSlice,
+  instToken : instSlice,
+  songToken : songSlice,
 })
 
 const persistConfig = {

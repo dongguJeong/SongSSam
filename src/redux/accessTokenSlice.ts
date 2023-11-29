@@ -4,12 +4,9 @@ export type accessTokenState = {
     accessToken : string | null,
 }
 
-
 const initialState : accessTokenState= {
     accessToken : null,
-    
 }
-
 
 const accessTokenSlice = createSlice({
     name : 'accessToken',

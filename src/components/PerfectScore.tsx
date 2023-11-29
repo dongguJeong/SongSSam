@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PitchDetector } from 'pitchy';
 import {  useSelector} from 'react-redux';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import '../styles/global.css';
 import AudioContainer from './AudioContainer';
 import { RootState } from '../redux/store';
 import { ISaveVoice,INote } from '../asset/Interface';
+import { motion, useAnimate } from 'framer-motion';
 
 
 const Wrapper = styled.div`
@@ -112,6 +113,7 @@ const ResetBtn = styled(RecordStartBtn)`
  height : 70px;
 `
 
+
 const DeleteBtn = styled(SendBtn)`
 `
 
@@ -162,7 +164,51 @@ font-size : 12px;
 color : gray;
 `
 
-function PerfectScore({songId , audioSource} : {songId : string | undefined , audioSource : string}) {
+const Dotdotdot = styled(motion.div)`
+`
+
+const DotdotdotVar = {
+  start: {
+    opacity: 0,
+  },
+  end: {
+    opacity: 1,
+  },
+};
+
+
+const blinkAnimation = keyframes`
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+`
+
+const BlinkDot = styled(motion.span)`
+  animation: ${blinkAnimation} 1s infinite;
+  margin: 0 4px;
+  animation-iteration-count: infinite;
+
+  &:nth-child(1) {
+    animation-delay: 0.4s;
+  }
+
+  &:nth-child(2) {
+    animation-delay: 0.8s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 1.2s;
+    animation-fill-mode: forwards;
+  }
+`;
+
+function PerfectScore({songId} : {songId : string | undefined}) {
   const [recording, setRecording] = useState(false);
   const [clips, setClips] = useState<ISaveVoice[]>([]);
   const [count, setCount] = useState(1);
@@ -171,8 +217,9 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
   const [recordingStartTime, setRecordingStartTime] = useState<number >(0);
   const [recordingEndTime, setRecordingEndTime] = useState<number>(0);
   const audioRef = useRef<HTMLAudioElement>(null);
-
   const constraint = { audio: true };
+  const INST = useSelector((state : RootState) => state.instToken.inst);
+  const audioSource = useSelector((state : RootState) => state.songToken.songURL);
 
   useEffect(() => {
     navigator.mediaDevices
@@ -430,7 +477,7 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
     const voiceURL = `https://songssam.site:8443/member/upload?songId=${songId}`;
     const formData = new FormData();
     formData.append('file', mp3File, `${songId}.mp3`);
-  
+
     // fetch를 사용하여 서버로 전송
     fetch(voiceURL, {
       method: 'POST',
@@ -473,7 +520,8 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
 
   return (
     <Wrapper>
-    
+
+      
         <PerfectTitle>
           <h1 style={{marginBottom : '10px' , width : '80px'}}>음계 :  {voiceOctave} </h1>
           <Warning__Container>
@@ -493,40 +541,59 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
       <canvas height={canvasHeight} width={canvasWidth} ref={canvasRef}></canvas>
 
       <RecordBtnContainer>
-        
-        <RecordStartBtn onClick={handleStartRecording} disabled={recording}>
-          <span>녹음시작</span>
-        </RecordStartBtn>
-        <RecordStopBtn onClick={handleStopRecording} disabled={!recording}>
-          <span>녹음종료</span>
-        </RecordStopBtn>
-        
-        <ResetBtn onClick={handleReset}>
-          <svg width="30px" height="30px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" >
-            <g fill="none" 
-                fillRule="evenodd" 
-                stroke='#FFFFFF' 
-                strokeLinecap="round"
-                strokeWidth='1.5'
-                strokeLinejoin="round" 
-                transform="matrix(0 1 1 0 2.5 2.5)">
-            <path d="m3.98652376 1.07807068c-2.38377179 1.38514556-3.98652376 3.96636605-3.98652376 6.92192932 0 4.418278 3.581722 8 8 8s8-3.581722 8-8-3.581722-8-8-8"/>
-            <path d="m4 1v4h-4" transform="matrix(1 0 0 -1 0 6)"/>
-            </g>
-          </svg>
-        </ResetBtn>
+        {
+        INST ?
+        <div style={{display : 'flex'}}>
+          <RecordStartBtn onClick={handleStartRecording} disabled={recording}>
+            <span>녹음시작</span>
+          </RecordStartBtn>
+          <RecordStopBtn onClick={handleStopRecording} disabled={!recording}>
+            <span>녹음종료</span>
+          </RecordStopBtn>
+          <ResetBtn onClick={handleReset}>
+                    <svg width="30px" height="30px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" >
+                      <g fill="none" 
+                          fillRule="evenodd" 
+                          stroke='#FFFFFF' 
+                          strokeLinecap="round"
+                          strokeWidth='1.5'
+                          strokeLinejoin="round" 
+                          transform="matrix(0 1 1 0 2.5 2.5)">
+                      <path d="m3.98652376 1.07807068c-2.38377179 1.38514556-3.98652376 3.96636605-3.98652376 6.92192932 0 4.418278 3.581722 8 8 8s8-3.581722 8-8-3.581722-8-8-8"/>
+                      <path d="m4 1v4h-4" transform="matrix(1 0 0 -1 0 6)"/>
+                      </g>
+                    </svg>
+          </ResetBtn>
 
-          <InstContainer>
-            <InstContainer__Title>
-            { audioSource === 'null' ?  <NoInst>노래에 대한 inst가 없습니다</NoInst> : <YesInst> Inst 듣기</YesInst>}
-            </InstContainer__Title>
-            {audioSource !== 'null' && (
-            <div style={{height : '40px', marginTop : '10px'}}>
-              <audio ref={audioRef} src={audioSource} style={{height : '100%'}} controls></audio>
-            </div>
-              
-            )}
-          </InstContainer>
+                    <InstContainer>
+                      <InstContainer__Title>
+                      { audioSource === null ?  <NoInst>노래에 대한 inst가 없습니다</NoInst> : <YesInst> Inst 듣기</YesInst>}
+                      </InstContainer__Title>
+                      {audioSource !== null && (
+                      <div style={{height : '40px', marginTop : '10px'}}>
+                        <audio ref={audioRef} src={audioSource} style={{height : '100%'}} controls></audio>
+                      </div>)}
+                    </InstContainer>
+        </div>
+        :
+        <div>
+          <div style={{display : 'flex'}}>
+            <div>
+            <span>노래를 다운 받는 중 입니다 잠시만 기다려주세요</span> </div>
+              <Dotdotdot 
+                variants={DotdotdotVar} 
+                initial="start"
+                animate = "end"
+              >
+              <BlinkDot>.</BlinkDot>
+              <BlinkDot>.</BlinkDot>
+              <BlinkDot>.</BlinkDot>
+              </Dotdotdot>
+              </div>
+          
+        </div>
+        }
+        
 
         <RecordingContainer>
           {recording ? <span>녹음 중</span> : null }
@@ -542,6 +609,9 @@ function PerfectScore({songId , audioSource} : {songId : string | undefined , au
                 <AudioContainer audioSource={clip.audioURL} clipDurationTime = {clip.clipDurationTime}></AudioContainer>
               </ClipInnerContainer> 
             </ClipContainer>
+            {
+              
+            }
             <SendBtn onClick={() => sendVoice(clip.blob)}>파일<br/>전송</SendBtn>
             <DeleteBtn onClick={() => {handleDelete(clip.clipName)}}> 삭제 </DeleteBtn>
           </Flex>

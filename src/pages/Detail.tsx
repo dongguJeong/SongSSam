@@ -6,12 +6,14 @@ import PerfectScore from '../components/PerfectScore';
 import {useParams} from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import UploadFormat from '../components/UploadFormat';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState} from '../redux/store';
 import { IAI, IData} from '../asset/Interface';
 import { MakeString } from '../asset/functions';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { clearInst, donwnLoadInst } from '../redux/instSlice';
+import { clearSongSlice, setSongSlice } from '../redux/songSlice';
 
 
 const Wrapper = styled.div` 
@@ -239,10 +241,10 @@ const AIBtn = styled(PlayBtn)`
 
 const AIContainer = styled.div`
     position : fixed;
-    top : 70px;
+    top : 23%;
     left : 28%;
     width : 700px;
-    min-height : 500px;
+    min-height : 350px;
     background-color : white;
     border-radius : 10px;
     z-index : 2;
@@ -338,7 +340,6 @@ export default function Detail() {
     const [play , setPlay] = useState(false);
     const [audioSource , setAudioSource] = useState('');
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const [loading, setLoading] = useState(true); 
     const [recommendList , setRecommendList] = useState<IData[] | null>(null);
     const [AI, setAI] = useState(false);
     const [AIData,setAIData] = useState<IAI[]>([]);
@@ -346,6 +347,7 @@ export default function Detail() {
 
     const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
     const movePage = useNavigate();
+    const dispatch = useDispatch();
 
     const handlePerfect = () => {
         setPerfect((cur) => !cur);
@@ -364,7 +366,6 @@ export default function Detail() {
 
     const closeAI =()=> {
         setAI((cur) => !cur);
-        
     }
 
 
@@ -410,23 +411,23 @@ export default function Detail() {
     };
 
     useEffect (() => {
+        dispatch(clearInst());
+        dispatch(clearSongSlice());
         const downloadInstFile = async () => {
             try {
                 if(instUrl !== 'null'){
                    const response = await fetch(`https://songssam.site:8443/song/download_inst?url=inst/${instUrl}`); 
                     const blob = await response.blob();
                     const audioURL = URL.createObjectURL(blob); 
-                    setAudioSource(audioURL);
+                    dispatch(setSongSlice(audioURL));
+                    dispatch(donwnLoadInst());
                 }
                 else{
                     setAudioSource('null');
-                } 
-               
+                    dispatch(donwnLoadInst());
+                }
             } catch (error) {
               console.error('파일 다운로드 중 오류 발생:', error);
-            }
-            finally{
-                setLoading(false);
             }
           };
           downloadInstFile();
@@ -442,7 +443,6 @@ export default function Detail() {
             });
             const JSON = await res.json();
             setRecommendList(JSON);
-            console.log(recommendList);
             }
             catch(e){
                 console.log(e);
@@ -463,11 +463,9 @@ export default function Detail() {
             }
         }
         fetchData();
-        
       },[]);
 
       const clickAI = (id : number) => {
-
         const data = {
             targetVoiceId : id,
             targetSongId : songId,
@@ -547,7 +545,7 @@ export default function Detail() {
             perfect && 
             <PerfectScoreContainer > 
                     <AlertContainer> <span>화면이 좁습니다</span> </AlertContainer>
-                    <PerfectScore songId = {songId} audioSource = {audioSource}/>
+                    <PerfectScore songId = {songId} />
             </PerfectScoreContainer>
         }
 
@@ -576,7 +574,6 @@ export default function Detail() {
                     </AIContainer__Grid__Container>)}
                 </AIContainer__Grid>
             </AIContainer>
-            
             </WholeWrapper>
         }
 
@@ -588,7 +585,16 @@ export default function Detail() {
             <OtherCol>
             
             <OtherListContainer>
-            
+                {
+                    recommendList === undefined ? 
+                    <div>
+                        추천 리스트 만드는 법
+                        <span> 1. 카카오톡 로그인 </span>
+                        <span> 2. 선호 장르 페이지 가서 선호 장르 선택 </span>
+                        <span> 3. 노래 부르기 버튼 클릭 후, 녹음 시작 버튼 누르고 녹음 파일 만들고 나서 파일 전송 버튼 클릭</span>
+                    </div>
+                    : null
+                }
                 {
                     recommendList && recommendList.map((song,i) => 
                     <OtherList 
