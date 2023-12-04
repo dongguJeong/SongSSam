@@ -1,6 +1,6 @@
 import React, { useEffect, useState,useRef } from 'react';
 import Layout from '../components/Layout';
-import { styled } from 'styled-components';
+import { styled} from 'styled-components';
 import "../styles/global.css";
 import PerfectScore from '../components/PerfectScore';
 import {useParams} from 'react-router-dom';
@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { clearInst, donwnLoadInst } from '../redux/instSlice';
 import { clearSongSlice, setSongSlice } from '../redux/songSlice';
+import { AnimatePresence , motion } from 'framer-motion';
 
 
 const Wrapper = styled.div` 
@@ -153,19 +154,22 @@ const Square = styled.div`
    
 `
 
-const OtherContainer = styled.div`
-    
+const OtherContainer = styled(motion.div)`
+    overflow : hidden;
+   height : 160px;
+   margin-bottom : 50px;
 `
 
-const OtherTitle = styled.div`
+const OtherTitle = styled(motion.div)`
     font-size : 20px;
+    font-weight : 500;
 `
-const OtherListContainer = styled.div`
+const OtherListContainer = styled(motion.div)`
     display : grid;
     grid-template-columns : repeat(4,130px);
     grid-gap : 100px;
 `
-const OtherList = styled.div<{bgpath : string}>`
+const OtherList = styled(motion.div)<{bgpath : string}>`
     background-image: url(${props => props.bgpath});
     background-size : contain;
     background-repeat : no-repeat;
@@ -176,8 +180,9 @@ const OtherList = styled.div<{bgpath : string}>`
 `;
 
 const OtherCol = styled.div`
-    margin-top : 20px;
-    margin-bottom : 50px;
+    margin-top : 0px;
+    position : relative;
+    height : 200px;
 `;
 
 const PerfectScoreContainer = styled.div`
@@ -244,12 +249,12 @@ const AIContainer = styled.div`
     top : 23%;
     left : 28%;
     width : 700px;
-    min-height : 350px;
+    height : 350px;
     background-color : white;
     border-radius : 10px;
     z-index : 2;
     border : 2px solid blue;
-    padding : 20px 20px;
+    padding : 20px 20px 10px 20px;
 `
 
 const Overlay = styled.div`
@@ -272,13 +277,13 @@ const AIContainer__Title = styled.div`
 
 const AIContainer__Grid = styled.div`
     display : grid;
-    grid-template-columns : repeat(3, 1fr);
+    grid-template-columns : repeat(2, 1fr);
     gap : 10px;
 `
 
 const AIContainer__Grid__Container = styled.div`
     border : 1px dashed var(--iconColor);
-    height : 240px;
+    height : 260px;
 `
 
 const AIContainer__Grid__Container__flex = styled.div`
@@ -291,16 +296,19 @@ const AIContainer__Grid__Container__flex = styled.div`
     cursor : pointer
 `
 
-const AI_Img = styled.div`
-    width : 100px;
-    height : 100px;
+const AI_Img = styled.img`
+    width : 140px;
+    height : 140px;
     border-radius : 50%;
-    background-color : red;
+    background-color : gray;
     margin-bottom : 50px;
+    padding-top : 10px;
+
 `
 
 const AI_NAME = styled.div`
     font-size : 15px;
+    font-weight : bold;
 `
 
 const CloseBtn = styled.div`
@@ -333,6 +341,126 @@ const WholeWrapper = styled.div`
   z-index : 2
 `
 
+const Manual= styled.div`
+  padding-top : 20px;
+ 
+`;
+const ManualBody = styled.div`
+  div{
+    margin-bottom : 5px;
+  }
+`;
+const ManualTitle = styled.div`
+  font-size : 18px;
+  padding-bottom : 10px;
+
+  div{
+    padding-bottom  :10px;
+  }
+`;
+
+const ManualContainer = styled.div`
+  margin-bottom  :30px;
+  border-radius : 10px;
+  width : 700px;
+  background-color : #FEF474;
+  display : flex;
+  padding-top : 20px;
+  margin-top : 10px;
+  img {
+    padding-left : 10px;
+    padding-bottom : 10px;
+    height : 200px;
+    width : 200px;
+    margin-right : 20px;
+  }
+`
+
+const sliderVar = {
+    invisible  : (back : boolean) => (
+        {
+        x : back ? -100 : 100,
+        y : 0,
+        opacity : 0,
+        }
+    ),
+    visible : {
+        x : 0,
+        y : 0,
+        opacity : 1,
+        
+    },
+    exit : (back : boolean) => (
+        {
+        x : back ? 100 : -100,
+        y : 0,
+        opacity : 0,
+    }),
+}
+
+const MaleListContainer = styled(OtherListContainer)`
+  position : relative ; 
+`
+
+const LeftArrow = styled.div`
+  cursor : pointer;
+  position : absolute ;
+  top : 0;
+  left : 0;
+  background-color : rgba(0,0,0,0.7);
+  height : 150px;
+  width : 50px;
+  z-index : 1;
+  display : flex;
+  justify-content : center;
+  align-items : center;
+  opacity : 0;
+  transition: opacity 0.3s ease; 
+
+  svg{
+    fill : white;
+  }
+
+  &:hover{
+    opacity : 1;
+    }
+`
+
+const RightArrow = styled.div`
+
+    display : flex;
+    cursor : pointer;
+    position : absolute ;
+    top : 0;
+    right : 250px;
+    background-color : rgba(0,0,0,0.7);
+    height : 150px;
+    width : 50px;
+    z-index : 1;
+    justify-content : center;
+    align-items : center;
+    opacity : 0;
+    transition: opacity 0.3s ease; 
+
+    svg{
+        fill : white;
+    }
+
+    &:hover{
+        opacity : 1;
+    }
+`
+
+const RecommendCol = styled.div`
+    margin-bottom : 50px;
+    overflow : hidden;
+    position : relative;
+`
+
+const RecommendTitle = styled(OtherTitle)`
+    margin-bottom : 20px;
+`
+
 export default function Detail() {
 
     const {title, singer,imgUrl,songId, originUrl,instUrl} = useParams();
@@ -344,6 +472,11 @@ export default function Detail() {
     const [AI, setAI] = useState(false);
     const [AIData,setAIData] = useState<IAI[]>([]);
     const [targetAI, setTargetAI] = useState(null);
+    const [maleRecommend, setMaleRecommend] = useState<IData[] | null>([]);
+    const [femaleRecommend, setFemaleRecommend] = useState<IData[] | null>([]);
+    const [maleIndex, setmaleIndex] = useState(0);
+    const [femaleIndex, setFemaleIndex] = useState(0);
+    const [back,setBack] = useState(false);
 
     const accessToken = useSelector((state: RootState) => state.accessToken.accessToken);
     const movePage = useNavigate();
@@ -353,10 +486,7 @@ export default function Detail() {
         setPerfect((cur) => !cur);
     }
     const handleAI = () => {
-        if(!accessToken){
-            alert("로그인이 필요합니다");
-            return;
-        }
+       
         if(originUrl === 'null'){
             alert("노래 업로드가 필요합니다");
             return;
@@ -481,6 +611,64 @@ export default function Detail() {
         requestAI();
       };
 
+
+      useEffect(() => {
+        const fetchMaleData = async() => {
+            const res = await fetch('https://songssam.site:8443/ddsp/recommand_ptr?ptrId=52');
+            const data = await res.json();
+            setMaleRecommend(data);
+        }
+
+        const fetchFemaleData = async() => {
+            const res = await fetch('https://songssam.site:8443/ddsp/recommand_ptr?ptrId=53');
+            const data = await res.json();
+            setFemaleRecommend(data);
+        };
+
+        fetchFemaleData();
+        fetchMaleData();
+      },[]);
+
+      const goLeft = () => {
+        setBack(true);
+        if(maleIndex === 0){
+            setmaleIndex(2);
+        }
+        else{
+            setmaleIndex(prev => prev-1);
+        }
+      }
+
+      const goRight = () => {
+        setBack(false);
+        if(maleIndex === 2){
+            setmaleIndex(0);
+        }
+        else{
+            setmaleIndex(prev => prev+1);
+        }
+      }
+
+      const goFLeft = () => {
+        setBack(true);
+        if(femaleIndex === 0){
+            setFemaleIndex(2);
+        }
+        else{
+            setFemaleIndex(prev => prev-1);
+        }
+      }
+
+      const goFRight = () => {
+        setBack(false);
+        if(femaleIndex === 2){
+            setFemaleIndex(0);
+        }
+        else{
+            setFemaleIndex(prev => prev+1);
+        }
+      }
+
   return (
   <Layout>
      <Wrapper>
@@ -568,7 +756,7 @@ export default function Detail() {
                         onClick={() => clickAI(AI.id)}
                     >
                         <AIContainer__Grid__Container__flex>
-                            <AI_Img ></AI_Img>
+                            <AI_Img src = {AI.id === 52 ? '/img/man.svg' : '/img/woman.svg'} />
                             <AI_NAME>{AI.name}</AI_NAME>
                         </AIContainer__Grid__Container__flex>    
                     </AIContainer__Grid__Container>)}
@@ -579,22 +767,12 @@ export default function Detail() {
 
         <OtherTitle>이런 곡은 어떠세요</OtherTitle>
         {
-            accessToken &&
+            (accessToken && recommendList ) ?
             
-            <OtherContainer>
+        <OtherContainer>
             <OtherCol>
-            
+
             <OtherListContainer>
-                {
-                    recommendList === undefined ? 
-                    <div>
-                        추천 리스트 만드는 법
-                        <span> 1. 카카오톡 로그인 </span>
-                        <span> 2. 선호 장르 페이지 가서 선호 장르 선택 </span>
-                        <span> 3. 노래 부르기 버튼 클릭 후, 녹음 시작 버튼 누르고 녹음 파일 만들고 나서 파일 전송 버튼 클릭</span>
-                    </div>
-                    : null
-                }
                 {
                     recommendList && recommendList.map((song,i) => 
                     <OtherList 
@@ -603,7 +781,7 @@ export default function Detail() {
                         onClick={() => movePage(MakeString(song))}>
                         <Square />
                         <OtherList__title >
-                            {song.title}
+                            {song.title.length <6 ? song.title : song.title.slice(0,6) + '...'}
                         </OtherList__title>
                     </OtherList>
                     )
@@ -611,7 +789,110 @@ export default function Detail() {
             </OtherListContainer>
             </OtherCol>
         </OtherContainer>
+
+        :
+        <ManualContainer>
+        <img src='https://t1.daumcdn.net/cfile/tistory/994BD3505D1B23A101'/>
+        <Manual>
+            <ManualTitle>
+                <div>이런! 추천 리스트가 없어요 ㅠㅠ </div> 
+                <div> 추천 리스트를 만들어보세요</div>
+            </ManualTitle>
+            <ManualBody>
+                
+                   <div> <span>1. 카카오톡 로그인 후 선호 장르 페이지 누르고 선호 장르 10개 고르기 <br/></span> </div>
+                   <div> <span>2. 노래 페이지 들어간 후, 노래 부르기 버튼 누르고 녹음 시작 버튼 누르기 <br/></span></div>
+                   <div> <span>3. Inst에 맞춰 열심히 노래를 부른 후 녹음 종료 버튼 클릭<br/></span></div>
+                   <div> <span>4. 생성된 audio 옆에 파일 전송 버튼 누르기</span></div>
+                
+            </ManualBody>
+        </Manual>
+        </ManualContainer>
         }
+
+        <RecommendTitle>남자 목소리로 이런 노래도 만들어보세요</RecommendTitle>
+
+        <OtherContainer>
+            <RecommendCol>
+                <LeftArrow onClick={goLeft}>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="40" width="40" viewBox="0 0 320 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>
+                </LeftArrow>  
+                <RightArrow onClick={goRight}>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="40" width="40" viewBox="0 0 320 512"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>
+                </RightArrow>
+            <AnimatePresence custom={back}>
+                <MaleListContainer
+                    custom={back}
+                    variants = {sliderVar}
+                    initial = 'invisible'
+                    animate = 'visible'
+                    exit = 'exit'
+                    transition = {{type  : 'tween',}}
+                    key={maleIndex}
+                >
+                    
+                   
+                    {
+                        maleRecommend && maleRecommend.slice(maleIndex*4,maleIndex*4+4).map((song,i) => 
+                        <OtherList 
+                            key={i}
+                            bgpath = {song.imgUrl} 
+                            onClick={() => movePage(MakeString(song))}>
+                            <Square />
+                            <OtherList__title >
+                                {song.title.length <6 ? song.title : song.title.slice(0,6) + '...'}
+                            </OtherList__title>
+                        </OtherList>
+                        )
+                    }
+                 
+                </MaleListContainer>
+            </AnimatePresence>
+            
+            </RecommendCol>
+        </OtherContainer>
+
+        <RecommendTitle>여자 목소리로 이런 노래도 만들어보세요</RecommendTitle>
+
+        <OtherContainer>
+            <RecommendCol>
+                <LeftArrow onClick={goFLeft}>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="40" width="40" viewBox="0 0 320 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>
+                </LeftArrow>  
+                <RightArrow onClick={goFRight}>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="40" width="40" viewBox="0 0 320 512"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>
+                </RightArrow>
+            <AnimatePresence custom={back}>
+                <MaleListContainer
+                    custom={back}
+                    variants = {sliderVar}
+                    initial = 'invisible'
+                    animate = 'visible'
+                    exit = 'exit'
+                    transition = {{type  : 'tween',}}
+                    key={femaleIndex}
+                >
+                   
+                    {
+                        femaleRecommend && femaleRecommend.slice(femaleIndex*4,femaleIndex*4+4).map((song,i) => 
+                        <OtherList 
+                            key={i}
+                            bgpath = {song.imgUrl} 
+                            onClick={() => movePage(MakeString(song))}>
+                            <Square />
+                            <OtherList__title >
+                                {song.title.length <6 ? song.title : song.title.slice(0,6) + '...'}
+                            </OtherList__title>
+                        </OtherList>
+                        )
+                    }
+                 
+                </MaleListContainer>
+            </AnimatePresence>
+            
+            </RecommendCol>
+        </OtherContainer>
+
        </Container>
     </Wrapper>
    

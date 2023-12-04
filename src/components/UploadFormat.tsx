@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import axios from "axios";
+import { UseConfirm } from "../asset/functions";
 
 const Wrapper = styled.div`
   margin-bottom : 50px;
@@ -258,11 +259,13 @@ export default function UploadFormat (Id : {Id? :number}){
       }
 
       const deleteProgress = (key : string) => {
-        setUploadProgress((prev) => {
-          const newState: { [key: string]: any } = { ...prev };
-          delete newState[key];
-          return newState;
-        });
+        if(UseConfirm()){
+          setUploadProgress((prev) => {
+            const newState: { [key: string]: any } = { ...prev };
+            delete newState[key];
+            return newState;
+          });
+        }
       }
 
     return(

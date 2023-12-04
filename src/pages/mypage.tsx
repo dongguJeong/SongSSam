@@ -8,6 +8,7 @@ import BigTitle from '../components/BigTitle';
 import axios from 'axios';
 import {IProfile,IVocal, IMp3, IData} from '../asset/Interface';
 import { useNavigate } from 'react-router-dom';
+import { UseConfirm } from '../asset/functions';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -101,7 +102,7 @@ const DeleteBtn = styled.div`
   color : blue;
 
   & : hover{
-    color : #26c9c3;
+    color : red;
   }
   
 `
@@ -249,7 +250,8 @@ function MyPage() {
   };
 
   const handleDelete = async(songId : number) => {
-    try{
+    if(UseConfirm()){
+     try{
       const res = await axios.post(`https://songssam.site:8443/member/deleteVocalFile?songId=${songId}`,
       {},
         {
@@ -267,7 +269,9 @@ function MyPage() {
     }
     catch(e){
       alert("삭제를 실패했습니다")
-    }    
+    }   
+    }
+      
   }
 
   const movePage = useNavigate();

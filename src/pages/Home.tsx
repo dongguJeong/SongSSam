@@ -31,14 +31,13 @@ const Filter = styled.select`
   padding-left : 2px;
 `
 
-
 function Home() {
 
   const [chartData, setChartData] = useState<IData[]>([]);
   const [filterValue, setFilterValue] = useState("chartjson");
   
   useEffect(() => {
-    if(filterValue === 'Ai'){
+    if(filterValue[0] === '5'){
       return;
     }
     const fetchData = async () => {
@@ -59,11 +58,15 @@ function Home() {
     fetchData();
     }, [filterValue]);
 
+
+
+
   const handleFilterChange = (e : React.ChangeEvent<HTMLSelectElement>) => {
     setFilterValue(e.target.value);
   };
 
-  
+
+
   return (
     <Layout>
       <Wrapper>
@@ -73,11 +76,12 @@ function Home() {
                   <option value="chartjson">전체</option>
                   <option value="uploaded_list">업로드 완료</option>
                   <option value="completed_list">전처리 완료</option>
-                  <option value='Ai'>Ai 커버곡</option>
+                  <option value='52'>남자 TTS</option>
+                  <option value='53'>여자 TTS</option>
           </Filter>
         </FilterContainer>
         {
-          filterValue !== 'Ai'  ?
+          filterValue[0] !== '5'  ?
           <Chart  
           btnTitle ="커버곡 만들러 가기"  
           data={chartData}
@@ -86,16 +90,13 @@ function Home() {
           :
           null
         }
-        
         {
-          filterValue === 'Ai' ? 
-          <>
-            <AiChart ptrId={1} Ai_Name='10cm'></AiChart>
-            <AiChart ptrId={3} Ai_Name='10cm'></AiChart>
-          </>
-          :
-          null
+          filterValue[0] === '5' ?  
+           <AiChart ptrId={Number(filterValue)}></AiChart>
+           :
+           null
         }
+       
         
       </Wrapper>
     </Layout>

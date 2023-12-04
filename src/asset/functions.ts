@@ -16,3 +16,13 @@ export const MakeString = (song : IData) => {
 
     return (`/detail/${artist}/${title}/${id}/${encodeURIComponent(imgUrl)}/${originUrl}/${instUrl}`);
   }
+
+export const UseConfirm = () => {
+  if(window.confirm("정말 삭제하시겠습니까?")){
+    return true;
+  }
+  else{
+    alert("취소되었습니다");
+    return false;
+  }
+}

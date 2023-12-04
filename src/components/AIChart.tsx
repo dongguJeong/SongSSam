@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import React, { useEffect,useState } from "react";
 import { IAI_Cover} from "../asset/Interface";
+import { useNavigate } from "react-router-dom";
+import { MakeString, UseConfirm } from "../asset/functions";
 
 
 const ChartContainer = styled.div`
@@ -100,37 +102,6 @@ const Singer = styled.span`
   }  
 `;
 
-const SongButton = styled.button`
-  
-  cursor : pointer;
-  height : 40px;
-  border-radius : 5px;
-  width : 120px;
-  background-color :  var(--iconColor);
-  border : none;
-  color : white;
-
-  &:hover{
-    box-shadow: 0px 4px 6px -1px rgb(0, 0, 0, .3);
-    transform: translate(-3px, -3px);
-    transition : transform 0.2s ease-in;
-  }
-  
-  a:{
-    font-size : 14px;
-    width : 100%;
-    height : 100%;
-    display : flex;
-    justify-content : center;
-    align-items : center;
-    padding : 20px 30px;
-
-  }
-
-  @media screen and (max-width : 900px){
-    display : none;
-  }
-`;
 
 const ChartHeader= styled.div`
   padding-bottom : 10px;
@@ -171,65 +142,68 @@ const BlankSpace = styled.div`
   background-color : transparent;
 `
 const Grid = styled.div`
-  display : grid;
-  grid-template-columns : 100px 1fr;
-  margin-bottom  :20px;
+  
+  margin-bottom  :30px;
+  
 `
 
-const AI_Img = styled.img`
+const AI_Img = styled.img<{imgurl : string}>`
   height : 90px;
   width : 90px;
-  background-color : gray;
-  border-radius : 10px;
-  justify-content : center;
+  background-color : white;
+  background-image : url(${props => props.imgurl});
+  background-size : contain;
+  background-repeat : no-repeat;
 `
 
-const Title__Container = styled.div`
+const Title_Container = styled.div`
   display : flex;
+
+  
 `
 
 const Title = styled.span`
   align-self : end;
-  font-size : 34px;
+  font-size : 25px;
   font-weight : 600;
+  
  
 `
 
-const Title_Small = styled.span`
-  font-size : 15px;
-  margin-left : 10px;
+const DeleteBtnContainer = styled.div`
+  height : 100%;
+  display : flex;
+  align-items : center;
+  justify-content : center;
+
 `
 
-export default function AiChart( {ptrId, Ai_Name} : {ptrId : number, Ai_Name : string} ){
+const DeleteBtn = styled.div`
+
+  background-color : gray;
+  color : white;
+  border-radius : 5px;
+  font-size : 12px;
+  padding : 4px 6px;
+  cursor : pointer; 
+  
+  display : flex;
+  align-items : center;
+  
+  &:hover{
+    background-color : white;
+    color : black;
+  }
+`
+
+export default function AiChart( {ptrId} : {ptrId : number} ){
   
   const [AiCovers , setAiCover] = useState<IAI_Cover[]>([]);
   const [wavFile, setWavFile] = useState<string[]>([]);
-  const [Loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchCover = async() => {
-      try{
-        const res = await fetch(`https://songssam.site:8443/ddsp/generatedSongList?ptrId=${ptrId}`);
-        const JSON = await res.json();
-        setAiCover(JSON);
-        console.log(JSON);
-      }
-      catch(e){
-        console.log(e);
-      }
-    }
-    fetchCover();
-  },[]);
-
-  useEffect(() => {
-    if (AiCovers) {
-      for (let AiCover of AiCovers) {
-        setLoading(false);
-        downloadWavFile(AiCover.generatedUrl);
-      }
-      setLoading(false);
-    }
-  }, [AiCovers]);
+  const movePage = useNavigate();
+  const Ai_Name = ptrId === 52 ? '남자 TTS' : '여자 TTS'
 
   const downloadWavFile = async (generatedUrl: string) => {
     try {
@@ -242,13 +216,62 @@ export default function AiChart( {ptrId, Ai_Name} : {ptrId : number, Ai_Name : s
     }
   };
 
+  useEffect(() => {
+    const fetchCover = async() => {
+      try{
+        const res = await fetch(`https://songssam.site:8443/ddsp/generatedSongList?ptrId=${ptrId}`);
+        const JSON = await res.json();
+        setAiCover(JSON);
+        setLoading(false);
+        console.log(JSON);
+    }
+      catch(e){
+        console.log(e);
+      }
+    }
+    fetchCover();
+  },[ptrId]);
+
+  useEffect(() => {
+    const downloadSequentially = async () => {
+      if (AiCovers.length > 0 && loading === false) {
+        for (let AiCover of AiCovers) {
+          await downloadWavFile(AiCover.generatedUrl);
+        }
+      }
+    };
+
+    downloadSequentially();
+  }, [loading]);
+
+  const deleteCoverSong = async(Id : number,  wavString : string) => {
+    if(UseConfirm()){
+      try{
+        const res = await fetch(`https://songssam.site:8443/ddsp/deleteSong/${Id}`,
+        {method : 'DELETE',}
+        );
+        setWavFile((prev) => prev.filter((i) => i !== wavString));
+        setAiCover((prev) => prev.filter((i) => i.id !== Id));
+        alert("삭제되었습니다");
+      }
+      catch(e){
+        console.log(e);
+      }
+    }
+      
+  }
+
   return(
       <>
         <Grid>
-          <AI_Img/>
-          <Title__Container>
-            <Title>{Ai_Name}<Title_Small>가 부른</Title_Small></Title> 
-          </Title__Container>
+          {/* <AI_Img imgurl = {Ai_Name === '남자 TTS' ? 
+            '/img/man.svg'
+            :
+            '/img/woman.svg'
+            } /> */}
+          <Title_Container>
+            <Title>{Ai_Name}</Title> 
+          </Title_Container>
         </Grid>
         
         <ChartContainer>
@@ -259,27 +282,32 @@ export default function AiChart( {ptrId, Ai_Name} : {ptrId : number, Ai_Name : s
             { AiCovers.map((AI ,index : number) => <SongContainer key={index}>
               <SongColumn>
                 <SongColumnLeft>
-                <SongRank>{index + 1}</SongRank>
+                <SongRank onClick={() => movePage(MakeString(AI.song))}>{index + 1}</SongRank>
                 {AI.song.imgUrl ? 
                   <SongImg bgpath = {AI.song.imgUrl}  /> 
                   : 
                   <BlankSpace></BlankSpace> 
                 }
                   <SongDetail>
-                    <SongTitle>
+                    <SongTitle onClick={() => movePage(MakeString(AI.song))}>
                         {AI.song.title}           
                     </SongTitle>
-                    <Singer>
+                    <Singer onClick={() => movePage(MakeString(AI.song))}>
                         {AI.song.artist}
                     </Singer>
                   </SongDetail>
                   </SongColumnLeft>
+
+                  <DeleteBtnContainer>
+                  <DeleteBtn>
+                    <span onClick={() => deleteCoverSong(AI.id , wavFile[index])}>삭제</span>
+                  </DeleteBtn>
+                  </DeleteBtnContainer>
+
                   <SongButtonContainer>
-                  {Loading ? (
-                    <span>다운로드 중입니다</span>
-                  ) : (
+
                     <audio controls src={wavFile[index]}></audio>
-                  )}
+                
                   </SongButtonContainer>
               </SongColumn>
             </SongContainer>)}

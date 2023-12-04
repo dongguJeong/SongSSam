@@ -7,6 +7,7 @@ import AudioContainer from './AudioContainer';
 import { RootState } from '../redux/store';
 import { ISaveVoice,INote } from '../asset/Interface';
 import { motion, useAnimate } from 'framer-motion';
+import { UseConfirm } from '../asset/functions';
 
 
 const Wrapper = styled.div`
@@ -514,8 +515,10 @@ function PerfectScore({songId} : {songId : string | undefined}) {
   };
 
   const handleDelete = (clipName : string) => {
-    const temp = clips.filter(clip => clip.clipName !== clipName);
-    setClips((cur) => cur = temp );
+    if(UseConfirm()){
+      const temp = clips.filter(clip => clip.clipName !== clipName);
+      setClips((cur) => cur = temp );
+    }
   };
 
   return (
