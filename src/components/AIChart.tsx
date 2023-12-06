@@ -1,8 +1,10 @@
 import styled from "styled-components";
-import React, { useEffect,useState } from "react";
+import React, { useEffect,useState,useRef } from "react";
 import { IAI_Cover} from "../asset/Interface";
 import { useNavigate } from "react-router-dom";
 import { MakeString, UseConfirm } from "../asset/functions";
+import LoadingCircle from "./LoadingCircle";
+import AudioCircle from "./AudioCircle";
 
 
 const ChartContainer = styled.div`
@@ -170,38 +172,15 @@ const Title = styled.span`
  
 `
 
-const DeleteBtnContainer = styled.div`
-  height : 100%;
-  display : flex;
-  align-items : center;
-  justify-content : center;
 
-`
-
-const DeleteBtn = styled.div`
-
-  background-color : gray;
-  color : white;
-  border-radius : 5px;
-  font-size : 12px;
-  padding : 4px 6px;
-  cursor : pointer; 
-  
-  display : flex;
-  align-items : center;
-  
-  &:hover{
-    background-color : white;
-    color : black;
-  }
-`
 
 export default function AiChart( {ptrId} : {ptrId : number} ){
   
   const [AiCovers , setAiCover] = useState<IAI_Cover[]>([]);
-  const [wavFile, setWavFile] = useState<string[]>([]);
+  const [wavFile, setWavFile] = useState<string[] >([]);
   const [loading, setLoading] = useState(true);
-
+  const [fullLoading, setFullLoading] = useState(true);
+  
   const movePage = useNavigate();
   const Ai_Name = ptrId === 52 ? '남자 TTS' : '여자 TTS'
 
@@ -239,42 +218,27 @@ export default function AiChart( {ptrId} : {ptrId : number} ){
           await downloadWavFile(AiCover.generatedUrl);
         }
       }
+      setFullLoading(false);
     };
 
     downloadSequentially();
   }, [loading]);
 
-  const deleteCoverSong = async(Id : number,  wavString : string) => {
-    if(UseConfirm()){
-      try{
-        const res = await fetch(`https://songssam.site:8443/ddsp/deleteSong/${Id}`,
-        {method : 'DELETE',}
-        );
-        setWavFile((prev) => prev.filter((i) => i !== wavString));
-        setAiCover((prev) => prev.filter((i) => i.id !== Id));
-        alert("삭제되었습니다");
-      }
-      catch(e){
-        console.log(e);
-      }
-    }
-      
-  }
-
+ 
   return(
       <>
         <Grid>
-          {/* <AI_Img imgurl = {Ai_Name === '남자 TTS' ? 
-            '/img/man.svg'
-            :
-            '/img/woman.svg'
-            } /> */}
+         
           <Title_Container>
             <Title>{Ai_Name}</Title> 
           </Title_Container>
         </Grid>
-        
-        <ChartContainer>
+        {
+          fullLoading ?
+           <LoadingCircle/>
+          :
+          
+          <ChartContainer>
           <ChartHeader>
             <span>목록</span> <span>제목</span> <span>가수</span> 
           </ChartHeader>
@@ -298,21 +262,14 @@ export default function AiChart( {ptrId} : {ptrId : number} ){
                   </SongDetail>
                   </SongColumnLeft>
 
-                  <DeleteBtnContainer>
-                  <DeleteBtn>
-                    <span onClick={() => deleteCoverSong(AI.id , wavFile[index])}>삭제</span>
-                  </DeleteBtn>
-                  </DeleteBtnContainer>
-
                   <SongButtonContainer>
-
-                    <audio controls src={wavFile[index]}></audio>
-                
+                    <AudioCircle audioSrc={wavFile[index]}/>
                   </SongButtonContainer>
               </SongColumn>
             </SongContainer>)}
           </ChartBox>
-        </ChartContainer>
+          </ChartContainer> 
+        }
     </>
     )
  };
