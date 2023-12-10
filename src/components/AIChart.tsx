@@ -42,7 +42,8 @@ const SongColumnLeft = styled.div`
   align-items : center;
 `
 
-const SongButtonContainer = styled.div`
+const SongButtonContainer = styled.div` 
+  width : 300px;
   text-align : center;
   display : flex;
   align-items : center;
@@ -172,6 +173,17 @@ const Title = styled.span`
  
 `
 
+const Audio = styled.audio`
+ &::-webkit-media-controls-panel{
+  background-color : white;
+ }
+
+ &::-webkit-media-controls-toggle-closed-captions-button{
+  display : none;
+ }
+
+  
+`
 
 
 export default function AiChart( {ptrId} : {ptrId : number} ){
@@ -262,8 +274,10 @@ export default function AiChart( {ptrId} : {ptrId : number} ){
                   </SongDetail>
                   </SongColumnLeft>
 
+                  
                   <SongButtonContainer>
-                    <AudioCircle audioSrc={wavFile[index]}/>
+                    <Audio src={wavFile[index]} controls></Audio>
+                    
                   </SongButtonContainer>
               </SongColumn>
             </SongContainer>)}
