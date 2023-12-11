@@ -136,7 +136,7 @@ const SongButton = styled.button`
 
 const RedButton = styled(SongButton)`
   color : black;
-  background-color :  #F6B941;
+  background-color : #E2E2E2;
 `
 
 

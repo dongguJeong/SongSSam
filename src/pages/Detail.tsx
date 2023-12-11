@@ -148,16 +148,14 @@ const AlertContainer = styled(SampleButton) `
 `
 
 const Square = styled.div`
-    width : 130px;
-    height : 130px;
+    width : 120px;
+    height : 120px;
     border-radius : 10px;
    
 `
 
 const OtherContainer = styled(motion.div)`
     overflow : hidden;
-   height : 160px;
-   margin-bottom : 50px;
 `
 
 const OtherTitle = styled(motion.div)`
@@ -166,7 +164,7 @@ const OtherTitle = styled(motion.div)`
 `
 const OtherListContainer = styled(motion.div)`
     display : grid;
-    grid-template-columns : repeat(4,130px);
+    grid-template-columns : repeat(4,100px);
     grid-gap : 100px;
 `
 const OtherList = styled(motion.div)<{bgpath : string}>`
@@ -217,11 +215,13 @@ const FFlex = styled.div`
 
 
 const OtherList__title = styled.div`
-    position : absolute 
-    bottom : -20px;
+    position : absolute ;
+    bottom : 0px;
     left : 0px;
-    text-align : center;
-    padding-top : 10px;
+    display : flex;
+    justify-content : center;
+    align-items : center;
+    width : 110px;
     font-size : 12px;
 
 `
@@ -253,7 +253,7 @@ const AIContainer = styled.div`
     background-color : white;
     border-radius : 10px;
     z-index : 2;
-    border : 2px solid blue;
+    border : 1px solid var(--iconColor);
     padding : 20px 20px 10px 20px;
 `
 
@@ -361,7 +361,7 @@ const ManualTitle = styled.div`
 const ManualContainer = styled.div`
   margin-bottom  :30px;
   border-radius : 10px;
-  width : 700px;
+  width : 750px;
   background-color : #FEF474;
   display : flex;
   padding-top : 20px;
@@ -407,8 +407,8 @@ const LeftArrow = styled.div`
   top : 0;
   left : 0;
   background-color : rgba(0,0,0,0.7);
-  height : 150px;
-  width : 50px;
+  height : 120px;
+  width : 30px;
   z-index : 1;
   display : flex;
   justify-content : center;
@@ -427,15 +427,15 @@ const LeftArrow = styled.div`
 
 const RightArrow = styled.div`
 
-    display : flex;
     cursor : pointer;
     position : absolute ;
     top : 0;
-    right : 250px;
+    right : 60px;
     background-color : rgba(0,0,0,0.7);
-    height : 150px;
-    width : 50px;
+    height : 120px;
+    width : 30px;
     z-index : 1;
+    display : flex;
     justify-content : center;
     align-items : center;
     opacity : 0;
@@ -457,7 +457,7 @@ const RecommendCol = styled.div`
 `
 
 const RecommendTitle = styled(OtherTitle)`
-    margin-bottom : 20px;
+    margin-bottom : 30px;
 `
 
 export default function Detail() {
@@ -802,7 +802,7 @@ export default function Detail() {
             </ManualTitle>
             <ManualBody>
                 
-                   <div> <span>1. 카카오톡 로그인 후 선호 장르 페이지 누르고 선호 장르 10개 고르기 <br/></span> </div>
+                   <div> <span>1. 카카오톡 로그인 후 <Link style={{textDecoration : 'underline', fontWeight : 'bold', color : 'blue'}} to ='/prefer'>선호하는 노래 조사</Link> 페이지 누르고 선호 장르 10개 고르기 <br/></span> </div>
                    <div> <span>2. 노래 페이지 들어간 후, 노래 부르기 버튼 누르고 녹음 시작 버튼 누르기 <br/></span></div>
                    <div> <span>3. Inst에 맞춰 열심히 노래를 부른 후 녹음 종료 버튼 클릭<br/></span></div>
                    <div> <span>4. 생성된 audio 옆에 파일 전송 버튼 누르기</span></div>
@@ -842,7 +842,7 @@ export default function Detail() {
                             onClick={() => movePage(MakeString(song))}>
                             <Square />
                             <OtherList__title >
-                                {song.title.length <6 ? song.title : song.title.slice(0,6) + '...'}
+                                <span>{song.title.length <6 ? song.title : song.title.slice(0,6) + '...'}</span>
                             </OtherList__title>
                         </OtherList>
                         )
@@ -883,7 +883,7 @@ export default function Detail() {
                             onClick={() => movePage(MakeString(song))}>
                             <Square />
                             <OtherList__title >
-                                {song.title.length <6 ? song.title : song.title.slice(0,6) + '...'}
+                                <span>{song.title.length <6 ? song.title : song.title.slice(0,6) + '...'}</span>
                             </OtherList__title>
                         </OtherList>
                         )
