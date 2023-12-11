@@ -228,7 +228,7 @@ const OtherList__title = styled.div`
 
 const PerfectBtn = styled(PlayBtn)`
     color : white;
-    background-color : black;
+    background-color : #414F6C;
     padding : 0;
     text-align : center;
     padding-top: 8px;
@@ -236,7 +236,7 @@ const PerfectBtn = styled(PlayBtn)`
 `
 
 const AIBtn = styled(PlayBtn)`
-    background-color : green;
+    background-color : #2964A7;
     padding : 0;
     text-align : center;
     padding-top : 8px;
@@ -362,7 +362,7 @@ const ManualContainer = styled.div`
   margin-bottom  :30px;
   border-radius : 10px;
   width : 750px;
-  background-color : #FEF474;
+  background-color : #F9F9F9;
   display : flex;
   padding-top : 20px;
   margin-top : 10px;
