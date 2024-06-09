@@ -2,13 +2,13 @@
 
 ## 실행 방법 
 
->` git clone -b front --single-branch https://github.com/ckj18/SongSSam`
+>``` git clone -b front --single-branch https://github.com/ckj18/SongSSam```
 
 
-> `npm install`
+> ```npm install```
 
 
-> `npm start`
+> ```npm start```
 
 
 ## 메인 화면
