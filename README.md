@@ -43,14 +43,11 @@
 
 <img width="1430" alt="스크린샷 2023-11-12 오후 8 43 36" src="https://github.com/ckj18/SongSSam/assets/133619736/32163b67-c0b9-45d9-be9c-86127e921b70">
 
-
-
 <img width="1192" alt="스크린샷 2023-11-12 오후 9 06 40" src="https://github.com/ckj18/SongSSam/assets/133619736/86d54827-8b7b-481c-82f2-78fdd3bdd7d1">
 
 
-
-
 ## 내 정보
+<img width="800" alt="스크린샷 2023-10-07 오후 7 54 02" src="https://github.com/user-attachments/assets/1d44e39e-5c21-40bd-b41f-6d1fb4838e9d">
 
 
 ## 선호 노래 조사
