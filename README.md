@@ -15,19 +15,19 @@
 <img width="800" alt="홈페이지" src="https://github.com/user-attachments/assets/280fc2f6-240f-4a46-8c10-c3b7198ed5f5">
 
 
-
-
 ## 곡 상세 페이지
-<img width="800" alt="스크린샷 2023-11-12 오후 8 32 16" src="https://github.com/ckj18/SongSSam/assets/133619736/9433f93a-5f98-4ba3-b069-1e2858b51a4a">
+<img width="800" alt="스크린샷 2024-07-13 오후 3 10 58" src="https://github.com/user-attachments/assets/3eb6a959-deac-42ad-b448-034fcd27355b">
 
 
 
 ### 퍼펙트 스코어 확인 
-<img width="1420" alt="스크린샷 2023-11-12 오후 8 33 30" src="https://github.com/ckj18/SongSSam/assets/133619736/6d816de1-e994-4ffc-85f7-28c466588f04">
+<img width="800" alt="스크린샷 2024-07-13 오후 3 29 30" src="https://github.com/user-attachments/assets/37214e8b-6e60-42df-ad83-06371d389585">
+
 
 
 ### 녹음 종료 클릭 시 오디오 컴포넌트 생성
-<img width="400" alt="스크린샷 2023-11-12 오후 8 33 42" src="https://github.com/ckj18/SongSSam/assets/133619736/f86c511b-60a7-4187-b333-821891d15d69">
+
+<img width="600" alt="스크린샷 2024-07-13 오후 3 30 18" src="https://github.com/user-attachments/assets/82c25218-6892-475f-90c1-cb5bb8106a1b">
 
 
 ### 파일 업로드 버튼 클릭 시
