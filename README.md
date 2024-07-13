@@ -12,7 +12,7 @@
 
 
 ## 메인 화면
-<img width="800" alt="스크린샷 2023-11-12 오후 8 31 56" src="https://github.com/ckj18/SongSSam/assets/133619736/23f4174d-5c1a-48e3-849a-d4978611b244">
+<img width="800" alt="홈페이지" src="https://github.com/user-attachments/assets/280fc2f6-240f-4a46-8c10-c3b7198ed5f5">
 
 
 
