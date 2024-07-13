@@ -18,7 +18,8 @@
 ## 곡 상세 페이지
 <img width="800" alt="스크린샷 2024-07-13 오후 3 20 13" src="https://github.com/user-attachments/assets/615e7199-5225-4e2f-ac11-fe71c0c9d4f7">
 
-
+## 반응형으로 제작
+<img width="502" alt="스크린샷 2024-07-13 오후 3 22 24" src="https://github.com/user-attachments/assets/5761fb69-3135-4698-a9ff-bd641016d738">
 
 ### 퍼펙트 스코어 확인 
 <img width="800" alt="스크린샷 2024-07-13 오후 3 29 30" src="https://github.com/user-attachments/assets/37214e8b-6e60-42df-ad83-06371d389585">
