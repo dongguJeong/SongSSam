@@ -16,7 +16,7 @@
 
 
 ## 곡 상세 페이지
-<img width="800" alt="스크린샷 2024-07-13 오후 3 10 58" src="https://github.com/user-attachments/assets/3eb6a959-deac-42ad-b448-034fcd27355b">
+<img width="800" alt="스크린샷 2024-07-13 오후 3 20 13" src="https://github.com/user-attachments/assets/615e7199-5225-4e2f-ac11-fe71c0c9d4f7">
 
 
 
